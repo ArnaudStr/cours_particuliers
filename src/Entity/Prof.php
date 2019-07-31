@@ -2,9 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
+use App\Entity\Avis;
+use App\Entity\Message;
+use App\Entity\PrixActivite;
+use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -80,11 +85,18 @@ class Prof implements UserInterface
      */
     private $prixActivites;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="prof", orphanRemoval=true)
+     */
+    private $sessionsCours;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->prixActivites = new ArrayCollection();
+        $this->sessionsCours = new ArrayCollection();
+        $this->dateCreation = new DateTime();
     }
 
     public function getId(): ?int
@@ -319,6 +331,37 @@ class Prof implements UserInterface
             // set the owning side to null (unless already changed)
             if ($prixActivite->getProf() === $this) {
                 $prixActivite->setProf(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SessionCours[]
+     */
+    public function getSessionsCours(): Collection
+    {
+        return $this->sessionsCours;
+    }
+
+    public function addSessionsCour(SessionCours $sessionsCour): self
+    {
+        if (!$this->sessionsCours->contains($sessionsCour)) {
+            $this->sessionsCours[] = $sessionsCour;
+            $sessionsCour->setProf($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionsCour(SessionCours $sessionsCour): self
+    {
+        if ($this->sessionsCours->contains($sessionsCour)) {
+            $this->sessionsCours->removeElement($sessionsCour);
+            // set the owning side to null (unless already changed)
+            if ($sessionsCour->getProf() === $this) {
+                $sessionsCour->setProf(null);
             }
         }
 

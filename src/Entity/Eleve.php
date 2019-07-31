@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
+use App\Entity\Avis;
+use App\Entity\Message;
+use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
+ * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
 class Eleve implements UserInterface
 {
@@ -70,10 +76,17 @@ class Eleve implements UserInterface
      */
     private $avis;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="eleve", orphanRemoval=true)
+     */
+    private $sessionsCours;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->sessionsCours = new ArrayCollection();
+        $this->dateCreation = new DateTime();
     }
 
     public function getId(): ?int
@@ -265,6 +278,37 @@ class Eleve implements UserInterface
             // set the owning side to null (unless already changed)
             if ($avi->getEleve() === $this) {
                 $avi->setEleve(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SessionCours[]
+     */
+    public function getSessionsCours(): Collection
+    {
+        return $this->sessionsCours;
+    }
+
+    public function addSessionsCour(SessionCours $sessionsCour): self
+    {
+        if (!$this->sessionsCours->contains($sessionsCour)) {
+            $this->sessionsCours[] = $sessionsCour;
+            $sessionsCour->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionsCour(SessionCours $sessionsCour): self
+    {
+        if ($this->sessionsCours->contains($sessionsCour)) {
+            $this->sessionsCours->removeElement($sessionsCour);
+            // set the owning side to null (unless already changed)
+            if ($sessionsCour->getEleve() === $this) {
+                $sessionsCour->setEleve(null);
             }
         }
 

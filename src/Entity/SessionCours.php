@@ -37,6 +37,18 @@ class SessionCours
      */
     private $prixActivite;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="sessionsCours")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $prof;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="sessionsCours")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $eleve;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +98,30 @@ class SessionCours
     public function setPrixActivite(?PrixActivite $prixActivite): self
     {
         $this->prixActivite = $prixActivite;
+
+        return $this;
+    }
+
+    public function getProf(): ?Prof
+    {
+        return $this->prof;
+    }
+
+    public function setProf(?Prof $prof): self
+    {
+        $this->prof = $prof;
+
+        return $this;
+    }
+
+    public function getEleve(): ?Eleve
+    {
+        return $this->eleve;
+    }
+
+    public function setEleve(?Eleve $eleve): self
+    {
+        $this->eleve = $eleve;
 
         return $this;
     }
