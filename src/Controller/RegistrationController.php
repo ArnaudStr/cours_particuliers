@@ -6,7 +6,9 @@ use App\Entity\Prof;
 use App\Entity\Eleve;
 use App\Form\RegistrationProfType;
 use App\Form\RegistrationEleveType;
+use App\Security\ProfAuthenticator;
 use App\Security\UserAuthenticator;
+use App\Security\EleveAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +21,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register/eleve", name="app_register_eleve")
      */
-    public function registerEleve(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
+    public function registerEleve(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, EleveAuthenticator $authenticator): Response
     {
         $user = new Eleve();
         $form = $this->createForm(RegistrationEleveType::class, $user);
@@ -56,7 +58,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register/prof", name="app_register_prof")
      */
-    public function registerProf(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, UserAuthenticator $authenticator): Response
+    public function registerProf(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
     {
         $user = new Prof();
         $form = $this->createForm(RegistrationProfType::class, $user);

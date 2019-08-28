@@ -29,11 +29,18 @@
                             <a class="nav-link" href="{{ path('showListeStagiaires') }}">Stagiaires</a>
                         </li> #}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                            <a class="nav-link" href="{{ path('app_login_prof') }}">Connexion prof</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login_eleve') }}">Connexion eleve</a>
                         </li> 
                         {# {% if is_granted('ROLE_USER') %} #}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_logout')}}">Déconnexion</a>
+                            <a class="nav-link" href="{{path('app_logout_prof')}}">Déconnexion prof</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('app_logout_eleve')}}">Déconnexion eleve</a>
                         </li>
                         {# {% endif %} #}
                         {# {% if is_granted('ROLE_ADMIN') %} #}

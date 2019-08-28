@@ -10,9 +10,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="app_login")
+     * @Route("/loginEleve", name="app_login_eleve")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function loginEleve(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
         //    $this->redirectToRoute('target_path');
@@ -23,14 +23,43 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/loginProf", name="app_login_prof")
      */
-    public function logout()
+    public function loginProf(AuthenticationUtils $authenticationUtils): Response
     {
-        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+        // if ($this->getUser()) {
+        //    $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/loginProf.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/logoutProf", name="app_logout_prof")
+     */
+    public function logoutProf() {
+        
+        return $this->redirectToRoute("home");
+        // return $this->redirectToRoute("app_login_prof");
+        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/logoutEleve", name="app_logout_eleve")
+     */
+    public function logoutEleve() {
+        
+        return $this->redirectToRoute("home");
+        // return $this->redirectToRoute("app_login_eleve");
+        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 }
