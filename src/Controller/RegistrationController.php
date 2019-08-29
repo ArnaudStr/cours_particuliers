@@ -28,6 +28,11 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setRoles(["ROLE_USER"]);
+
+            $user->setRoles(["ROLE_ELEVE"]);
+
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
@@ -46,7 +51,7 @@ class RegistrationController extends AbstractController
                 $user,
                 $request,
                 $authenticator,
-                'main' // firewall name in security.yaml
+                'eleve_security' // firewall name in security.yaml
             );
         }
 
@@ -55,36 +60,137 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    // /**
+    //  * @Route("/register/prof", name="app_register_prof")
+    //  */
+    // public function registerProf(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
+    // {
+    //     $user = new Prof();
+    //     $form = $this->createForm(RegistrationProfType::class, $user);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+
+
+
+    //         $user->setRoles(["ROLE_PROF"]);
+        
+
+    //         // encode the plain password
+    //         $user->setPassword(
+    //             $passwordEncoder->encodePassword(
+    //                 $user,
+    //                 $form->get('plainPassword')->getData()
+    //             )
+    //         );
+
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($user);
+    //         $entityManager->flush();
+
+    //         // do anything else you need here, like send an email
+
+    //         return $guardHandler->authenticateUserAndHandleSuccess(
+    //             $user,
+    //             $request,
+    //             $authenticator,
+    //             'prof_security' // firewall name in security.yaml
+    //         );
+    //     }
+
+    //     return $this->render('registration/register.html.twig', [
+    //         'registrationForm' => $form->createView(),
+    //     ]);
+    // }
+
     /**
-     * @Route("/register/prof", name="app_register_prof")
+     * @Route("/register", name="app_register")
      */
-    public function registerProf(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
-    {
-        $user = new Prof();
-        $form = $this->createForm(RegistrationProfType::class, $user);
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
+    {       
+
+        $form = $this->createForm(RegistrationProfType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
+
+            if ( $form->get('isEleve')->getData() ) {
+
+                $user = new Eleve();
+
+                $user->setRoles(["ROLE_ELEVE"]);
+
+                $user->setUsername(
+                    $form->get('username')->getData()
+                );
+    
+                // encode the plain password
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+
+                $user->setEmail(
+                    $form->get('email')->getData()
+                );
+
+                $user->setNom(
+                    $form->get('nom')->getData()
+
+                );
+
+                $user->setPrenom(
+                    $form->get('prenom')->getData()
+
+                );
+
+                $user->setAdresse(
+                    $form->get('adresse')->getData()
+                );
+    
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+    
+                // do anything else you need here, like send an email
+    
+                return $guardHandler->authenticateUserAndHandleSuccess(
                     $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+                    $request,
+                    $authenticator,
+                    'eleve_security' // firewall name in security.yaml
+                );
+            }
+        
+            else {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $user = new Prof();
 
-            // do anything else you need here, like send an email
+                $user->setRoles(["ROLE_PROF"]);
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+                // encode the plain password
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                // do anything else you need here, like send an email
+
+                return $guardHandler->authenticateUserAndHandleSuccess(
+                    $user,
+                    $request,
+                    $authenticator,
+                    'prof_security' // firewall name in security.yaml
+                );
+            }
         }
 
         return $this->render('registration/register.html.twig', [

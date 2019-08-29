@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
@@ -18,8 +19,12 @@ class RegistrationProfType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
-            ->add('email',TextType::class)
+            ->add('username', TextType::class, [
+                "mapped" => false
+            ])
+            ->add('email',TextType::class,[
+                "mapped" => false
+            ])
   
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
@@ -37,16 +42,29 @@ class RegistrationProfType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('nom',TextType::class)
-            ->add('prenom',TextType::class)
-            ->add('adresse',TextType::class)
+            ->add('nom',TextType::class, [
+                "mapped" => false
+            ])
+            ->add('prenom',TextType::class, [
+                "mapped" => false
+            ])
+            ->add('adresse',TextType::class, [
+                "mapped" => false
+            ])
+            ->add('isEleve', ChoiceType::class, [
+                "choices" => [
+                    'Eleve' => true,
+                    'Prof' => false
+                ],
+                "mapped" => false
+            ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Prof::class,
-        ]);
-    }
+    // public function configureOptions(OptionsResolver $resolver)
+    // {
+    //     $resolver->setDefaults([
+    //         'data_class' => Prof::class,
+    //     ]);
+    // }
 }

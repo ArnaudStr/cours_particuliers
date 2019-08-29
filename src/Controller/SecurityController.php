@@ -44,7 +44,17 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/prof/logoutProf", name="app_logout_prof")
+     * @Route("/eleve/logout", name="app_logout_eleve")
+     */
+    public function logoutEleve() {
+        
+        return $this->redirectToRoute("home");
+        // return $this->redirectToRoute("app_login_prof");
+        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/prof/logout", name="app_logout_prof")
      */
     public function logoutProf() {
         
@@ -53,13 +63,4 @@ class SecurityController extends AbstractController
         // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
-    /**
-     * @Route("/eleve/logoutEleve", name="app_logout_eleve")
-     */
-    public function logoutEleve() {
-        
-        return $this->redirectToRoute("home");
-        // return $this->redirectToRoute("app_login_eleve");
-        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
-    }
 }
