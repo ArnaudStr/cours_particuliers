@@ -38,9 +38,9 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false   
         eleve_security:
-            # pattern: ^/loginEleve
+            pattern: ^/eleve/
             provider: eleve_provider
-            anonymous: false
+            anonymous: true
             guard:
                 authenticators:
                     - App\Security\EleveAuthenticator
@@ -55,9 +55,9 @@ security:
             #     lifetime: 604800 # 1 week in seconds
             #     path:     /
         prof_security:
-            # pattern: ^/loginProf
+            pattern: ^/prof/
             provider: prof_provider
-            anonymous: false
+            anonymous: true
             guard:
                 authenticators:
                     - App\Security\ProfAuthenticator
@@ -71,6 +71,9 @@ security:
             #     secret:   '%kernel.secret%'
             #     lifetime: 604800 # 1 week in seconds
             #     path:     /
+        default:
+            pattern: ^/
+            anonymous: true
 
 
             # activate different ways to authenticate

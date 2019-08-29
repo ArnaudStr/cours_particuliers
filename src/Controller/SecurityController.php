@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/loginEleve", name="app_login_eleve")
+     * @Route("/eleve/loginEleve", name="app_login_eleve")
      */
     public function loginEleve(AuthenticationUtils $authenticationUtils): Response
     {
@@ -27,7 +27,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/loginProf", name="app_login_prof")
+     * @Route("/prof/loginProf", name="app_login_prof")
      */
     public function loginProf(AuthenticationUtils $authenticationUtils): Response
     {
@@ -44,7 +44,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logoutProf", name="app_logout_prof")
+     * @Route("/prof/logoutProf", name="app_logout_prof")
      */
     public function logoutProf() {
         
@@ -54,7 +54,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logoutEleve", name="app_logout_eleve")
+     * @Route("/eleve/logoutEleve", name="app_logout_eleve")
      */
     public function logoutEleve() {
         
