@@ -17,15 +17,28 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login_prof') }}">Connexion prof</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login_eleve') }}">Connexion eleve</a>
-                        </li> 
+                        {% if not is_granted('ROLE_USER') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('home') }}">Acceuil</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                            </li> 
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login_prof') }}">Connexion professeur</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_login_eleve') }}">Connexion élève</a>
+                            </li>     
+                        {% endif %}
 
                         {% if is_granted('ROLE_ELEVE') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('home_eleve') }}">Acceuil</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('app_logout_eleve')}}">Déconnexion</a>
                         </li>
@@ -33,17 +46,15 @@
                         {% elseif is_granted('ROLE_PROF') %}
 
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path('home_prof') }}">Acceuil</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{path('app_logout_prof')}}">Déconnexion</a>
                         </li>
                         {% endif %}
-                        {# {% if is_granted('ROLE_ADMIN') %} #}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_register_eleve') }}">Inscription élève</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_register') }}">Inscription prof</a>
-                        </li> 
-                        {% if is_granted('ROLE_PROF') %}
+
+
+                       {# {% if is_granted('ROLE_PROF') %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('home_prof') }}">Acceuil</a>
                             </li>
@@ -53,17 +64,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('home_eleve') }}">Acceuil</a>
                             </li>
-                        {% endif %}
-
-                        {# <li class="nav-item">
-                            <a class="nav-link" href="{{ path('user_get_all') }}">Utilisateurs</a>
-                        </li>
                         {% endif %} #}
 
                     </ul>
                 </div>
             </nav>
-                    {% block body %}
+        {% block body %}
 
         {% endblock %}
         {% block javascripts %}{% endblock %}

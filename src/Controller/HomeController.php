@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class HomeController extends AbstractController
@@ -24,7 +24,7 @@ class HomeController extends AbstractController
      */
     public function indexEleve()
     {
-        return $this->render('home/index.html.twig', [
+        return $this->render('home/indexEleve.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
@@ -34,7 +34,7 @@ class HomeController extends AbstractController
      */
     public function indexProf()
     {
-        return $this->render('home/index.html.twig', [
+        return $this->render('home/indexProf.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }

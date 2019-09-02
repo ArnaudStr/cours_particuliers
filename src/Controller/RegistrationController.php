@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Prof;
 use App\Entity\Eleve;
-use App\Form\RegistrationProfType;
-use App\Form\RegistrationEleveType;
+use App\Form\RegistrationType;
 use App\Security\ProfAuthenticator;
-use App\Security\UserAuthenticator;
 use App\Security\EleveAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +22,7 @@ class RegistrationController extends AbstractController
     public function registerEleve(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, EleveAuthenticator $authenticator): Response
     {
         $user = new Eleve();
-        $form = $this->createForm(RegistrationEleveType::class, $user);
+        $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,7 +64,7 @@ class RegistrationController extends AbstractController
     // public function registerProf(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
     // {
     //     $user = new Prof();
-    //     $form = $this->createForm(RegistrationProfType::class, $user);
+    //     $form = $this->createForm(RegistrationType::class, $user);
     //     $form->handleRequest($request);
 
     //     if ($form->isSubmitted() && $form->isValid()) {
@@ -109,7 +107,7 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, ProfAuthenticator $authenticator): Response
     {       
 
-        $form = $this->createForm(RegistrationProfType::class);
+        $form = $this->createForm(RegistrationType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -119,6 +117,18 @@ class RegistrationController extends AbstractController
                 $user = new Eleve();
 
                 $user->setRoles(["ROLE_ELEVE"]);
+
+                $route = $this->redirectToRoute('app_login_eleve');
+            }
+
+            else {
+
+                $user = new Prof();
+
+                $user->setRoles(["ROLE_PROF"]);
+
+                $route = $this->render('security/loginProf.html.twig');
+            }
 
                 $user->setUsername(
                     $form->get('username')->getData()
@@ -138,12 +148,10 @@ class RegistrationController extends AbstractController
 
                 $user->setNom(
                     $form->get('nom')->getData()
-
                 );
 
                 $user->setPrenom(
                     $form->get('prenom')->getData()
-
                 );
 
                 $user->setAdresse(
@@ -156,42 +164,16 @@ class RegistrationController extends AbstractController
     
                 // do anything else you need here, like send an email
     
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $user,
-                    $request,
-                    $authenticator,
-                    'eleve_security' // firewall name in security.yaml
-                );
+                // return $guard;
+                // return $guardHandler->authenticateUserAndHandleSuccess(
+                //     $user,
+                //     $request,
+                //     $authenticator,
+                //     'eleve_security' // firewall name in security.yaml
+                // );
+
+                return $route;
             }
-        
-            else {
-
-                $user = new Prof();
-
-                $user->setRoles(["ROLE_PROF"]);
-
-                // encode the plain password
-                $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                        $user,
-                        $form->get('plainPassword')->getData()
-                    )
-                );
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                // do anything else you need here, like send an email
-
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $user,
-                    $request,
-                    $authenticator,
-                    'prof_security' // firewall name in security.yaml
-                );
-            }
-        }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),

@@ -3,7 +3,6 @@
 namespace App\Security;
 
 use App\Entity\Eleve;
-use App\Entity\Prof;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

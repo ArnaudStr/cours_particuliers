@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue {{ app.user ~ " !"}}{% endblock %}
+
+{% block body %}
+
+{% if is_granted('ROLE_ELEVE') %}
+    
+    <h1> C'est la hess je capte ap </h1>
+
+{% else %}
+    <h1> Veuillez vous connecter! </h1>
+{% endif %}
+
+
+{% endblock %}

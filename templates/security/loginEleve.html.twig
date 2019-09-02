@@ -4,13 +4,6 @@
 
 {% block body %}
 <form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    {% if app.user %}
-        <div class="checkbox mb-3">You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout_eleve') }}">Logout</a>
-    {% endif %}
 
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="inputUsername" class="sr-only">Username</label>
