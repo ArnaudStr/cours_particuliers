@@ -7,12 +7,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MemberController extends AbstractController
 {
+
     /**
-     * @Route("/member", name="member")
+     * @Route("/prof/profile", name="profile_prof")
      */
-    public function index()
+    public function profileProf()
     {
-        return $this->render('member/index.html.twig', [
+        return $this->render('member/profile.html.twig', [
+            'controller_name' => 'MemberController',
+        ]);
+    }
+
+    /**
+     * @Route("/eleve/profile", name="profile_eleve")
+     */
+    public function profileEleve()
+    {
+        return $this->render('member/profile.html.twig', [
             'controller_name' => 'MemberController',
         ]);
     }
