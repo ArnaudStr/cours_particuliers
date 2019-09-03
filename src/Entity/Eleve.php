@@ -81,6 +81,11 @@ class Eleve implements UserInterface
      */
     private $sessionsCours;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pictureFilename;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -321,5 +326,17 @@ class Eleve implements UserInterface
      */
     public function __toString(){
         return $this->getPrenom().' '.$this->getNom();
+    }
+
+    public function getPictureFilename(): ?string
+    {
+        return $this->pictureFilename;
+    }
+
+    public function setPictureFilename(?string $pictureFilename): self
+    {
+        $this->pictureFilename = $pictureFilename;
+
+        return $this;
     }
 }

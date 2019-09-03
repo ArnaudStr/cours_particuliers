@@ -3,7 +3,7 @@
 {% block title %}Bienvenue {{ app.user ~ " !"}}{% endblock %}
 
 {% block body %}
-    {% if is_granted('ROLE_ELEVE') %}
+    {% if is_granted('ROLE_PROF') %}
         
         <h1> C'est la hess je capte ap </h1>
 
