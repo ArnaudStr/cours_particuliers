@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
@@ -82,7 +84,12 @@ class Eleve implements UserInterface
     private $sessionsCours;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\File(
+     *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
+     *      maxSize = "1M",
+     *      mimeTypesMessage = "Image non valide",
+     *      maxSizeMessage = "L'image est trop lourde, taille max : {{ size }}"
      */
     private $pictureFilename;
 

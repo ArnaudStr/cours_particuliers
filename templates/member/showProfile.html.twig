@@ -8,8 +8,8 @@
     <p>Nom d'utilisateur : {{ app.user.username }}</p>
     <p>Adresse : {{ app.user.adresse }}</p>
     <p>Email : {{ app.user.email }}</p>
-
-
+    <p>Photo : {{ app.user.pictureFilename }} </p>
+    <object data="{{ app.user.pictureFilename }}" type=""></object>
     {% if is_granted ('ROLE_PROF') %}
         
         <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier mon profil</button></a></p>

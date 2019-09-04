@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+// use Symfony\Component\Validator\Constraints;
+// use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProfRepository")
@@ -91,7 +96,12 @@ class Prof implements UserInterface
     private $sessionsCours;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\File(
+     *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
+     *      maxSize = "1M",
+     *      mimeTypesMessage = "Image non valide",
+     *      maxSizeMessage = "L'image est trop lourde, taille max : {{ size }}"
      */
     private $pictureFilename;
 
@@ -388,10 +398,14 @@ class Prof implements UserInterface
 
     public function getPictureFilename(): ?string
     {
+        if(!$this->pictureFilename){
+            return "default.jpg";
+        }
         return $this->pictureFilename;
     }
 
-    public function setPictureFilename(?string $pictureFilename): self
+    // public function setPictureFilename(?string $pictureFilename): self
+    public function setPictureFilename($pictureFilename)
     {
         $this->pictureFilename = $pictureFilename;
 

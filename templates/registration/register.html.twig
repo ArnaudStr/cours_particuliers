@@ -15,8 +15,10 @@
             {{ form_row(registrationForm.adresse) }}
             {{ form_row(registrationForm.plainPassword) }}
             {{ form_row(registrationForm.isEleve) }}
-            <button class="btn">Register</button>
-
+            {{ form_row(registrationForm.submit) }}
+            
+        <!-- render missing fields -->
+        {{ form_rest(registrationForm) }}
         {{ form_end(registrationForm, {'render_rest': false}) }}
 
     </div>

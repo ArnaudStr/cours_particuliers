@@ -6,10 +6,14 @@
         {{form_row(editForm.nom) }}
         {{form_row(editForm.prenom) }}
         {{form_row(editForm.adresse) }}   
-        {{form_row(editForm.description) }}   
+        {{form_row(editForm.description) }}
+
         {{form_row(editForm.pictureFilename) }} 
+
+        
         {{form_row(editForm.submit) }} 
         {{ form_rest(editForm) }}
+        
     {{ form_end(editForm, {'render_rest': false}) }}
 
 {% endblock %}
