@@ -106,44 +106,18 @@ class MemberController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Upload de la photo et inscription en BDD du nom de l'image
-            // $pictureFilename = $form->get("pictureFilename")->getData();
+            if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
 
-            // if ($form->get("pictureFilename")->getData() == null)
-            // {
-            //     $filename = $eleve->getPictureFilename();
-            // }
-            // else {
-            // if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
+                $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
 
+                $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
 
-                $finder = new Finder();
-                $finder->files()->in($this->getParameter('pictures_directory'));
-                
-                $files=[];
-                foreach ($finder as $file)
-                {
-                    array_push($files, $file->getFileName());
-                }
-
-                dump($files);
-                dump($eleve);
-
-                if ( ! in_array($eleve->getPictureFilename(),$files) ) {
-
-                    $pictureFilename = $form->get("pictureFilename")->getData();
-
-                    $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
-                    dump($filename);
-                    $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
-
-                    $eleve->setPictureFilename($filename);
-                
-                }
-                // dd($eleve);
-            // }
-
-
-            // dump($eleve);
+                $eleve->setPictureFilename($filename);
+            }
+            else
+            {
+                $eleve->setPictureFilename("test");
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($eleve);
@@ -166,19 +140,23 @@ class MemberController extends AbstractController
     public function editProf(Prof $prof, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {       
 
+        $pictureBeforeForm = $prof->getPictureFilename();
+        
         $form = $this->createForm(EditProfType::class, $prof);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Upload de la photo et inscription en BDD du nom de l'image
-            $pictureFilename = $form->get("pictureFilename")->getData();
-
-            $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
-
-            $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
-
-            $prof->setPictureFilename($filename);
+            if ( $pictureFilename = $form->get("pictureFilename")->getData() ){
+                $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
+                $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
+                $prof->setPictureFilename($filename);
+            }
+            else
+            {
+                $prof->setPictureFilename($pictureBeforeForm);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($prof);

@@ -33,7 +33,7 @@ class EditProfType extends AbstractType
                 // make it optional so you don't have to re-upload the PDF file
                 // everytime you edit the Product details
                 'required' => false,
-                'data_class' => null    
+                'data_class' => null,
             ])
             
             ->add('submit', SubmitType::class, [

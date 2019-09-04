@@ -84,7 +84,7 @@ class Eleve implements UserInterface
     private $sessionsCours;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      * @Assert\File(
      *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
      *      maxSize = "1M",
@@ -342,7 +342,9 @@ class Eleve implements UserInterface
 
     public function setPictureFilename(?string $pictureFilename): self
     {
-        $this->pictureFilename = $pictureFilename;
+        if (!is_null($pictureFilename)) {
+            $this->pictureFilename = $pictureFilename;
+        }
 
         return $this;
     }

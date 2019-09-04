@@ -96,7 +96,7 @@ class Prof implements UserInterface
     private $sessionsCours;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      * @Assert\File(
      *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
      *      maxSize = "1M",
