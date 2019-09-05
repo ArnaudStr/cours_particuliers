@@ -45,8 +45,8 @@ security:
                 authenticators:
                     - App\Security\EleveAuthenticator
             # user_checker: App\Security\UserChecker
-            # logout:
-            #     path:   app_logout_eleve
+            logout:
+                path:   app_logout_eleve
                 # invalidate_session: true
 
                 # target: app_login_eleve
@@ -62,8 +62,8 @@ security:
                 authenticators:
                     - App\Security\ProfAuthenticator
             # user_checker: App\Security\UserChecker
-            # logout:
-            #     path:   app_logout_prof
+            logout:
+                path:   app_logout_prof
                 # invalidate_session: true
 
                 # target: app_login_prof

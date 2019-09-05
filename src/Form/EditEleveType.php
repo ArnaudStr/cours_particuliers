@@ -31,6 +31,7 @@ class EditEleveType extends AbstractType
                 // everytime you edit the Product details
                 'required' => false,
                 'data_class' => null,
+                // 'mapped' => false
             ])
 
             ->add('submit', SubmitType::class, [

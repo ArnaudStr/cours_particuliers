@@ -110,6 +110,11 @@ class Prof implements UserInterface
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $confirmationToken;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -420,6 +425,18 @@ class Prof implements UserInterface
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
 
         return $this;
     }
