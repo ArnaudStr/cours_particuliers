@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Eleve;
+use App\Entity\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class EleveAuthenticator extends AbstractFormLoginAuthenticator
+class AdminAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
@@ -38,7 +38,7 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'app_login_eleve' === $request->attributes->get('_route')
+        return 'app_admin_login' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -59,12 +59,12 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = new CsrfToken('authenticateEleve', $credentials['csrf_token']);
+        $token = new CsrfToken('authenticateAdmin', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(Eleve::class)->findOneBy(['username' => $credentials['username']]);
+        $user = $this->entityManager->getRepository(Admin::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
@@ -85,11 +85,12 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('home_eleve'));
+        return new RedirectResponse($this->urlGenerator->generate('admin_home'));
+
     }
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate('                                                                                                                                                                                                                                                                      ');
+        return $this->urlGenerator->generate('app_admin_login');
     }
 }

@@ -51,15 +51,15 @@ class MemberController extends AbstractController
 
                 $user->setConfirmationToken($this->generateToken());
 
-                $token = $user->getConfirmationToken();
+                // $token = $user->getConfirmationToken();
 
-                $email = $user->getEmail();
+                // $email = $user->getEmail();
 
-                $username = $user->getUsername();
+                // $username = $user->getUsername();
 
-                $mailerService->sendToken($mailer, $token, $email, $username, 'registration.html.twig');
+                // $mailerService->sendToken($mailer, $token, $email, $username, 'registration.html.twig');
 
-                $this->addFlash('user-error', 'Votre inscription a été validée, vous aller recevoir un email de confirmation pour activer votre compte et pouvoir vous connecté');
+                // $this->addFlash('user-error', 'Votre inscription a été validée, vous aller recevoir un email de confirmation pour activer votre compte et pouvoir vous connecté');
 
                 $user->setRoles(["ROLE_PROF"]);
 
@@ -107,51 +107,50 @@ class MemberController extends AbstractController
             return $route;
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('registration/register2.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
 
-
-    /**
-     * @Route("/confirm_account/{token}/{username}", name="confirm_account")
-     */
-    public function confirmAccount($token, $username): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(Prof::class)->findOneBy(['username' => $username]);
-        $tokenExist = $user->getConfirmationToken();
-        if($token === $tokenExist) {
-           $user->setConfirmationToken(null);
-           $user->setEnabled(true);
-           $em->persist($user);
-           $em->flush();
-           return $this->redirectToRoute('app_login_prof');
-        } else {
-            return $this->render('registration/token-expire.html.twig');
-        }
-    }
-    /**
-     * @Route("/send_confirmation_token", name="send_confirmation_token")
-     */
-    public function sendConfirmationToken(Request $request, MailerService $mailerService, \Swift_Mailer $mailer): RedirectResponse
-    {
-        $em = $this->getDoctrine()->getManager();
-        $email = $request->request->get('email');
-        $user = $this->getDoctrine()->getRepository(Prof::class)->findOneBy(['email' => $email]);
-        if($user === null) {
-            $this->addFlash('not-user-exist', 'utilisateur non trouvé');
-            return $this->redirectToRoute('app_register');
-        }
-        $user->setConfirmationToken($this->generateToken());
-        $em->persist($user);
-        $em->flush();
-        $token = $user->getConfirmationToken();
-        $email = $user->getEmail();
-        $username = $user->getUsername();
-        $mailerService->sendToken($mailer, $token, $email, $username, 'register.html.twig');
-        return $this->redirectToRoute('app_login_prof');
-    }
+    // /**
+    //  * @Route("/confirm_account/{token}/{username}", name="confirm_account")
+    //  */
+    // public function confirmAccount($token, $username): Response
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //     $user = $em->getRepository(Prof::class)->findOneBy(['username' => $username]);
+    //     $tokenExist = $user->getConfirmationToken();
+    //     if($token === $tokenExist) {
+    //        $user->setConfirmationToken(null);
+    //        $user->setEnabled(true);
+    //        $em->persist($user);
+    //        $em->flush();
+    //        return $this->redirectToRoute('app_login_prof');
+    //     } else {
+    //         return $this->render('registration/token-expire.html.twig');
+    //     }
+    // }
+    // /**
+    //  * @Route("/send_confirmation_token", name="send_confirmation_token")
+    //  */
+    // public function sendConfirmationToken(Request $request, MailerService $mailerService, \Swift_Mailer $mailer): RedirectResponse
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+    //     $email = $request->request->get('email');
+    //     $user = $this->getDoctrine()->getRepository(Prof::class)->findOneBy(['email' => $email]);
+    //     if($user === null) {
+    //         $this->addFlash('not-user-exist', 'utilisateur non trouvé');
+    //         return $this->redirectToRoute('app_register');
+    //     }
+    //     $user->setConfirmationToken($this->generateToken());
+    //     $em->persist($user);
+    //     $em->flush();
+    //     $token = $user->getConfirmationToken();
+    //     $email = $user->getEmail();
+    //     $username = $user->getUsername();
+    //     $mailerService->sendToken($mailer, $token, $email, $username, 'register.html.twig');
+    //     return $this->redirectToRoute('app_login_prof');
+    // }
 
     private function generateToken()
     {
@@ -233,7 +232,7 @@ class MemberController extends AbstractController
 
             // dump($pictureFilename);
             // dump($filename);
-            dd($prof);
+            // dd($prof);
 
             // do anything else you need here, like send an email
 

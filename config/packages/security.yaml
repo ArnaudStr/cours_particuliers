@@ -4,11 +4,19 @@ security:
             algorithm: auto
         App\Entity\Eleve:
             algorithm: auto
+        App\Entity\Admin:
+            algorithm: auto
+
 
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
+        admin_provider:
+            entity:
+                class: App\Entity\Admin
+                property: username
+                # manager_name: user
         prof_provider:
             entity:
                 class: App\Entity\Prof
@@ -22,6 +30,7 @@ security:
         chain_provider:
             chain:
                 providers: ['prof_provider', 'eleve_provider']
+        # used to reload user from session & other features (e.g. switch_user)
         # chain_provider:
         #     chain:
         #         providers: [in_memory, user_db]
@@ -71,6 +80,17 @@ security:
             #     secret:   '%kernel.secret%'
             #     lifetime: 604800 # 1 week in seconds
             #     path:     /
+        admin_security:
+            pattern: ^/admin/
+            provider: admin_provider
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\AdminAuthenticator
+            logout:
+                path: app_admin_logout
+                # where to redirect after logout
+            # target: apzp_any_route
         default:
             pattern: ^/
             anonymous: true
@@ -90,7 +110,7 @@ security:
     #     - { path: ^/prof, roles: ROLE_PROF }
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
+        ROLE_ADMIN:       [ROLE_USER, ROLE_PROF, ROLE_ELEVE]
         ROLE_ELEVE:       ROLE_USER
         ROLE_PROF:       ROLE_USER
 
