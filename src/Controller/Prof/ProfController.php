@@ -2,9 +2,13 @@
 
 namespace App\Controller\Prof;
 
-use App\Entity\Activite;
-use App\Form\ActivityType;
-use App\Form\CategoryType;
+use App\Entity\Prof;
+
+
+use App\Entity\PrixActivite;
+use App\Entity\CreneauCours;
+
+use App\Form\CreationCoursType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,32 +21,60 @@ class ProfController extends AbstractController
 {
 
     /**
-     * @Route("/add_course", name="add_course")
-     * @Route("/edit/course/{id}", name="edit_course")
+     * @Route("/addProposeCours/{id}", name="propose_cours")
      */
-    public function addEditCourse(Activite $activite = null, ObjectManager $manager, Request $request) {
-        if(!$activite) {
-            $activite = new Activite();
-            $title = "Ajout d'une activite";
-        }
+    public function addEditCoursProf(Prof $prof, PrixActivite $prixActivite = null, CreneauCours $creneauCours = null, ObjectManager $manager, Request $request) {
+       
+        $prixActivite = new PrixActivite();
+        $creneauCours = new CreneauCours();
  
-        else {
-            $title = 'Modification de la activite '.$activite;
-        }
- 
-        $form = $this->createForm(ActivityType::class, $activite);
+        $form = $this->createForm(CreationCoursType::class);
         
         $form->handleRequest($request);
                
         if($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($activite);
+
+            dump($prof);
+            $prixActivite->setProf(
+                $prof
+            );
+            $prixActivite->setActivite(
+                $form->get('activite')->getData()
+            );
+            $prixActivite->setPrix(
+                $form->get('tarifHoraire')->getData()
+            );
+
+            $creneauCours->setProf(
+                $prof
+            );
+            $creneauCours->setActivite(
+                $form->get('activite')->getData()
+            );
+            $creneauCours->setDateDebut(
+                $form->get('dateDebut')->getData()
+            );
+            $creneauCours->setDateFin(
+                $form->get('dateFin')->getData()
+            );
+
+            $manager->persist($prixActivite);
+            $manager->persist($creneauCours);
             $manager->flush();
  
             return $this->redirectToRoute('home_prof');
-            // return $this->redirectToRoute('showInfoActivite', ['id' => $activite->getId()]);
+            // return $this->redirectToRoute('showInfosessionCours', ['id' => $sessionCours->getId()]);
         }
-        return $this->render('course/addEditCourse.html.twig', ['form' => $form->createView(),
-            'title' => $title, 'editMode' => $activite->getId() != null, 'activite' => $activite
+        return $this->render('course/addEditCreationCours.html.twig', ['form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/calendar", name="cours_calendar")
+     */
+    public function calendar() {
+        return $this->render('course/calendar.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 }

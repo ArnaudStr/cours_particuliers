@@ -3,14 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
+use App\Entity\Activite;
 use App\Entity\Categorie;
-use App\Form\CategoryType;
+use App\Form\ActiviteType;
+use App\Form\CategorieType;
 use App\Form\RegistrationFormType;
 use App\Security\AdminAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
+
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -112,7 +114,7 @@ class AdminController extends AbstractController
             $title = 'Modification de la categorie '.$categorie;
         }
  
-        $form = $this->createForm(CategoryType::class, $categorie);
+        $form = $this->createForm(CategorieType::class, $categorie);
         
         $form->handleRequest($request);
                
@@ -123,8 +125,38 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_home');
             // return $this->redirectToRoute('showInfoCategorie', ['id' => $categorie->getId()]);
         }
-        return $this->render('category/addEditCategory.html.twig', ['form' => $form->createView(),
+        return $this->render('course/addEditCategory.html.twig', ['form' => $form->createView(),
             'title' => $title, 'editMode' => $categorie->getId() != null, 'categorie' => $categorie
+        ]);
+    }
+
+    /**
+     * @Route("/add_activite", name="add_activite")
+     * @Route("/edit/activite/{id}", name="edit_activite")
+     */
+    public function addEditActivity(Activite $activite = null, ObjectManager $manager, Request $request) {
+        if(!$activite) {
+            $activite = new Activite();
+            $title = "Ajout d'une activite";
+        }
+ 
+        else {
+            $title = 'Modification de la activite '.$activite;
+        }
+ 
+        $form = $this->createForm(ActiviteType::class, $activite);
+        
+        $form->handleRequest($request);
+               
+        if($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($activite);
+            $manager->flush();
+ 
+            return $this->redirectToRoute('admin_home');
+            // return $this->redirectToRoute('showInfoActivite', ['id' => $activite->getId()]);
+        }
+        return $this->render('course/addEditActivity.html.twig', ['form' => $form->createView(),
+            'title' => $title, 'editMode' => $activite->getId() != null, 'activite' => $activite
         ]);
     }
 }

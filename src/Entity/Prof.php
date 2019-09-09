@@ -115,6 +115,11 @@ class Prof implements UserInterface
      */
     private $confirmationToken;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="prof", orphanRemoval=true)
+     */
+    private $creneauCours;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -122,6 +127,7 @@ class Prof implements UserInterface
         $this->prixActivites = new ArrayCollection();
         $this->sessionsCours = new ArrayCollection();
         $this->dateCreation = new DateTime();
+        $this->creneauCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -437,6 +443,37 @@ class Prof implements UserInterface
     public function setConfirmationToken(string $confirmationToken): self
     {
         $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CreneauCours[]
+     */
+    public function getCreneauCours(): Collection
+    {
+        return $this->creneauCours;
+    }
+
+    public function addCreneauCour(CreneauCours $creneauCour): self
+    {
+        if (!$this->creneauCours->contains($creneauCour)) {
+            $this->creneauCours[] = $creneauCour;
+            $creneauCour->setProf($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneauCour(CreneauCours $creneauCour): self
+    {
+        if ($this->creneauCours->contains($creneauCour)) {
+            $this->creneauCours->removeElement($creneauCour);
+            // set the owning side to null (unless already changed)
+            if ($creneauCour->getProf() === $this) {
+                $creneauCour->setProf(null);
+            }
+        }
 
         return $this;
     }

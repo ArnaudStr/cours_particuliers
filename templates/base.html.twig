@@ -24,6 +24,9 @@
                             <a class="nav-link" href="{{ path('add_categorie') }}">Ajouter une catégorie</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path('add_activite') }}">Ajouter une activité</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{path('app_admin_logout')}}">Déconnexion</a>
                         </li>
 
@@ -70,13 +73,16 @@
                             <a class="nav-link" href="{{ path('show_profile_prof') }}">Mon profil</a>
                         </li>
 
-
                         <li class="nav-item">
-                                <a class="nav-link" href="{{ path('add_course') }}">Proposer un cours</a>
-                            </li>
+                            <a class="nav-link" href="{{ path('propose_cours', {'id':app.user.id}) }}">Proposer un cours</a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('app_logout_prof')}}">Déconnexion</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('cours_calendar') }}">Planigramme</a>
                         </li>
                         {% endif %}
                     {% endif %}

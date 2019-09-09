@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PrixActiviteRepository")
@@ -28,11 +29,6 @@ class PrixActivite
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="prixActivite")
-     */
-    private $sessionCours;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="prixActivites")

@@ -24,7 +24,7 @@ class HomeController extends AbstractController
      */
     public function indexEleve()
     {
-        return $this->render('home/indexEleve.html.twig', [
+        return $this->render('eleve/indexEleve.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
@@ -34,7 +34,7 @@ class HomeController extends AbstractController
      */
     public function indexProf()
     {
-        return $this->render('home/indexProf.html.twig', [
+        return $this->render('prof/indexProf.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }

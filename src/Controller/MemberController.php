@@ -195,7 +195,7 @@ class MemberController extends AbstractController
             return $this->redirectToRoute('show_profile_eleve');
         }
 
-        return $this->render('member/editProfileEleve.html.twig', [
+        return $this->render('eleve/editProfileEleve.html.twig', [
             'editForm' => $form->createView(),
             'picture' => $pictureBeforeForm
         ]);
@@ -239,7 +239,7 @@ class MemberController extends AbstractController
             return $this->redirectToRoute('show_profile_prof');
         }
 
-        return $this->render('member/editProfileProf.html.twig', [
+        return $this->render('prof/editProfileProf.html.twig', [
             'editForm' => $form->createView(),
         ]);
     }
