@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,19 +31,19 @@ class CreneauCours
     private $activite;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="creneauCours", cascade={"persist"}, orphanRemoval=true)
      */
-    private $jour;
+    private $creneaux;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="integer")
      */
-    private $heureDebut;
+    private $tarifHoraire;
 
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $heureFin;
+    public function __construct()
+    {
+        $this->creneaux = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -74,38 +76,69 @@ class CreneauCours
         return $this;
     }
 
-    public function getJour(): ?string
+ 
+    /**
+     * @return Collection|Creneau[]
+     */
+    public function getCreneaux(): Collection
     {
-        return $this->jour;
+        return $this->creneaux;
     }
 
-    public function setJour(string $jour): self
+    public function addCreneau(Creneau $creneau): self
     {
-        $this->jour = $jour;
+        if (!$this->creneaux->contains($creneau)) {
+            $this->creneaux[] = $creneau;
+            $creneau->setCreneauCours($this);
+        }
 
         return $this;
     }
 
-    public function getHeureDebut(): ?\DateTimeInterface
+    public function removeCreneau(Creneau $creneau): self
     {
-        return $this->heureDebut;
-    }
-
-    public function setHeureDebut(\DateTimeInterface $heureDebut): self
-    {
-        $this->heureDebut = $heureDebut;
+        if ($this->creneaux->contains($creneau)) {
+            $this->creneaux->removeElement($creneau);
+            // set the owning side to null (unless already changed)
+            if ($creneau->getCreneauCours() === $this) {
+                $creneau->setCreneauCours(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getHeureFin(): ?\DateTimeInterface
+    public function getTarifHoraire(): ?int
     {
-        return $this->heureFin;
+        return $this->tarifHoraire;
     }
 
-    public function setHeureFin(\DateTimeInterface $heureFin): self
+    public function setTarifHoraire(int $tarifHoraire): self
     {
-        $this->heureFin = $heureFin;
+        $this->tarifHoraire = $tarifHoraire;
+
+        return $this;
+    }
+
+    public function addCreneaux(Creneau $creneaux): self
+    {
+        if (!$this->creneaux->contains($creneaux)) {
+            $this->creneaux[] = $creneaux;
+            $creneaux->setCreneauCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneaux(Creneau $creneaux): self
+    {
+        if ($this->creneaux->contains($creneaux)) {
+            $this->creneaux->removeElement($creneaux);
+            // set the owning side to null (unless already changed)
+            if ($creneaux->getCreneauCours() === $this) {
+                $creneaux->setCreneauCours(null);
+            }
+        }
 
         return $this;
     }

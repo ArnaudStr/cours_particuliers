@@ -33,11 +33,6 @@ class SessionCours
     private $facture;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PrixActivite", inversedBy="sessionCours")
-     */
-    private $prixActivite;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="sessionsCours")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -90,17 +85,6 @@ class SessionCours
         return $this;
     }
 
-    public function getPrixActivite(): ?PrixActivite
-    {
-        return $this->prixActivite;
-    }
-
-    public function setPrixActivite(?PrixActivite $prixActivite): self
-    {
-        $this->prixActivite = $prixActivite;
-
-        return $this;
-    }
 
     public function getProf(): ?Prof
     {

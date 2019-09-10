@@ -2,12 +2,13 @@
 
 namespace App\Controller\Prof;
 
+use DateTime;
+
+
 use App\Entity\Prof;
+use App\Entity\Session;
 
-
-use App\Entity\PrixActivite;
 use App\Entity\CreneauCours;
-
 use App\Form\CreationCoursType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -23,43 +24,44 @@ class ProfController extends AbstractController
     /**
      * @Route("/addProposeCours/{id}", name="propose_cours")
      */
-    public function addEditCoursProf(Prof $prof, PrixActivite $prixActivite = null, CreneauCours $creneauCours = null, ObjectManager $manager, Request $request) {
+    public function addEditCoursProf(Prof $prof, ObjectManager $manager, Request $request) {
        
-        $prixActivite = new PrixActivite();
         $creneauCours = new CreneauCours();
+        $creneauCours->setProf($prof);
  
-        $form = $this->createForm(CreationCoursType::class);
+        $form = $this->createForm(CreationCoursType::class, $creneauCours);
         
         $form->handleRequest($request);
                
         if($form->isSubmitted() && $form->isValid()) {
 
-            dump($prof);
-            $prixActivite->setProf(
-                $prof
-            );
-            $prixActivite->setActivite(
-                $form->get('activite')->getData()
-            );
-            $prixActivite->setPrix(
-                $form->get('tarifHoraire')->getData()
-            );
-
-            $creneauCours->setProf(
-                $prof
-            );
-            $creneauCours->setActivite(
-                $form->get('activite')->getData()
-            );
-            $creneauCours->setDateDebut(
-                $form->get('dateDebut')->getData()
-            );
-            $creneauCours->setDateFin(
-                $form->get('dateFin')->getData()
-            );
-
-            $manager->persist($prixActivite);
             $manager->persist($creneauCours);
+            foreach ($creneauCours->getCreneaux() as $creneau){
+
+                // On prévoit les créneaux pour le prochain mois
+                for ($i=0; $i<4; $i++){
+
+                    $session = new Session();
+                    $session->setProf($prof);
+                    $session->setActivite($creneauCours->getActivite());
+
+                    $dateDebut = new DateTime();
+                    $dateDebut->modify('next '.$creneau->getJour().' +'.($i*7).' days');
+                    $dateDebut->setTime($creneau->getHeureDebut()->format('H'), $creneau->getHeureDebut()->format('i'));
+                    $session->setDateDebut($dateDebut);
+
+                    $dateFin = new DateTime();
+                    $dateFin->modify('next '.$creneau->getJour().' +'.($i*7).' days');
+
+                    $dateFin->setTime($creneau->getHeureFin()->format('H'), $creneau->getHeureFin()->format('i'));
+                    $session->setDateFin($dateFin);
+
+                    $manager->persist($session);
+
+
+                }
+            }
+
             $manager->flush();
  
             return $this->redirectToRoute('home_prof');
@@ -74,6 +76,15 @@ class ProfController extends AbstractController
      */
     public function calendar() {
         return $this->render('course/calendar.html.twig', [
+            'title' => 'Planning'
+        ]);
+    }
+
+    /**
+     * @Route("/show_course/{id}", name="showCourse")
+     */
+    public function inscriptionSession() {
+        return $this->render('course/showCourse.html.twig', [
             'title' => 'Planning'
         ]);
     }

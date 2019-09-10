@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    {% for categorie in categories %}
+        {% for activite in categorie.activites %}
+            {% for creneauCours in activite.creneauxCours %}
+                {{ creneauCours.prof.nom }}
+                <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+
+    {% for activite in activites %}
+        {% for creneauCours in activite.creneauxCours %}
+            {{ creneauCours.prof.nom }}
+            <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
+
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}
+
+{%  block javascripts %}
+{%  endblock %}

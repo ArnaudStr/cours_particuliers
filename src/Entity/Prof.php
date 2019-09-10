@@ -5,7 +5,6 @@ namespace App\Entity;
 use DateTime;
 use App\Entity\Avis;
 use App\Entity\Message;
-use App\Entity\PrixActivite;
 use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -85,10 +84,7 @@ class Prof implements UserInterface
      */
     private $avis;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PrixActivite", mappedBy="prof", orphanRemoval=true)
-     */
-    private $prixActivites;
+
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="prof", orphanRemoval=true)
@@ -120,14 +116,19 @@ class Prof implements UserInterface
      */
     private $creneauCours;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="prof", orphanRemoval=true)
+     */
+    private $sessions;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
-        $this->prixActivites = new ArrayCollection();
         $this->sessionsCours = new ArrayCollection();
         $this->dateCreation = new DateTime();
         $this->creneauCours = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -337,36 +338,8 @@ class Prof implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|PrixActivite[]
-     */
-    public function getPrixActivites(): Collection
-    {
-        return $this->prixActivites;
-    }
-
-    public function addPrixActivite(PrixActivite $prixActivite): self
-    {
-        if (!$this->prixActivites->contains($prixActivite)) {
-            $this->prixActivites[] = $prixActivite;
-            $prixActivite->setProf($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrixActivite(PrixActivite $prixActivite): self
-    {
-        if ($this->prixActivites->contains($prixActivite)) {
-            $this->prixActivites->removeElement($prixActivite);
-            // set the owning side to null (unless already changed)
-            if ($prixActivite->getProf() === $this) {
-                $prixActivite->setProf(null);
-            }
-        }
-
-        return $this;
-    }
+ 
+ 
 
     /**
      * @return Collection|SessionCours[]
@@ -472,6 +445,37 @@ class Prof implements UserInterface
             // set the owning side to null (unless already changed)
             if ($creneauCour->getProf() === $this) {
                 $creneauCour->setProf(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setProf($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getProf() === $this) {
+                $session->setProf(null);
             }
         }
 

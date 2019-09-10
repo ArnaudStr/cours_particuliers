@@ -30,13 +30,19 @@ class Activite
     private $categorie;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PrixActivite", mappedBy="activite", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="activite", orphanRemoval=true)
      */
-    private $prixActivites;
+    private $sessions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="activite", orphanRemoval=true)
+     */
+    private $creneauxCours;
 
     public function __construct()
     {
-        $this->prixActivites = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->creneauCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -68,31 +74,63 @@ class Activite
         return $this;
     }
 
+
     /**
-     * @return Collection|PrixActivite[]
+     * @return Collection|Session[]
      */
-    public function getPrixActivites(): Collection
+    public function getSessions(): Collection
     {
-        return $this->prixActivites;
+        return $this->sessions;
     }
 
-    public function addPrixActivite(PrixActivite $prixActivite): self
+    public function addSession(Session $session): self
     {
-        if (!$this->prixActivites->contains($prixActivite)) {
-            $this->prixActivites[] = $prixActivite;
-            $prixActivite->setActivite($this);
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setActivite($this);
         }
 
         return $this;
     }
 
-    public function removePrixActivite(PrixActivite $prixActivite): self
+    public function removeSession(Session $session): self
     {
-        if ($this->prixActivites->contains($prixActivite)) {
-            $this->prixActivites->removeElement($prixActivite);
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
             // set the owning side to null (unless already changed)
-            if ($prixActivite->getActivite() === $this) {
-                $prixActivite->setActivite(null);
+            if ($session->getActivite() === $this) {
+                $session->setActivite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CreneauCours[]
+     */
+    public function getCreneauxCours(): Collection
+    {
+        return $this->creneauxCours;
+    }
+
+    public function addCreneauCours(CreneauCours $creneauCours): self
+    {
+        if (!$this->creneauxCours->contains($creneauCours)) {
+            $this->creneauxCours[] = $creneauCours;
+            $creneauCours->setActivite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneauCours(CreneauCours $creneauCours): self
+    {
+        if ($this->creneauxCours->contains($creneauCours)) {
+            $this->creneauxCours->removeElement($creneauCours);
+            // set the owning side to null (unless already changed)
+            if ($creneauCours->getActivite() === $this) {
+                $creneauCours->setActivite(null);
             }
         }
 

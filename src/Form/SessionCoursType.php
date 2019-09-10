@@ -14,7 +14,6 @@ class SessionCoursType extends AbstractType
         $builder
             ->add('date')
             ->add('duree')
-            ->add('prixActivite')
         ;
     }
 
