@@ -43,6 +43,7 @@ class Activite
     {
         $this->sessions = new ArrayCollection();
         $this->creneauCours = new ArrayCollection();
+        $this->creneauxCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,6 +132,29 @@ class Activite
             // set the owning side to null (unless already changed)
             if ($creneauCours->getActivite() === $this) {
                 $creneauCours->setActivite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addCreneauxCour(CreneauCours $creneauxCour): self
+    {
+        if (!$this->creneauxCours->contains($creneauxCour)) {
+            $this->creneauxCours[] = $creneauxCour;
+            $creneauxCour->setActivite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneauxCour(CreneauCours $creneauxCour): self
+    {
+        if ($this->creneauxCours->contains($creneauxCour)) {
+            $this->creneauxCours->removeElement($creneauxCour);
+            // set the owning side to null (unless already changed)
+            if ($creneauxCour->getActivite() === $this) {
+                $creneauxCour->setActivite(null);
             }
         }
 

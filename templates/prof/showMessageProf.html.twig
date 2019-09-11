@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Messages reçus :</h1>
+
+{% set listEleves = [] %}
+{% set idEleve = null %}
+{% set msgNonLus = 0 %}
+
+{% for message in app.user.messages %}
+    {% if idEleve != message.eleve.id %}
+        {% set idEleve = message.eleve.id %}
+        {% set listEleves = listEleves|merge([idEleve]) %}
+
+        <p>Discution avec {{ message.eleve.username }}</p>
+        <p><a href="{{ path('conversation_prof', { 'idEleve':message.eleve.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
+    {% endif %}
+
+    {% if message.auteur !=  app.user.username %} 
+        {% if not message.lu %}
+        {% set msgNonLus = msgNonLus + 1 %}
+    {% endif %}
+
+{% endif %}
+
+{% endfor %}
+
+{{ msgNonLus }}
+
+{% endblock %}
+
+{% block javascripts %}
+    
+{% endblock %}

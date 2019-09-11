@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    {% for message in app.user.messages %}
+
+        <h1>{{ message.prof.nom }}</h1>
+
+        <p>{{ message.contenu }}</p>
+    {% endfor %}
+
+
+{% endblock %}
+
+{%  block javascripts %}
+{%  endblock %}

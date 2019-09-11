@@ -3,15 +3,16 @@
 namespace App\Entity;
 
 use DateTime;
+use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
 use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -98,7 +99,7 @@ class Eleve implements UserInterface
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->sessionsCours = new ArrayCollection();
-        $this->dateCreation = new DateTime();
+        $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
     }
 
     public function getId(): ?int

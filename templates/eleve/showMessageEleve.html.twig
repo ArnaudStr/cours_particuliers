@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Messages reçus :</h1>
+
+{% set listProfs = [] %}
+{% set idProf = null %}
+{% set msgNonLus = 0 %}
+
+{% for message in app.user.messages %}
+    {% if idProf != message.prof.id %}
+        {% set idProf = message.prof.id %}
+        {% set listProfs = listProfs|merge([idProf]) %}
+        {% if not message.lu %}
+            {% set msgNonLus = msgNonLus + 1 %}
+        {% endif %}
+
+        <p>Discution avec {{ message.prof.username }}</p>
+        <p><a href="{{ path('conversation_eleve', {'idProf':message.prof.id}) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
+    {% endif %}
+
+{% endfor %}
+
+{{ msgNonLus }}
+
+{% endblock %}
+
+{% block javascripts %}
+    
+{% endblock %}

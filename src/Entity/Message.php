@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeZone;
+use App\Entity\Prof;
+use App\Entity\Eleve;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,16 +31,32 @@ class Message
     private $dateEnvoi;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="messages")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $prof;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve")
      * @ORM\JoinColumn(nullable=false)
      */
     private $eleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="messages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
-    private $Prof;
+    private $auteur;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $lu;
+
+    public function __construct()
+    {
+        $this->dateEnvoi = new DateTime('now',new DateTimeZone('Europe/Paris'));
+        $this->lu = false;
+    }
 
     public function getId(): ?int
     {
@@ -67,6 +87,18 @@ class Message
         return $this;
     }
 
+    public function getProf(): ?Prof
+    {
+        return $this->prof;
+    }
+
+    public function setProf(?Prof $prof): self
+    {
+        $this->prof = $prof;
+
+        return $this;
+    }
+
     public function getEleve(): ?Eleve
     {
         return $this->eleve;
@@ -79,15 +111,28 @@ class Message
         return $this;
     }
 
-    public function getProf(): ?Prof
+    public function getAuteur(): ?string
     {
-        return $this->Prof;
+        return $this->auteur;
     }
 
-    public function setProf(?Prof $Prof): self
+    public function setAuteur(string $auteur): self
     {
-        $this->Prof = $Prof;
+        $this->auteur = $auteur;
 
         return $this;
     }
+
+    public function getLu(): ?bool
+    {
+        return $this->lu;
+    }
+
+    public function setLu(bool $lu): self
+    {
+        $this->lu = $lu;
+
+        return $this;
+    }
+
 }

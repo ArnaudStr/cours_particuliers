@@ -5,8 +5,11 @@
 {% block body %}
 
     {% for categorie in categories %}
+    {{ categorie.nom }}
         {% for activite in categorie.activites %}
             {% for creneauCours in activite.creneauxCours %}
+            {{ creneauCours.id }}
+
                 {{ creneauCours.prof.nom }}
                 <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
             {% endfor %}
@@ -15,11 +18,18 @@
 
     {% for activite in activites %}
         {% for creneauCours in activite.creneauxCours %}
+        {{ creneauCours.id }}
             {{ creneauCours.prof.nom }}
             <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
+            {% if is_granted('ROLE_ELEVE') %}
 
+                 <p><a href="{{ path('send_message_eleve', {'idProf':creneauCours.prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Envoyer un message</button></a></p>
+                
+            {% endif %}
         {% endfor %}
     {% endfor %}
+
+
 
 {% endblock %}
 

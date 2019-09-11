@@ -4,20 +4,23 @@ namespace App\Controller;
 
 use App\Entity\Prof;
 use App\Entity\Eleve;
+use App\Entity\Message;
+use App\Form\MessageType;
 use App\Form\EditProfType;
 use App\Form\EditEleveType;
 use App\Service\FileUploader;
 use App\Form\RegistrationType;
+use App\Service\MailerService;
+use App\Form\ResetPasswordType;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Form\ResetPasswordType;
-use App\Service\MailerService;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
@@ -249,7 +252,7 @@ class MemberController extends AbstractController
      */
     public function showProfileProf()
     {
-        return $this->render('member/showProfile.html.twig', [
+        return $this->render('prof/showProfileProf.html.twig', [
             'controller_name' => 'MemberController',
         ]);
     }
@@ -262,7 +265,6 @@ class MemberController extends AbstractController
         return $this->render('member/showProfile.html.twig', [
             'controller_name' => 'MemberController',
         ]);
-    }
-    
+    }   
  
 }

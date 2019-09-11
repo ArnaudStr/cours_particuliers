@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Messages reçus :</h1>
+
+
+    {% for message in app.user.messages %}
+        {% if message.auteur !=  app.user.username  %}
+            <p>Message de : {{ message.auteur }} envoyé le {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} </p>
+            <p>{{ message.contenu }}</p>
+        {% else %}
+        <p style="text-align: right">{{ message.contenu }}</p>
+        {% endif %}
+
+
+    {% endfor %}
+
+    <p><a href="{{ path('send_message_eleve', {'idProf':prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Répondre</button></a></p>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    
+{% endblock %}

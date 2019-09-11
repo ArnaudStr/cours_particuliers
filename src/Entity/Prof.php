@@ -3,16 +3,17 @@
 namespace App\Entity;
 
 use DateTime;
+use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
 use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\User\UserInterface;
 // use Symfony\Component\Validator\Constraints;
 // use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 
@@ -75,7 +76,7 @@ class Prof implements UserInterface
     private $dateCreation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="Prof", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="prof", orphanRemoval=true)
      */
     private $messages;
 
@@ -83,8 +84,6 @@ class Prof implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Avis", mappedBy="prof", orphanRemoval=true)
      */
     private $avis;
-
-
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="prof", orphanRemoval=true)
@@ -126,7 +125,7 @@ class Prof implements UserInterface
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->sessionsCours = new ArrayCollection();
-        $this->dateCreation = new DateTime();
+        $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->creneauCours = new ArrayCollection();
         $this->sessions = new ArrayCollection();
     }

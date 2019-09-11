@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+	<h1>Test message prof eleve</h1>
+
+	{{ form_start(messageForm) }}
+
+		{{form_row(messageForm.contenu) }} 
+		{{form_row(messageForm.submit) }} 
+
+	{{ form_end(messageForm) }}
+
+
+{% endblock %}
+
+{%  block javascripts %}
+{%  endblock %}

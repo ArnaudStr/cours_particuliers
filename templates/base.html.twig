@@ -66,6 +66,21 @@
                             <a class="nav-link" href="{{path('app_logout_eleve')}}">Déconnexion</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages</a>
+                        </li> 
+
+                        <li class="nav-item">
+                            <form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
+                                <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
+                                <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
+                            </form>
+                        </li>
+
                         {% elseif is_granted('ROLE_PROF') %}
 
                         <li class="nav-item">
@@ -87,14 +102,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('cours_calendar') }}">Planigramme</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('show_messages_prof')}}">Mes messages</a>
+                        </li> 
+
                         {% endif %}
                     {% endif %}
-                        <li class="nav-item">
-                            <form action='{{ path('search_result') }}' class='form-inline my-2 my-lg-2' method="GET">
-                                <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
-                                <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
-                            </form>
-                        </li>
+
                 </ul>
             </div>
         </nav>
