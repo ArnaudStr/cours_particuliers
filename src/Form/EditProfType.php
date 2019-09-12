@@ -29,7 +29,15 @@ class EditProfType extends AbstractType
             ])
 
             ->add('pictureFilename', FileType::class, [
-                'label' => 'Ajouter une image',
+                'attr' =>[
+                    'multiple' => 'multiple',
+                    'id' => 'preview',
+                    'onmousedown' => 'return false',
+                    'placeholder' => 'test',
+                    'title' => 'testTitre',
+                    'onkeydown' => 'return false'
+                ],
+                'label' => 'Modifier image',
                 // make it optional so you don't have to re-upload the PDF file
                 // everytime you edit the Product details
                 'required' => false,

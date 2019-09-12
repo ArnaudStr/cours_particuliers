@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-   {{ form_start(editForm) }}
 
+    {{form_start(editForm, {
+        'attr' :{
+            'enctype' : 'multipart/form-data',
+        }})
+    }}  
         {{form_row(editForm.nom) }}
         {{form_row(editForm.prenom) }}
         {{form_row(editForm.adresse) }}   
         {{form_row(editForm.description) }}
-        {{form_row(editForm.pictureFilename) }} 
+        <div id="prev"> </div>
+        {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
         {{form_row(editForm.submit) }} 
         {{ form_rest(editForm) }}
         
@@ -16,5 +21,51 @@
 {% endblock %}
 
 {% block javascripts %}
-    
+
+<script>
+    function miniature(fileInput, prev) {
+        function creationImage(file, prev, i) {
+             if (prev.getElementsByTagName('img').length == i) {
+                  function creationBalise() {
+                       var imgElement = document.createElement('img');
+                       imgElement.style.maxWidth = '250px';
+                       imgElement.style.maxHeight = '250px';
+                       imgElement.src = this.result;
+                       prev.appendChild(imgElement);
+                  }
+                  var reader = new FileReader();
+                  reader.addEventListener('load', creationBalise);
+                  reader.readAsDataURL(file);
+             }
+             else {
+                  var timer = setTimeout(function(){creationImage(file, prev, i);}, 250);
+             }
+        }
+
+        var allowedTypes = ['png', 'jpg', 'jpeg', 'gif'];
+        var nomFiles = [];
+        var files = fileInput.files;
+        var filesLen = files.length;
+        var imgType;
+           
+        for (var i = 0; i < filesLen; i++) {
+             nomFiles.push(files[i].name);
+             imgType = files[i].name.split('.');
+             imgType = imgType[imgType.length - 1];
+             if (allowedTypes.indexOf(imgType) != -1) {
+                  creationImage(files[i], prev, i);
+             }
+        }
+           
+        var noms = nomFiles.join(" / ");
+        prev.innerHTML = '<p>Il y a '+ filesLen +' fichier(s)<br/>'+noms+'</p>';     
+   }  
+   document.getElementById('preview').addEventListener('change', function(){
+        var fileInput = document.getElementById('preview');
+        var prev = document.getElementById('prev');
+        miniature(fileInput, prev);	
+   }, false);
+
+</script>
+
 {% endblock %}

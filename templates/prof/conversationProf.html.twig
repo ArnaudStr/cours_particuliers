@@ -5,16 +5,19 @@
 <h1>Messages reçus :</h1>
 
     {% for message in app.user.messages %}
-        {% if message.auteur !=  app.user.username  %}
+        {% if message in msgLus %}
             <p>Message de : {{ message.auteur }} envoyé le {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} </p>
             <p>{{ message.contenu }}</p>
+        {% elseif  message not in msgNonLus %}
+            <p style="text-align: right">Votre réponse envoyée le {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}}</p>
+            <p style="text-align: right">{{ message.contenu }}</p>
         {% else %}
-        <p style="text-align: right">{{ message.contenu }}</p>
-        {% message.setLu(true) %} 
+            <p style="color:red">NOUVEAU MESSAGE de : {{ message.auteur }} envoyé le {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} </p>
+            <p style="color:red">{{ message.contenu }}</p>        
         {% endif %}
     {% endfor %}
 
-    <p><a href="{{ path('send_message_eleve', {'idProf':app.user.id, 'idEleve':eleve.id}) }}"><button type="button" class="btn btn-warning btn-lg">Répondre</button></a></p>
+    <p><a href="{{ path('send_message_prof', {'idProf':app.user.id, 'idEleve':eleve.id}) }}"><button type="button" class="btn btn-warning btn-lg">Répondre</button></a></p>
 
 
 {% endblock %}

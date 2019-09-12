@@ -30,6 +30,9 @@
                             <a class="nav-link" href="{{ path('add_activite') }}">Ajouter une activité</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{path('app_admin_logout')}}">Déconnexion</a>
                         </li>
 
@@ -55,7 +58,8 @@
 
                         {% if is_granted('ROLE_ELEVE') %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('home_eleve') }}">Acceuil</a>
+                            {# <a class="nav-link" href="{{ path('home_eleve', {'id':app.user.id}) }}">Acceuil</a> #}
+                            <a class="nav-link" href="{{ path('home_eleve') }}">Acceuil</a> 
                         </li>
 
                         <li class="nav-item">
@@ -67,12 +71,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages</a>
+                            {# <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages {{ nonLus }}</a> #}
+                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages </a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages</a>
-                        </li> 
 
                         <li class="nav-item">
                             <form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">

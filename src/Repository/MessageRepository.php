@@ -2,9 +2,13 @@
 
 namespace App\Repository;
 
+use DateTime;
+use App\Entity\Eleve;
 use App\Entity\Message;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+// use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 
 /**
  * @method Message|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +51,54 @@ class MessageRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllToDelete(): array
+    {
+        $date = new DateTime('now -30 days');
+        // automatically knows to select Products
+        // the "p" is an alias you'll use in the rest of the query
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.dateEnvoi < :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+
+    }
+
+
+    // SELECT count(*) from eleve e, message m
+	// where e.id = m.eleve_id
+	// and e.username != m.auteur
+    // and m.lu = 0
+
+    public function findNonLusEleve(Eleve $eleve): array
+    {
+
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT count(m)
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.auteur != :eleveUsername
+            AND m.lu = 0'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        // dd($query->execute());
+        // returns an array of Product objects
+        return $query->getOneorNullresult();
+
+        // $qb = $this->createQueryBuilder('m')
+        //         ->andWhere('m.eleve = :eleve')
+        //         ->andWhere('m.auteur != :eleveUsername')
+        //         ->andWhere('m.lu = 0')
+                // ->setParameter('eleveId', $eleve->getId())
+                // ->setParameter('eleveId', $eleve->getUsername())
+        //         ->getQuery()
+        //         ->getResult();
+
+        // return count($qb);
+
+    }
 }

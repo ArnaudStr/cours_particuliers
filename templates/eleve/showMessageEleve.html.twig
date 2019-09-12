@@ -12,13 +12,17 @@
     {% if idProf != message.prof.id %}
         {% set idProf = message.prof.id %}
         {% set listProfs = listProfs|merge([idProf]) %}
-        {% if not message.lu %}
-            {% set msgNonLus = msgNonLus + 1 %}
-        {% endif %}
 
         <p>Discution avec {{ message.prof.username }}</p>
-        <p><a href="{{ path('conversation_eleve', {'idProf':message.prof.id}) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
+        <p><a href="{{ path('conversation_eleve', { 'idProf':message.prof.id, 'idEleve':app.user.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
     {% endif %}
+
+    {% if message.auteur !=  app.user.username %} 
+        {% if not message.lu %}
+        {% set msgNonLus = msgNonLus + 1 %}
+    {% endif %}
+
+{% endif %}
 
 {% endfor %}
 

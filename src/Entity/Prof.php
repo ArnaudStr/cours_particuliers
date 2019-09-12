@@ -10,15 +10,15 @@ use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-// use Symfony\Component\Validator\Constraints;
-// use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProfRepository")
+ * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
 class Prof implements UserInterface
 {

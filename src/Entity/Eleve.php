@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
@@ -338,14 +339,15 @@ class Eleve implements UserInterface
 
     public function getPictureFilename(): ?string
     {
+        if(!$this->pictureFilename){
+            return "default.jpg";
+        }
         return $this->pictureFilename;
     }
 
     public function setPictureFilename(?string $pictureFilename): self
     {
-        if (!is_null($pictureFilename)) {
-            $this->pictureFilename = $pictureFilename;
-        }
+        $this->pictureFilename = $pictureFilename;
 
         return $this;
     }

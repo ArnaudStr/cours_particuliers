@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
+use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use App\Form\ActiviteType;
 use App\Form\CategorieType;
 use App\Form\RegistrationFormType;
 use App\Security\AdminAuthenticator;
-use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -158,5 +159,24 @@ class AdminController extends AbstractController
         return $this->render('course/addEditActivity.html.twig', ['form' => $form->createView(),
             'title' => $title, 'editMode' => $activite->getId() != null, 'activite' => $activite
         ]);
+    }
+
+    /**
+     * @Route("/deleteMessages", name="delete_messages")
+     */
+    public function deleteMessages(ObjectManager $manager) {
+
+        $messages = $this->getDoctrine()
+        ->getRepository(Message::class)
+        ->findAllToDelete();  
+
+        foreach ($messages as $message) {
+            $manager->remove($message);
+        }
+
+        $manager->flush();
+
+        return $this->redirectToRoute('admin_home');
+
     }
 }

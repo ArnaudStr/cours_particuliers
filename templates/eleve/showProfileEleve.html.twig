@@ -9,9 +9,8 @@
     <p>Adresse : {{ app.user.adresse }}</p>
     <p>Email : {{ app.user.email }}</p>
     <p>Photo : {{ app.user.pictureFilename }} </p>
-    <p>Description : {{ app.user.description }}</p>
     <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
         
-    <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier mon profil</button></a></p>
+    <p><a href="{{ path('edit_eleve', {'id':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier mon profil</button></a></p>
 
 {% endblock %}

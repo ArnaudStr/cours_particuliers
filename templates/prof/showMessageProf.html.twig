@@ -14,7 +14,7 @@
         {% set listEleves = listEleves|merge([idEleve]) %}
 
         <p>Discution avec {{ message.eleve.username }}</p>
-        <p><a href="{{ path('conversation_prof', { 'idEleve':message.eleve.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
+        <p><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':message.eleve.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
     {% endif %}
 
     {% if message.auteur !=  app.user.username %} 
