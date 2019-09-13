@@ -2,14 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Eleve;
-use App\Entity\Message;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-class HomeController extends AbstractController
+class VisitorController extends AbstractController
 {
 
     /**
@@ -17,7 +14,7 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        return $this->render('home/index.html.twig', [
+        return $this->render('visitor/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
@@ -36,22 +33,4 @@ class HomeController extends AbstractController
     //     ]);
     // }
 
-
-    /**
-     * @Route("/eleve/", name="home_eleve")
-     */
-    public function indexEleve()
-    {
-        return $this->render('eleve/indexEleve.html.twig', [
-        ]);
-    }
-
-    /**
-     * @Route("/prof/", name="home_prof")
-     */
-    public function indexProf()
-    {
-        return $this->render('prof/indexProf.html.twig', [
-        ]);
-    }
 }

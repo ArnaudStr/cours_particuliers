@@ -113,12 +113,7 @@ class Prof implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="prof", orphanRemoval=true)
      */
-    private $creneauCours;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="prof", orphanRemoval=true)
-     */
-    private $sessions;
+    private $creneauxCours;
 
     public function __construct()
     {
@@ -126,8 +121,7 @@ class Prof implements UserInterface
         $this->avis = new ArrayCollection();
         $this->sessionsCours = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
-        $this->creneauCours = new ArrayCollection();
-        $this->sessions = new ArrayCollection();
+        $this->creneauxCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -422,62 +416,32 @@ class Prof implements UserInterface
     /**
      * @return Collection|CreneauCours[]
      */
-    public function getCreneauCours(): Collection
+    public function getCreneauxCours(): Collection
     {
-        return $this->creneauCours;
+        return $this->creneauxCours;
     }
 
-    public function addCreneauCour(CreneauCours $creneauCour): self
+    public function addCreneauCours(CreneauCours $creneauCours): self
     {
-        if (!$this->creneauCours->contains($creneauCour)) {
-            $this->creneauCours[] = $creneauCour;
-            $creneauCour->setProf($this);
+        if (!$this->creneauxCours->contains($creneauCours)) {
+            $this->creneauxCours[] = $creneauCours;
+            $creneauCours->setProf($this);
         }
 
         return $this;
     }
 
-    public function removeCreneauCour(CreneauCours $creneauCour): self
+    public function removeCreneauCours(CreneauCours $creneauCours): self
     {
-        if ($this->creneauCours->contains($creneauCour)) {
-            $this->creneauCours->removeElement($creneauCour);
+        if ($this->creneauxCours->contains($creneauCours)) {
+            $this->creneauxCours->removeElement($creneauCours);
             // set the owning side to null (unless already changed)
-            if ($creneauCour->getProf() === $this) {
-                $creneauCour->setProf(null);
+            if ($creneauCours->getProf() === $this) {
+                $creneauCours->setProf(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection|Session[]
-     */
-    public function getSessions(): Collection
-    {
-        return $this->sessions;
-    }
-
-    public function addSession(Session $session): self
-    {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setProf($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSession(Session $session): self
-    {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
-            // set the owning side to null (unless already changed)
-            if ($session->getProf() === $this) {
-                $session->setProf(null);
-            }
-        }
-
-        return $this;
-    }
 }

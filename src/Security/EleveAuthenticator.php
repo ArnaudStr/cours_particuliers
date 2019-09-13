@@ -38,7 +38,7 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'app_login_eleve' === $request->attributes->get('_route')
+        return 'login_eleve' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 

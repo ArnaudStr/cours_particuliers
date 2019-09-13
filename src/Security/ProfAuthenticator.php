@@ -38,7 +38,7 @@ class ProfAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'app_login_prof' === $request->attributes->get('_route')
+        return 'login_prof' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -90,6 +90,6 @@ class ProfAuthenticator extends AbstractFormLoginAuthenticator
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate('app_login_prof');
+        return $this->urlGenerator->generate('login_prof');
     }
 }

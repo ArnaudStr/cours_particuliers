@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    {% for creneauCours in app.user.creneauxCours %}
+        <p><a href="{{ path('edit_propose_cours', {'idProf':app.user.id, 'idCours':creneauCours.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier le cours {{ creneauCours }}</button></a></p>
+    {% endfor %}
+
+    <p><a href="{{ path('add_propose_cours', {'idProf':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p>
+
+{% endblock %}
+
+{% block javascripts %}
+    
+{% endblock %}

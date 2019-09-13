@@ -9,20 +9,21 @@ use DateTimeZone;
 use App\Entity\Prof;
 
 use App\Entity\Eleve;
+use App\Entity\Creneau;
 use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditProfType;
 use App\Entity\CreneauCours;
 use App\Form\CreationCoursType;
-use Symfony\Component\Filesystem\Filesystem;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 /**
@@ -31,8 +32,45 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ProfController extends AbstractController
 {
 
+    
     /**
-     * @Route("/showProfile", name="show_profile_prof")
+     * @Route("/", name="home_prof")
+     */
+    public function indexProf()
+    {
+        return $this->render('prof/indexProf.html.twig', [
+        ]);
+    }
+
+    /**
+     * @Route("/loginProf", name="login_prof")
+     */
+    public function loginProf(AuthenticationUtils $authenticationUtils)
+    {
+        // if ($this->getUser()) {
+        //    $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/loginProf.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/logoutProf", name="logout_prof")
+     */
+    public function logoutProf() {
+        
+        return $this->redirectToRoute("home");
+        // return $this->redirectToRoute("login_prof");
+        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
+    /**
+     * @Route("/showProfileProf", name="show_profile_prof")
      */
     public function showProfileProf()
     {
@@ -98,43 +136,103 @@ class ProfController extends AbstractController
         ]);
     }
 
+
+
+
+
+    public function ajoutSessions($nbSemaines, Creneau $creneau, ObjectManager $manager){
+        for ($i=0; $i<$nbSemaines; $i++){
+
+            $session = new Session();
+            $session->setCreneau($creneau);
+
+            // On crée la crée la session pour la semaine suivante
+            $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
+            $dateDebut->modify('next '.$creneau->getJour().' +'.($i*7).' days');
+            $dateDebut->setTime($creneau->getHeureDebut()->format('H'), $creneau->getHeureDebut()->format('i'));
+            
+            $session->setDateDebut($dateDebut);
+
+            $dateFin = new DateTime('now',new DateTimeZone('Europe/Paris'));
+            $dateFin->modify('next '.$creneau->getJour().' +'.($i*7).' days');
+            $dateFin->setTime($creneau->getHeureFin()->format('H'), $creneau->getHeureFin()->format('i'));
+        
+            $session->setDateFin($dateFin);
+
+            $manager->persist($session);
+        }
+    }
+
     /**
-     * @Route("/addProposeCours/{id}", name="propose_cours")
+     * @Route("/addProposeCours/{idProf}", name="add_propose_cours")
+     * @Route("/editProposeCours/{idProf}/{idCours}", name="edit_propose_cours")
+     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @ParamConverter("creneauCours", options={"id" = "idCours"})
      */
-    public function addEditCoursProf(Prof $prof, ObjectManager $manager, Request $request) {
+    public function addEditCoursProf(Prof $prof, CreneauCours $creneauCours = null, ObjectManager $manager, Request $request) {
        
-        $creneauCours = new CreneauCours();
-        $creneauCours->setProf($prof);
- 
+        $modif = true;
+
+        // si $creaneauCours est null (add)
+        if (!$creneauCours){
+            $modif = false;
+            $creneauCours = new CreneauCours();
+            $creneauCours->setProf($prof);
+            $title = 'Ajout d\'un cours';
+        }
+        else{
+            $title = 'Modification de cours '.$creneauCours;
+            $creneauCoursAvantForm = $creneauCours->getCreneaux();
+            $idCreneauCoursAvantForm = [];
+            foreach ($creneauCoursAvantForm as $creneauxAvantForm){
+                array_push($idCreneauCoursAvantForm, $creneauxAvantForm->getId());
+            }
+        }
+
         $form = $this->createForm(CreationCoursType::class, $creneauCours);
         
         $form->handleRequest($request);
                
         if($form->isSubmitted() && $form->isValid()) {
 
+            // On met les creneaux dans le cours
             $manager->persist($creneauCours);
+
+            // On parcours les disponibilités du prof
             foreach ($creneauCours->getCreneaux() as $creneau){
 
-                // On prévoit les créneaux pour le prochain mois
-                for ($i=0; $i<4; $i++){
+                if (!$modif){
 
-                    $session = new Session();
-                    $session->setProf($prof);
-                    $session->setActivite($creneauCours->getActivite());
+                    $this->ajoutSessions(4, $creneau, $manager);
+                }
 
-                    $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
-                    $dateDebut->modify('next '.$creneau->getJour().' +'.($i*7).' days');
-                    $dateDebut->setTime($creneau->getHeureDebut()->format('H'), $creneau->getHeureDebut()->format('i'));
-                    $session->setDateDebut($dateDebut);
+                else{
 
-                    $dateFin = new DateTime('now',new DateTimeZone('Europe/Paris'));
-                    $dateFin->modify('next '.$creneau->getJour().' +'.($i*7).' days');
+                    foreach ($creneauCours->getCreneaux() as $creneau){
 
-                    $dateFin->setTime($creneau->getHeureFin()->format('H'), $creneau->getHeureFin()->format('i'));
-                    $session->setDateFin($dateFin);
+                        $creneauCoursApresForm = $creneauCours->getCreneaux();
+                        $idCreneauCoursApresForm = [];
+                        foreach ($creneauCoursApresForm as $creneauxApresForm){
+                            array_push($idCreneauCoursApresForm, $creneauxApresForm->getId());
+                        }
 
-                    $manager->persist($session);
+                        // Si c'est un nouveau créneau
+                        if (!in_array($creneau->getId(), $idCreneauCoursAvantForm))
+                        {
+                            $this->ajoutSessions(4, $creneau, $manager);
 
+
+                        }
+                    }
+
+                    foreach ($creneauCoursAvantForm as $creneau){
+
+                        // Si c'est un ancien creneau qui a été modifié / supprimé
+                        if (!in_array($creneau->getId(), $idCreneauCoursApresForm))
+                        {
+                            $manager->remove($creneau);
+                        }
+                    }
 
                 }
             }
@@ -145,6 +243,16 @@ class ProfController extends AbstractController
             // return $this->redirectToRoute('showInfosessionCours', ['id' => $sessionCours->getId()]);
         }
         return $this->render('course/addEditCreationCours.html.twig', ['form' => $form->createView(),
+        'title' => $title, 'editMode' => $modif, 'cours' => $creneauCours
+        ]);
+    }
+
+    /**
+     * @Route("/showListeCours", name="show_liste_cours")
+     */
+    public function showListeCours() {
+        return $this->render('prof/showListeCoursProf.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 
@@ -166,7 +274,7 @@ class ProfController extends AbstractController
         ]);
     }
 
-        /**
+    /**
      * @Route("/sendMessageProf/{idProf}/{idEleve}", name="send_message_prof")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})

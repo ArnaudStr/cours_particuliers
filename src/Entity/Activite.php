@@ -30,11 +30,6 @@ class Activite
     private $categorie;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="activite", orphanRemoval=true)
-     */
-    private $sessions;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="activite", orphanRemoval=true)
      */
     private $creneauxCours;
@@ -42,7 +37,6 @@ class Activite
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
-        $this->creneauCours = new ArrayCollection();
         $this->creneauxCours = new ArrayCollection();
     }
 
@@ -74,7 +68,6 @@ class Activite
 
         return $this;
     }
-
 
     /**
      * @return Collection|Session[]
@@ -138,26 +131,4 @@ class Activite
         return $this;
     }
 
-    public function addCreneauxCour(CreneauCours $creneauxCour): self
-    {
-        if (!$this->creneauxCours->contains($creneauxCour)) {
-            $this->creneauxCours[] = $creneauxCour;
-            $creneauxCour->setActivite($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreneauxCour(CreneauCours $creneauxCour): self
-    {
-        if ($this->creneauxCours->contains($creneauxCour)) {
-            $this->creneauxCours->removeElement($creneauxCour);
-            // set the owning side to null (unless already changed)
-            if ($creneauxCour->getActivite() === $this) {
-                $creneauxCour->setActivite(null);
-            }
-        }
-
-        return $this;
-    }
 }

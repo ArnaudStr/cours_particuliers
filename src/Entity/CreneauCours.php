@@ -25,13 +25,13 @@ class CreneauCours
     private $prof;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Activite")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="creneauCours")
      * @ORM\JoinColumn(nullable=false)
      */
     private $activite;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="creneauCours", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="creneauCours",cascade={"persist"}, orphanRemoval=true)
      */
     private $creneaux;
 
@@ -120,27 +120,12 @@ class CreneauCours
         return $this;
     }
 
-    public function addCreneaux(Creneau $creneaux): self
-    {
-        if (!$this->creneaux->contains($creneaux)) {
-            $this->creneaux[] = $creneaux;
-            $creneaux->setCreneauCours($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreneaux(Creneau $creneaux): self
-    {
-        if ($this->creneaux->contains($creneaux)) {
-            $this->creneaux->removeElement($creneaux);
-            // set the owning side to null (unless already changed)
-            if ($creneaux->getCreneauCours() === $this) {
-                $creneaux->setCreneauCours(null);
-            }
-        }
-
-        return $this;
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return $this->getActivite()->getNom();
     }
 
 }

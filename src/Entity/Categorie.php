@@ -80,4 +80,5 @@ class Categorie
 
         return $this;
     }
+    
 }

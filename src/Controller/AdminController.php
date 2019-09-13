@@ -8,7 +8,6 @@ use App\Entity\Activite;
 use App\Entity\Categorie;
 use App\Form\ActiviteType;
 use App\Form\CategorieType;
-use App\Form\RegistrationFormType;
 use App\Security\AdminAuthenticator;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +26,7 @@ class AdminController extends AbstractController
 {
 
     /**
-     * @Route("/", name="admin_home")
+     * @Route("/", name="home_admin")
      */
     public function index()
     {
@@ -37,12 +36,12 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/register", name="app_admin_register")
+     * @Route("/register", name="register_admin")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator): Response
     {
         $user = new Admin();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationAdminype::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,7 +75,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="app_admin_login")
+     * @Route("/login", name="login_admin")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -89,11 +88,11 @@ class AdminController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/loginAdmin.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
-     * @Route("/logout", name="app_admin_logout")
+     * @Route("/logout", name="logout_admin")
      */
     public function logout()
     {
@@ -101,9 +100,11 @@ class AdminController extends AbstractController
 
     }
 
+
+
     /**
-     * @Route("/add/categorie", name="add_categorie")
-     * @Route("/edit/categorie/{id}", name="edit_categorie")
+     * @Route("/addCategorie", name="add_categorie")
+     * @Route("/editCategorie/{id}", name="edit_categorie")
      */
     public function addEditCategorie(Categorie $categorie = null, ObjectManager $manager, Request $request) {
         if(!$categorie) {
@@ -112,7 +113,7 @@ class AdminController extends AbstractController
         }
  
         else {
-            $title = 'Modification de la categorie '.$categorie;
+            $title = 'Modification de la categorie '.$categorie->getNom();
         }
  
         $form = $this->createForm(CategorieType::class, $categorie);
@@ -123,17 +124,55 @@ class AdminController extends AbstractController
             $manager->persist($categorie);
             $manager->flush();
  
-            return $this->redirectToRoute('admin_home');
+            return $this->redirectToRoute('home_admin');
             // return $this->redirectToRoute('showInfoCategorie', ['id' => $categorie->getId()]);
         }
-        return $this->render('course/addEditCategory.html.twig', ['form' => $form->createView(),
+        return $this->render('admin/addEditCategory.html.twig', ['form' => $form->createView(),
             'title' => $title, 'editMode' => $categorie->getId() != null, 'categorie' => $categorie
         ]);
     }
 
     /**
-     * @Route("/add_activite", name="add_activite")
-     * @Route("/edit/activite/{id}", name="edit_activite")
+     * @Route("/deleteCategorie/{id}", name="delete_categorie")
+     */
+    public function deleteCategorie(Categorie $categorie, ObjectManager $manager) {
+        $manager->remove($categorie);
+        $manager->flush();
+  
+        return $this->redirectToRoute('show_list_activites_categories');
+    }
+
+    /**
+     * @Route("/showListActivitesCategories", name="show_list_activites_categories")
+     */
+    public function showListActivitesCategories() {
+        // On enregistre les formations
+        $all_categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
+        // Appel à la vue d'affichage des formations
+        return $this->render('admin/showListCategories.html.twig', [
+            'title' => 'Liste des catégories',
+            'categories' => $all_categories
+        ]);
+    }
+
+
+    // /**
+    //  * @Route("/showListActivites", name="show_list_activites")
+    //  */
+    // public function showListActivities() {
+    //     // On enregistre les formations
+    //     $all_activities = $this->getDoctrine()->getRepository(Activite::class)->findAll();
+    //     // Appel à la vue d'affichage des formations
+    //     return $this->render('admin/showListActivities.html.twig', [
+    //         'title' => 'Liste des activités',
+    //         'activites' => $all_activities
+    //     ]);
+    // }
+
+
+    /**
+     * @Route("/addActivite", name="add_activite")
+     * @Route("/editActivite/{id}", name="edit_activite")
      */
     public function addEditActivity(Activite $activite = null, ObjectManager $manager, Request $request) {
         if(!$activite) {
@@ -142,7 +181,7 @@ class AdminController extends AbstractController
         }
  
         else {
-            $title = 'Modification de la activite '.$activite;
+            $title = 'Modification de la activite '.$activite->getNom();
         }
  
         $form = $this->createForm(ActiviteType::class, $activite);
@@ -153,12 +192,22 @@ class AdminController extends AbstractController
             $manager->persist($activite);
             $manager->flush();
  
-            return $this->redirectToRoute('admin_home');
+            return $this->redirectToRoute('home_admin');
             // return $this->redirectToRoute('showInfoActivite', ['id' => $activite->getId()]);
         }
-        return $this->render('course/addEditActivity.html.twig', ['form' => $form->createView(),
+        return $this->render('admin/addEditActivity.html.twig', ['form' => $form->createView(),
             'title' => $title, 'editMode' => $activite->getId() != null, 'activite' => $activite
         ]);
+    }
+    
+    /**
+     * @Route("/deleteActivite/{id}", name="delete_activite")
+     */
+    public function deleteActivite(Activite $activite, ObjectManager $manager) {
+        $manager->remove($activite);
+        $manager->flush();
+  
+        return $this->redirectToRoute('show_list_activites_categories');
     }
 
     /**
@@ -176,7 +225,7 @@ class AdminController extends AbstractController
 
         $manager->flush();
 
-        return $this->redirectToRoute('admin_home');
+        return $this->redirectToRoute('home_admin');
 
     }
 }

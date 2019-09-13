@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,9 +34,19 @@ class Creneau
     private $heureFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CreneauCours", inversedBy="creneaux")
+     * @ORM\ManyToOne(targetEntity="App\Entity\CreneauCours", inversedBy="creneau")
      */
     private $creneauCours;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="creneau", orphanRemoval=true)
+     */
+    private $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -85,6 +97,37 @@ class Creneau
     public function setCreneauCours(?CreneauCours $creneauCours): self
     {
         $this->creneauCours = $creneauCours;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setCreneau($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getCreneau() === $this) {
+                $session->setCreneau(null);
+            }
+        }
 
         return $this;
     }

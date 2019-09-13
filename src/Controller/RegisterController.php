@@ -4,31 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Prof;
 use App\Entity\Eleve;
-use App\Entity\Message;
-use App\Form\MessageType;
-use App\Form\EditProfType;
-use App\Form\EditEleveType;
-use App\Service\FileUploader;
 use App\Form\RegistrationType;
 use App\Service\MailerService;
-use App\Form\ResetPasswordType;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
-class MemberController extends AbstractController
+class RegisterController extends AbstractController
 {
 
      /**
-     * @Route("/register", name="app_register")
+     * @Route("/register", name="register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  MailerService $mailerService, \Swift_Mailer $mailer): Response
     // public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
@@ -45,7 +35,7 @@ class MemberController extends AbstractController
 
                 $user->setRoles(["ROLE_ELEVE"]);
 
-                $route = $this->redirectToRoute('app_login_eleve');
+                $route = $this->redirectToRoute('login_eleve');
             }
 
             else {
@@ -66,7 +56,7 @@ class MemberController extends AbstractController
 
                 $user->setRoles(["ROLE_PROF"]);
 
-                $route = $this->redirectToRoute('app_login_prof');
+                $route = $this->redirectToRoute('login_prof');
             }
     
             $user->setPictureFilename('default.jpg');
@@ -110,7 +100,7 @@ class MemberController extends AbstractController
             return $route;
         }
 
-        return $this->render('registration/register2.html.twig', [
+        return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
@@ -128,7 +118,7 @@ class MemberController extends AbstractController
     //        $user->setEnabled(true);
     //        $em->persist($user);
     //        $em->flush();
-    //        return $this->redirectToRoute('app_login_prof');
+    //        return $this->redirectToRoute('login_prof');
     //     } else {
     //         return $this->render('registration/token-expire.html.twig');
     //     }
@@ -143,7 +133,7 @@ class MemberController extends AbstractController
     //     $user = $this->getDoctrine()->getRepository(Prof::class)->findOneBy(['email' => $email]);
     //     if($user === null) {
     //         $this->addFlash('not-user-exist', 'utilisateur non trouvé');
-    //         return $this->redirectToRoute('app_register');
+    //         return $this->redirectToRoute('register');
     //     }
     //     $user->setConfirmationToken($this->generateToken());
     //     $em->persist($user);
@@ -152,7 +142,7 @@ class MemberController extends AbstractController
     //     $email = $user->getEmail();
     //     $username = $user->getUsername();
     //     $mailerService->sendToken($mailer, $token, $email, $username, 'register.html.twig');
-    //     return $this->redirectToRoute('app_login_prof');
+    //     return $this->redirectToRoute('login_prof');
     // }
 
     private function generateToken()

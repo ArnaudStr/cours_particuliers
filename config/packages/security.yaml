@@ -55,10 +55,10 @@ security:
                     - App\Security\EleveAuthenticator
             # user_checker: App\Security\UserChecker
             logout:
-                path:   app_logout_eleve
+                path: logout_eleve
                 # invalidate_session: true
 
-                # target: app_login_eleve
+                # target: login_eleve
             # remember_me:
             #     secret:   '%kernel.secret%'
             #     lifetime: 604800 # 1 week in seconds
@@ -72,10 +72,10 @@ security:
                     - App\Security\ProfAuthenticator
             # user_checker: App\Security\UserChecker
             logout:
-                path:   app_logout_prof
+                path: logout_prof
                 # invalidate_session: true
 
-                # target: app_login_prof
+                # target: login_prof
             # remember_me:
             #     secret:   '%kernel.secret%'
             #     lifetime: 604800 # 1 week in seconds
@@ -88,7 +88,7 @@ security:
                 authenticators:
                     - App\Security\AdminAuthenticator
             logout:
-                path: app_admin_logout
+                path: logout_admin
                 # where to redirect after logout
             # target: apzp_any_route
         default:

@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-// use App\Form\CreneauType;
 use App\Entity\Creneau;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +20,7 @@ class CreneauType extends AbstractType
                 'choices' => [  'Lundi' => "monday",
                                 'Mardi' => "tuesday",
                                 'Mercredi' => "wednesday",
-                                'Jeudi' => "tuesday",
+                                'Jeudi' => "thursday",
                                 'Vendredi' => "friday",
                                 'Samedi' => "saturday",
                                 'Dimanche' => "sunday",

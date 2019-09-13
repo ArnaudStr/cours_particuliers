@@ -38,11 +38,8 @@ class EditProfType extends AbstractType
                     'onkeydown' => 'return false'
                 ],
                 'label' => 'Modifier image',
-                // make it optional so you don't have to re-upload the PDF file
-                // everytime you edit the Product details
                 'required' => false,
                 'data_class' => null,
-                // 'mapped' => false
             ])
             
             ->add('submit', SubmitType::class, [

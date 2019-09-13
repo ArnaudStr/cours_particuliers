@@ -24,16 +24,13 @@
                     {% if is_granted('ROLE_ADMIN') %}
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('add_categorie') }}">Ajouter une catégorie</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('add_activite') }}">Ajouter une activité</a>
+                            <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activités</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_admin_logout')}}">Déconnexion</a>
+                            <a class="nav-link" href="{{path('logout_admin')}}">Déconnexion</a>
                         </li>
 
                     {% else %}
@@ -43,15 +40,15 @@
                                 <a class="nav-link" href="{{ path('home') }}">Acceuil</a>
                             </li>
                             <li>
-                                <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                                <a class="nav-link" href="{{ path('register') }}">Inscription</a>
                             </li> 
 
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_login_prof') }}">Connexion professeur</a>
+                                <a class="nav-link" href="{{ path('login_prof') }}">Connexion professeur</a>
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_login_eleve') }}">Connexion élève</a>
+                                <a class="nav-link" href="{{ path('login_eleve') }}">Connexion élève</a>
                             </li>
 
                         {% endif %}
@@ -67,7 +64,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_logout_eleve')}}">Déconnexion</a>
+                            <a class="nav-link" href="{{path('logout_eleve')}}">Déconnexion</a>
                         </li>
 
                         <li class="nav-item">
@@ -93,11 +90,11 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('propose_cours', {'id':app.user.id}) }}">Proposer un cours</a>
+                            <a class="nav-link" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{path('app_logout_prof')}}">Déconnexion</a>
+                            <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
                         </li>
 
                         <li class="nav-item">
