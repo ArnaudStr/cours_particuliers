@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
-use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -81,11 +80,6 @@ class Eleve implements UserInterface
     private $avis;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="eleve", orphanRemoval=true)
-     */
-    private $sessionsCours;
-
-    /**
      * @ORM\Column(type="string")
      * @Assert\File(
      *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
@@ -95,12 +89,17 @@ class Eleve implements UserInterface
      */
     private $pictureFilename;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="eleve")
+     */
+    private $sessions;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
-        $this->sessionsCours = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
+        $this->sessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -298,45 +297,6 @@ class Eleve implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|SessionCours[]
-     */
-    public function getSessionsCours(): Collection
-    {
-        return $this->sessionsCours;
-    }
-
-    public function addSessionsCour(SessionCours $sessionsCour): self
-    {
-        if (!$this->sessionsCours->contains($sessionsCour)) {
-            $this->sessionsCours[] = $sessionsCour;
-            $sessionsCour->setEleve($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSessionsCour(SessionCours $sessionsCour): self
-    {
-        if ($this->sessionsCours->contains($sessionsCour)) {
-            $this->sessionsCours->removeElement($sessionsCour);
-            // set the owning side to null (unless already changed)
-            if ($sessionsCour->getEleve() === $this) {
-                $sessionsCour->setEleve(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * toString
-     * @return string
-     */
-    public function __toString(){
-        return $this->getPrenom().' '.$this->getNom();
-    }
-
     public function getPictureFilename(): ?string
     {
         if(!$this->pictureFilename){
@@ -348,6 +308,45 @@ class Eleve implements UserInterface
     public function setPictureFilename(?string $pictureFilename): self
     {
         $this->pictureFilename = $pictureFilename;
+
+        return $this;
+    }  
+    
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return $this->getPrenom().' '.$this->getNom();
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getEleve() === $this) {
+                $session->setEleve(null);
+            }
+        }
 
         return $this;
     }

@@ -34,9 +34,9 @@ class Creneau
     private $heureFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CreneauCours", inversedBy="creneau")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="creneau")
      */
-    private $creneauCours;
+    private $cours;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="creneau", orphanRemoval=true)
@@ -89,14 +89,14 @@ class Creneau
         return $this;
     }
 
-    public function getCreneauCours(): ?CreneauCours
+    public function getCours(): ?Cours
     {
-        return $this->creneauCours;
+        return $this->cours;
     }
 
-    public function setCreneauCours(?CreneauCours $creneauCours): self
+    public function setCours(?Cours $cours): self
     {
-        $this->creneauCours = $creneauCours;
+        $this->cours = $cours;
 
         return $this;
     }

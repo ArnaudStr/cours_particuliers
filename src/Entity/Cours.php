@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CreneauCoursRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CoursRepository")
  */
-class CreneauCours
+class Cours
 {
     /**
      * @ORM\Id()
@@ -19,19 +19,19 @@ class CreneauCours
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="creneauCours")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="cours")
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="creneauCours")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="cours")
      * @ORM\JoinColumn(nullable=false)
      */
     private $activite;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="creneauCours",cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="cours",cascade={"persist"}, orphanRemoval=true)
      */
     private $creneaux;
 
@@ -39,6 +39,21 @@ class CreneauCours
      * @ORM\Column(type="integer")
      */
     private $tarifHoraire;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $webcam;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $domicile;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $chezEleve;
 
     public function __construct()
     {
@@ -89,7 +104,7 @@ class CreneauCours
     {
         if (!$this->creneaux->contains($creneau)) {
             $this->creneaux[] = $creneau;
-            $creneau->setCreneauCours($this);
+            $creneau->setCours($this);
         }
 
         return $this;
@@ -100,8 +115,8 @@ class CreneauCours
         if ($this->creneaux->contains($creneau)) {
             $this->creneaux->removeElement($creneau);
             // set the owning side to null (unless already changed)
-            if ($creneau->getCreneauCours() === $this) {
-                $creneau->setCreneauCours(null);
+            if ($creneau->getCours() === $this) {
+                $creneau->setCours(null);
             }
         }
 
@@ -126,6 +141,42 @@ class CreneauCours
      */
     public function __toString(){
         return $this->getActivite()->getNom();
+    }
+
+    public function getWebcam(): ?bool
+    {
+        return $this->webcam;
+    }
+
+    public function setWebcam(bool $webcam): self
+    {
+        $this->webcam = $webcam;
+
+        return $this;
+    }
+
+    public function getDomicile(): ?bool
+    {
+        return $this->domicile;
+    }
+
+    public function setDomicile(bool $domicile): self
+    {
+        $this->domicile = $domicile;
+
+        return $this;
+    }
+
+    public function getChezEleve(): ?bool
+    {
+        return $this->chezEleve;
+    }
+
+    public function setChezEleve(bool $chezEleve): self
+    {
+        $this->chezEleve = $chezEleve;
+
+        return $this;
     }
 
 }

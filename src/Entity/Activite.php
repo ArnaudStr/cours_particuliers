@@ -30,14 +30,14 @@ class Activite
     private $categorie;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="activite", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Cours", mappedBy="activite", orphanRemoval=true)
      */
-    private $creneauxCours;
+    private $coursS;
 
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
-        $this->creneauxCours = new ArrayCollection();
+        $this->coursS = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,30 +101,30 @@ class Activite
     }
 
     /**
-     * @return Collection|CreneauCours[]
+     * @return Collection|Cours[]
      */
-    public function getCreneauxCours(): Collection
+    public function getCoursS(): Collection
     {
-        return $this->creneauxCours;
+        return $this->coursS;
     }
 
-    public function addCreneauCours(CreneauCours $creneauCours): self
+    public function addCours(Cours $cours): self
     {
-        if (!$this->creneauxCours->contains($creneauCours)) {
-            $this->creneauxCours[] = $creneauCours;
-            $creneauCours->setActivite($this);
+        if (!$this->coursS->contains($cours)) {
+            $this->coursS[] = $cours;
+            $cours->setActivite($this);
         }
 
         return $this;
     }
 
-    public function removeCreneauCours(CreneauCours $creneauCours): self
+    public function removeCours(Cours $cours): self
     {
-        if ($this->creneauxCours->contains($creneauCours)) {
-            $this->creneauxCours->removeElement($creneauCours);
+        if ($this->coursS->contains($cours)) {
+            $this->coursS->removeElement($cours);
             // set the owning side to null (unless already changed)
-            if ($creneauCours->getActivite() === $this) {
-                $creneauCours->setActivite(null);
+            if ($cours->getActivite() === $this) {
+                $cours->setActivite(null);
             }
         }
 

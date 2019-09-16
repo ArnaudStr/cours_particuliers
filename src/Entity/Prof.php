@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
-use App\Entity\SessionCours;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -86,11 +85,6 @@ class Prof implements UserInterface
     private $avis;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SessionCours", mappedBy="prof", orphanRemoval=true)
-     */
-    private $sessionsCours;
-
-    /**
      * @ORM\Column(type="string")
      * @Assert\File(
      *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
@@ -111,17 +105,16 @@ class Prof implements UserInterface
     private $confirmationToken;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CreneauCours", mappedBy="prof", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Cours", mappedBy="prof", orphanRemoval=true)
      */
-    private $creneauxCours;
+    private $coursS;
 
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
-        $this->sessionsCours = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
-        $this->creneauxCours = new ArrayCollection();
+        $this->coursS = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,48 +324,6 @@ class Prof implements UserInterface
         return $this;
     }
 
- 
- 
-
-    /**
-     * @return Collection|SessionCours[]
-     */
-    public function getSessionsCours(): Collection
-    {
-        return $this->sessionsCours;
-    }
-
-    public function addSessionsCour(SessionCours $sessionsCour): self
-    {
-        if (!$this->sessionsCours->contains($sessionsCour)) {
-            $this->sessionsCours[] = $sessionsCour;
-            $sessionsCour->setProf($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSessionsCour(SessionCours $sessionsCour): self
-    {
-        if ($this->sessionsCours->contains($sessionsCour)) {
-            $this->sessionsCours->removeElement($sessionsCour);
-            // set the owning side to null (unless already changed)
-            if ($sessionsCour->getProf() === $this) {
-                $sessionsCour->setProf(null);
-            }
-        }
-
-        return $this;
-    }
-    
-    /**
-     * toString
-     * @return string
-     */
-    public function __toString(){
-        return $this->getPrenom().' '.$this->getNom();
-    }
-
     public function getPictureFilename(): ?string
     {
         if(!$this->pictureFilename){
@@ -414,34 +365,41 @@ class Prof implements UserInterface
     }
 
     /**
-     * @return Collection|CreneauCours[]
+     * @return Collection|Cours[]
      */
-    public function getCreneauxCours(): Collection
+    public function getCoursS(): Collection
     {
-        return $this->creneauxCours;
+        return $this->coursS;
     }
 
-    public function addCreneauCours(CreneauCours $creneauCours): self
+    public function addCours(Cours $cours): self
     {
-        if (!$this->creneauxCours->contains($creneauCours)) {
-            $this->creneauxCours[] = $creneauCours;
-            $creneauCours->setProf($this);
+        if (!$this->coursS->contains($cours)) {
+            $this->coursS[] = $cours;
+            $cours->setProf($this);
         }
 
         return $this;
     }
 
-    public function removeCreneauCours(CreneauCours $creneauCours): self
+    public function removeCours(Cours $cours): self
     {
-        if ($this->creneauxCours->contains($creneauCours)) {
-            $this->creneauxCours->removeElement($creneauCours);
+        if ($this->coursS->contains($cours)) {
+            $this->coursS->removeElement($cours);
             // set the owning side to null (unless already changed)
-            if ($creneauCours->getProf() === $this) {
-                $creneauCours->setProf(null);
+            if ($cours->getProf() === $this) {
+                $cours->setProf(null);
             }
         }
 
         return $this;
     }
-
+    
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return $this->getPrenom().' '.$this->getNom();
+    }
 }

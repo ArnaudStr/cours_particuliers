@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\CoutActivite;
+use App\Entity\Cours;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method CoutActivite|null find($id, $lockMode = null, $lockVersion = null)
- * @method CoutActivite|null findOneBy(array $criteria, array $orderBy = null)
- * @method CoutActivite[]    findAll()
- * @method CoutActivite[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Cours|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Cours|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Cours[]    findAll()
+ * @method Cours[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CoutActiviteRepository extends ServiceEntityRepository
+class CoursRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, CoutActivite::class);
+        parent::__construct($registry, Cours::class);
     }
 
     // /**
-    //  * @return CoutActivite[] Returns an array of CoutActivite objects
+    //  * @return Cours[] Returns an array of Cours objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class CoutActiviteRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?CoutActivite
+    public function findOneBySomeField($value): ?Cours
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')

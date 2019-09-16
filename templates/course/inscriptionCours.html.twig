@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <div data-entry-ideleve={{app.user.id}}>
+    <div data-entry-idcours={{cours.id}}>
+
+    {% include '@Calendar/calendar.html' %} 
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/js/calendarInscriptionCours.js"></script>
+{% endblock %}

@@ -4,14 +4,15 @@ namespace App\Form;
 
 use App\Entity\Activite;
 use App\Form\CreneauType;
-use App\Entity\CreneauCours;
+use App\Entity\Cours;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class CreationCoursType extends AbstractType
@@ -29,6 +30,23 @@ class CreationCoursType extends AbstractType
                 'attr' => [
                     "min" => 1,
                 ],
+            ])
+
+            ->add('webcam', CheckboxType::class, [
+                "label" => "Cours par Webcam",
+                'required' => false,
+            ])
+
+            ->add('domicile', CheckboxType::class, [
+                "label" => "Cours à domicile",
+                'required' => false,
+
+            ])
+
+            ->add('chezEleve', CheckboxType::class, [
+                "label" => "Cours chez le professeur",
+                'required' => false,
+
             ])
 
             ->add('creneaux', CollectionType::class, [
@@ -49,7 +67,7 @@ class CreationCoursType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => CreneauCours::class,
+            'data_class' => Cours::class,
         ]);
     }
 }

@@ -32,6 +32,11 @@ class Session
      */
     private $creneau;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="sessions")
+     */
+    private $eleve;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Session
     public function setCreneau(?Creneau $creneau): self
     {
         $this->creneau = $creneau;
+
+        return $this;
+    }
+
+    public function getEleve(): ?Eleve
+    {
+        return $this->eleve;
+    }
+
+    public function setEleve(?Eleve $eleve): self
+    {
+        $this->eleve = $eleve;
 
         return $this;
     }

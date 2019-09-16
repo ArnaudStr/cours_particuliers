@@ -14,7 +14,7 @@ use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditProfType;
-use App\Entity\CreneauCours;
+use App\Entity\Cours;
 use App\Form\CreationCoursType;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -167,39 +167,40 @@ class ProfController extends AbstractController
      * @Route("/addProposeCours/{idProf}", name="add_propose_cours")
      * @Route("/editProposeCours/{idProf}/{idCours}", name="edit_propose_cours")
      * @ParamConverter("prof", options={"id" = "idProf"})
-     * @ParamConverter("creneauCours", options={"id" = "idCours"})
+     * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function addEditCoursProf(Prof $prof, CreneauCours $creneauCours = null, ObjectManager $manager, Request $request) {
+    public function addEditCoursProf(Prof $prof, Cours $cours = null, ObjectManager $manager, Request $request) {
        
         $modif = true;
 
         // si $creaneauCours est null (add)
-        if (!$creneauCours){
+        if (!$cours){
             $modif = false;
-            $creneauCours = new CreneauCours();
-            $creneauCours->setProf($prof);
+            $cours = new Cours();
+            $cours->setProf($prof);
             $title = 'Ajout d\'un cours';
         }
+
         else{
-            $title = 'Modification de cours '.$creneauCours;
-            $creneauCoursAvantForm = $creneauCours->getCreneaux();
-            $idCreneauCoursAvantForm = [];
-            foreach ($creneauCoursAvantForm as $creneauxAvantForm){
-                array_push($idCreneauCoursAvantForm, $creneauxAvantForm->getId());
+            $title = 'Modification de cours '.$cours;
+            $coursAvantForm = $cours->getCreneaux();
+            $idCoursAvantForm = [];
+            foreach ($coursAvantForm as $creneauxAvantForm){
+                array_push($idCoursAvantForm, $creneauxAvantForm->getId());
             }
         }
 
-        $form = $this->createForm(CreationCoursType::class, $creneauCours);
-        
+        $form = $this->createForm(CreationCoursType::class, $cours);
+
         $form->handleRequest($request);
                
         if($form->isSubmitted() && $form->isValid()) {
 
             // On met les creneaux dans le cours
-            $manager->persist($creneauCours);
+            $manager->persist($cours);
 
             // On parcours les disponibilités du prof
-            foreach ($creneauCours->getCreneaux() as $creneau){
+            foreach ($cours->getCreneaux() as $creneau){
 
                 if (!$modif){
 
@@ -208,27 +209,26 @@ class ProfController extends AbstractController
 
                 else{
 
-                    foreach ($creneauCours->getCreneaux() as $creneau){
+                    foreach ($cours->getCreneaux() as $creneau){
 
-                        $creneauCoursApresForm = $creneauCours->getCreneaux();
-                        $idCreneauCoursApresForm = [];
-                        foreach ($creneauCoursApresForm as $creneauxApresForm){
-                            array_push($idCreneauCoursApresForm, $creneauxApresForm->getId());
+                        $coursApresForm = $cours->getCreneaux();
+                        $idCoursApresForm = [];
+                        foreach ($coursApresForm as $creneauxApresForm){
+                            array_push($idCoursApresForm, $creneauxApresForm->getId());
                         }
 
                         // Si c'est un nouveau créneau
-                        if (!in_array($creneau->getId(), $idCreneauCoursAvantForm))
+                        if (!in_array($creneau->getId(), $idCoursAvantForm))
                         {
                             $this->ajoutSessions(4, $creneau, $manager);
-
 
                         }
                     }
 
-                    foreach ($creneauCoursAvantForm as $creneau){
+                    foreach ($coursAvantForm as $creneau){
 
                         // Si c'est un ancien creneau qui a été modifié / supprimé
-                        if (!in_array($creneau->getId(), $idCreneauCoursApresForm))
+                        if (!in_array($creneau->getId(), $idCoursApresForm))
                         {
                             $manager->remove($creneau);
                         }
@@ -243,7 +243,7 @@ class ProfController extends AbstractController
             // return $this->redirectToRoute('showInfosessionCours', ['id' => $sessionCours->getId()]);
         }
         return $this->render('course/addEditCreationCours.html.twig', ['form' => $form->createView(),
-        'title' => $title, 'editMode' => $modif, 'cours' => $creneauCours
+        'title' => $title, 'editMode' => $modif, 'cours' => $cours
         ]);
     }
 
@@ -252,15 +252,6 @@ class ProfController extends AbstractController
      */
     public function showListeCours() {
         return $this->render('prof/showListeCoursProf.html.twig', [
-            'title' => 'Planning'
-        ]);
-    }
-
-    /**
-     * @Route("/calendar", name="cours_calendar")
-     */
-    public function calendar() {
-        return $this->render('course/calendar.html.twig', [
             'title' => 'Planning'
         ]);
     }
@@ -352,4 +343,14 @@ class ProfController extends AbstractController
             'msgNonLus' => $msgNonLus,
         ]);
     }
+
+    /**
+     * @Route("/calendarProf", name="calendar_prof")
+     */
+    public function calendarProf() {
+        return $this->render('prof/calendrierProf.html.twig', [
+            'title' => 'Planning'
+        ]);
+    }
+    
 }

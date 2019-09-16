@@ -5,9 +5,11 @@ namespace App\Controller\Eleve;
 
 use App\Entity\Prof;
 
+use App\Entity\Cours;
 use App\Entity\Eleve;
-use App\Entity\Message;
 
+use App\Entity\Message;
+use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditEleveType;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 /**
@@ -22,15 +25,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class EleveController extends AbstractController
 {
-    // /**
-    //  * @Route("/calendar", name="cours_calendar")
-    //  */
-    // public function calendar() {
-    //     return $this->render('course/calendar.html.twig', [
-    //         'title' => 'Planning'
-    //     ]);
-    // }
-
     /**
      * @Route("/loginEleve", name="login_eleve")
      */
@@ -201,6 +195,41 @@ class EleveController extends AbstractController
             'eleve' => $eleve,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
+        ]);
+    }
+
+    /**
+     * @Route("/inscriptionCoursEleve/{id}", name="inscription_cours_eleve")
+     */
+    public function inscriptionCoursEleve(Cours $cours) {
+
+        return $this->render('course/inscriptionCours.html.twig', [
+            'cours' => $cours,
+        ]);
+    }
+    
+    /**
+     * @Route("/validationInscriptionSession/{idSession}/{idEleve}", name="validation_inscription_session")
+     * @ParamConverter("session", options={"id" = "idSession"})
+     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     */
+    public function validationInscriptionSession(Session $session, Eleve $eleve) {
+
+        $session->setEleve($eleve);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($session);
+        $entityManager->flush();
+            return $this->render('eleve/indexEleve.html.twig', [
+                'title' => 'Planning'
+        ]);
+    }
+
+    /**
+     * @Route("/calendarEleve", name="calendar_eleve")
+     */
+    public function calendarEleve() {
+        return $this->render('eleve/calendrierEleve.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 }

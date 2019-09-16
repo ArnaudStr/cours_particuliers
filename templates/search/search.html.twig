@@ -7,25 +7,26 @@
     {% for categorie in categories %}
     {{ categorie.nom }}
         {% for activite in categorie.activites %}
-            {% for creneauCours in activite.creneauxCours %}
-            {{ creneauCours.id }}
+            {% for cours in activite.coursS %}
+            {{ cours.id }}
 
-                {{ creneauCours.prof.nom }}
-                <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
+                {{ cours.prof.nom }}
+                <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
             {% endfor %}
         {% endfor %}
     {% endfor %}
 
     {% for activite in activites %}
-        {% for creneauCours in activite.creneauxCours %}
-        {{ creneauCours.id }}
-            {{ creneauCours.prof.nom }}
-            <img class="profile_pic" src="/assets/pictures/{{ creneauCours.prof.pictureFilename }}" alt="">
+        {% for cours in activite.coursS %}
+        {{ cours.id }}
+            {{ cours.prof.nom }}
+            <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
             {% if is_granted('ROLE_ELEVE') %}
 
-                 <p><a href="{{ path('send_message_eleve', {'idProf':creneauCours.prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Envoyer un message</button></a></p>
+                 <p><a href="{{ path('send_message_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Envoyer un message</button></a></p>
                 
             {% endif %}
+            <p><a href="{{ path('inscription_cours_eleve', {'id':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">S'inscrire au cours</button></a></p>
         {% endfor %}
     {% endfor %}
 

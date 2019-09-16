@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <div data-entry-ideleve={{app.user.id}}>
+
+    {% include '@Calendar/calendar.html' %} 
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/js/calendarEleve.js"></script>
+{% endblock %}

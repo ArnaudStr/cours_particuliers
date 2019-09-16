@@ -17,11 +17,6 @@ class Avis
     private $id;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $note;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $commentaire;
@@ -46,18 +41,6 @@ class Avis
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getNote(): ?float
-    {
-        return $this->note;
-    }
-
-    public function setNote(?float $note): self
-    {
-        $this->note = $note;
-
-        return $this;
     }
 
     public function getCommentaire(): ?string

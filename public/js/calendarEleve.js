@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     var calendarEl = document.getElementById('calendar-holder');
+    var elevejs = document.querySelector('[data-entry-ideleve]').dataset.entryIdeleve;
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         defaultView: 'timeGridWeek',
-        editable: true,
+        editable: false,
         eventSources: [
             {
                 url: "/fc-load-events",
                 method: "POST",
                 extraParams: {
-                    filters: JSON.stringify({})
+                    filters: JSON.stringify({ eleve:elevejs })
                 },
                 failure: () => {
                     // alert("There was an error while fetching FullCalendar!");

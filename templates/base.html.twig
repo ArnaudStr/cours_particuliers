@@ -8,6 +8,9 @@
             <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
             <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.9.0/css/all.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
 
         {% endblock %}
     </head>
@@ -68,9 +71,17 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path('calendar_eleve') }}">Mon planning</a>
+                        </li>
+
+                        <li class="nav-item">
                             {# <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages {{ nonLus }}</a> #}
                             <a class="nav-link" href="{{path('show_messages_eleve')}}">Mes messages </a>
                         </li>
+
+                        {# <li class="nav-item">
+                            <a class="nav-link" href="{{path('logout_eleve')}}">S'i</a>
+                        </li> #}
 
                         <li class="nav-item">
                             <form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
@@ -96,14 +107,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('cours_calendar') }}">Planigramme</a>
-                        </li>
-
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('show_messages_prof')}}">Mes messages</a>
                         </li> 
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('calendar_prof') }}">Mon planning</a>
+                        </li>
+
 
                         {% endif %}
                     {% endif %}
@@ -118,6 +130,10 @@
 
         {% block javascripts %}
         
+            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
