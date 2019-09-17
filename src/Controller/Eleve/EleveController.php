@@ -3,11 +3,13 @@
 namespace App\Controller\Eleve;
 
 
+use App\Entity\Avis;
+
 use App\Entity\Prof;
-
 use App\Entity\Cours;
-use App\Entity\Eleve;
 
+use App\Entity\Eleve;
+use App\Form\AvisType;
 use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
@@ -230,6 +232,45 @@ class EleveController extends AbstractController
     public function calendarEleve() {
         return $this->render('eleve/calendrierEleve.html.twig', [
             'title' => 'Planning'
+        ]);
+    }
+
+    /**
+     * @Route("/emettreAvis/{idEleve}/{idProf}", name="emettre_avis")
+     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @ParamConverter("prof", options={"id" = "idProf"})
+     */
+    public function emettreAvis(Eleve $eleve, Prof $prof, Request $request) {
+
+        $avis = new Avis();
+
+        // dd($avis);
+
+        $form = $this->createForm(AvisType::class, $avis);
+
+        $form->handleRequest($request);
+
+  
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $avis->setProf($prof);
+            $avis->setEleve($eleve);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($avis);
+            $prof->addNote($form->get('note')->getData());
+            $entityManager->persist($prof);
+
+            $entityManager->flush();
+
+            // do anything else you need here, like send an email
+
+            return $this->redirectToRoute('home_eleve');
+        }
+
+        return $this->render('eleve/emettreAvis.html.twig', [
+            'title' => 'Avis',
+            'form' => $form->createView(),
         ]);
     }
 }

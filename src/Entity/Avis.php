@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +39,11 @@ class Avis
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
+
+    public function __construct()
+    {
+        $this->dateAvis = new DateTime('now',new DateTimeZone('Europe/Paris'));
+    }
 
     public function getId(): ?int
     {

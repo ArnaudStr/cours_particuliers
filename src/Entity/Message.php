@@ -31,13 +31,13 @@ class Message
     private $dateEnvoi;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $eleve;

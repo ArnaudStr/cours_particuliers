@@ -60,11 +60,6 @@ class Prof implements UserInterface
     private $adresse;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $note;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $email;
@@ -108,6 +103,11 @@ class Prof implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Cours", mappedBy="prof", orphanRemoval=true)
      */
     private $coursS;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $notes = [];
 
     public function __construct()
     {
@@ -222,18 +222,6 @@ class Prof implements UserInterface
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
-
-        return $this;
-    }
-
-    public function getNote(): ?float
-    {
-        return $this->note;
-    }
-
-    public function setNote(?float $note): self
-    {
-        $this->note = $note;
 
         return $this;
     }
@@ -395,6 +383,27 @@ class Prof implements UserInterface
         return $this;
     }
     
+    public function getNotes(): ?array
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?array $notes): self
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function addNote(Float $note): self
+    {
+        if ($note<=5 && $note>=0) {
+            $this->notes[] = $note;
+        }
+
+        return $this;
+    }
+    
     /**
      * toString
      * @return string
@@ -402,4 +411,6 @@ class Prof implements UserInterface
     public function __toString(){
         return $this->getPrenom().' '.$this->getNom();
     }
+
+
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+   {{ form_start(form) }}
+
+        {{form_row(form.commentaire) }}
+        {{form_row(form.note) }}
+        {{form_row(form.submit) }} 
+        {{ form_rest(form) }}
+        
+        {{ form_end(form) }} 
+{% endblock %}
+
+{% block javascripts %}
+    
+{% endblock %}

@@ -141,15 +141,15 @@ class CalendarListener
                     ])
                 );
             }
-            // else {
-            //     $sessionEvent->addOption(
-            //         'url',
-            //         $this->router->generate('validation_inscription_session', [
-            //             'idSession' => $session->getId(),
-            //             'idEleve' => ,
-            //         ])
-            //     );
-            // }
+            else if (array_key_exists('eleve', $filters)) {
+                $sessionEvent->addOption(
+                    'url',
+                    $this->router->generate('emettre_avis', [
+                        'idProf' => $session->getCreneau()->getCours()->getProf()->getId(),
+                        'idEleve' => $filters['eleve']
+                    ])
+                );
+            }
 
             if ($sessionEvent) {
                 // finally, add the event to the CalendarEvent to fill the calendar

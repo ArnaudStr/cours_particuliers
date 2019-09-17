@@ -8,13 +8,13 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Prof;
 
+use App\Entity\Cours;
 use App\Entity\Eleve;
 use App\Entity\Creneau;
 use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditProfType;
-use App\Entity\Cours;
 use App\Form\CreationCoursType;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,7 +23,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 
 /**
@@ -34,10 +37,23 @@ class ProfController extends AbstractController
 
     
     /**
-     * @Route("/", name="home_prof")
+     * @Route("/home", name="home_prof")
      */
     public function indexProf()
     {
+        $nbMsgNonLus = 0;
+
+        foreach($this->getUser()->getMessages() as $message){
+            if ( $message->getAuteur() != $this->getUser()->getUsername() ){
+                if (!$message->getLu()){
+                    $nbMsgNonLus++;
+                }
+            }
+        }
+
+        $session = new SessionUser();
+        $session->set('nbMsgNonLus', $nbMsgNonLus);
+        
         return $this->render('prof/indexProf.html.twig', [
         ]);
     }
@@ -64,6 +80,8 @@ class ProfController extends AbstractController
      */
     public function logoutProf() {
         
+        $this->clear();
+
         return $this->redirectToRoute("home");
         // return $this->redirectToRoute("login_prof");
         // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
@@ -317,6 +335,7 @@ class ProfController extends AbstractController
      */
     public function conversationProf(Prof $prof, Eleve $eleve) {
 
+        $session = new SessionUser();
         $msgLus = [];
         $msgNonLus = [];
         $entityManager = $this->getDoctrine()->getManager();
@@ -330,6 +349,7 @@ class ProfController extends AbstractController
                     array_push($msgNonLus, $message);
                     $message->setLu(true);
                     $entityManager->persist($message);
+                    $session->set('nbMsgNonLus', ($session->get('nbMsgNonLus'))-1);
                 }
             }
         }

@@ -19,13 +19,13 @@ class Cours
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="cours")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="coursS")
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="cours")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Activite", inversedBy="coursS")
      * @ORM\JoinColumn(nullable=false)
      */
     private $activite;

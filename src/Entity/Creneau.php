@@ -34,7 +34,7 @@ class Creneau
     private $heureFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="creneau")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="creneaux")
      */
     private $cours;
 
