@@ -84,16 +84,14 @@ class CalendarListener
             $sessionEvent=null;
 
             // Sessions disponibles à l'inscription
-            if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters)) {
-                if ( !$session->getEleve() ) {
-                    // this create the events with your data (here formation data) to fill calendar
-                    $sessionEvent = new Event(
-                        "S'inscire",
-                        $session->getDateDebut(),
-                        $session->getDateFin() // If the end date is null or not defined, a all day event is created.
-                    );
+            if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$session->getEleve()) {
+                // this create the events with your data (here formation data) to fill calendar
+                $sessionEvent = new Event(
+                    "S'inscire",
+                    $session->getDateDebut(),
+                    $session->getDateFin() // If the end date is null or not defined, a all day event is created.
+                );
 
-                }
             }
 
             // Sessions d'un eleve
@@ -130,12 +128,12 @@ class CalendarListener
             }
 
 
-
-            if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters)) {
+            // Cours di
+            if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$session->getEleve() ) {
 
                 $sessionEvent->addOption(
                     'url',
-                    $this->router->generate('validation_inscription_session', [
+                    $this->router->generate('demande_inscription_session', [
                         'idSession' => $session->getId(),
                         'idEleve' => $filters['eleve']
                     ])

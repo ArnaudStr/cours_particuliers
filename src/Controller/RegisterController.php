@@ -20,8 +20,7 @@ class RegisterController extends AbstractController
      /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder,  MailerService $mailerService, \Swift_Mailer $mailer): Response
-    // public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {       
 
         $form = $this->createForm(RegistrationType::class);
@@ -43,16 +42,6 @@ class RegisterController extends AbstractController
                 $user = new Prof();
 
                 $user->setConfirmationToken($this->generateToken());
-
-                // $token = $user->getConfirmationToken();
-
-                // $email = $user->getEmail();
-
-                // $username = $user->getUsername();
-
-                // $mailerService->sendToken($mailer, $token, $email, $username, 'registration.html.twig');
-
-                // $this->addFlash('user-error', 'Votre inscription a été validée, vous aller recevoir un email de confirmation pour activer votre compte et pouvoir vous connecté');
 
                 $user->setRoles(["ROLE_PROF"]);
 
@@ -145,9 +134,9 @@ class RegisterController extends AbstractController
     //     return $this->redirectToRoute('login_prof');
     // }
 
-    private function generateToken()
-    {
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-    }
+    // private function generateToken()
+    // {
+    //     return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    // }
 
 }

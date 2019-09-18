@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
+use App\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -93,6 +94,12 @@ class Eleve implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="eleve")
      */
     private $sessions;
+
+    /**
+     * @var string le token qui servira lors de l'oubli de mot de passe
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $resetToken;
 
     public function __construct()
     {
@@ -349,5 +356,21 @@ class Eleve implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResetToken(): string
+    {
+        return $this->resetToken;
+    }
+ 
+    /**
+     * @param string $resetToken
+     */
+    public function setResetToken(?string $resetToken): void
+    {
+        $this->resetToken = $resetToken;
     }
 }

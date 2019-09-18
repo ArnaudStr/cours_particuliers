@@ -20,6 +20,7 @@ use App\Form\CreationCoursType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -372,5 +373,36 @@ class ProfController extends AbstractController
             'title' => 'Planning'
         ]);
     }
+
+    /**
+     * @Route("/demandeSessionProf", name="demande_sessions_prof")
+     */
+    public function demandeSessionProf() {
+        return $this->render('prof/validationSessions.html.twig', [
+            'title' => 'Planning'
+        ]);
+    }
+
+    /**
+     * @Route("/validationSessionProf/{id}/{valider}", name="validation_sessions_prof")
+     */
+    public function validationSessionProf(Session $session, int $valider) {
+
+        if ($valider == 1) {
+            $session->setValidee(true);
+        }
+        else {
+            $session->setEleve(null);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($session);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home_prof');
+
+    }
+
+    
     
 }

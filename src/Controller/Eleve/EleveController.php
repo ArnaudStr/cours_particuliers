@@ -14,12 +14,17 @@ use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditEleveType;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 /**
@@ -211,13 +216,15 @@ class EleveController extends AbstractController
     }
     
     /**
-     * @Route("/validationInscriptionSession/{idSession}/{idEleve}", name="validation_inscription_session")
+     * @Route("/demandeInscriptionSession/{idSession}/{idEleve}", name="demande_inscription_session")
      * @ParamConverter("session", options={"id" = "idSession"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function validationInscriptionSession(Session $session, Eleve $eleve) {
+    public function demandeInscriptionSession(Session $session, Eleve $eleve) {
 
+        // Inscription élève au cours
         $session->setEleve($eleve);
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($session);
         $entityManager->flush();
@@ -226,6 +233,8 @@ class EleveController extends AbstractController
         ]);
     }
 
+
+    
     /**
      * @Route("/calendarEleve", name="calendar_eleve")
      */
@@ -272,5 +281,91 @@ class EleveController extends AbstractController
             'title' => 'Avis',
             'form' => $form->createView(),
         ]);
+    }
+
+
+    /**
+     * @Route("/forgotten_password", name="app_forgotten_password")
+     */
+    public function forgottenPassword(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        \Swift_Mailer $mailer,
+        TokenGeneratorInterface $tokenGenerator
+    )
+    {
+ 
+        if ($request->isMethod('POST')) {
+ 
+            $email = $request->request->get('email');
+ 
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $entityManager->getRepository(Eleve::class)->findOneByEmail($email);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Email Inconnu');
+                return $this->redirectToRoute('home');
+            }
+            $token = $tokenGenerator->generateToken();
+ 
+            try{
+                $user->setResetToken($token);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+                return $this->redirectToRoute('home');
+            }
+ 
+            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $message = (new \Swift_Message('Forgot Password'))
+                ->setFrom('arnaud6757@gmail.com')
+                // ->setFrom('arnaud.straumann@free.fr')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    'text/html'
+                );
+ 
+            $mailer->send($message);
+
+            $this->addFlash('notice', 'Mail envoyé');
+
+            return $this->redirectToRoute('home');
+        }
+ 
+        return $this->render('security/forgotten_password.html.twig');
+    }
+
+        /**
+     * @Route("/reset_password/{token}", name="app_reset_password")
+     */
+    public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+    {
+ 
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getDoctrine()->getManager();
+ 
+            $user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Token Inconnu');
+                return $this->redirectToRoute('home');
+            }
+ 
+            $user->setResetToken(null);
+            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $entityManager->flush();
+ 
+            $this->addFlash('notice', 'Mot de passe mis à jour');
+ 
+            return $this->redirectToRoute('home');
+        }else {
+ 
+            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+        }
+ 
     }
 }

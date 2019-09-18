@@ -37,6 +37,16 @@ class Session
      */
     private $eleve;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $validee;
+
+    public function __construct()
+    {
+        $this->validee = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +96,18 @@ class Session
     public function setEleve(?Eleve $eleve): self
     {
         $this->eleve = $eleve;
+
+        return $this;
+    }
+
+    public function getValidee(): ?bool
+    {
+        return $this->validee;
+    }
+
+    public function setValidee(bool $validee): self
+    {
+        $this->validee = $validee;
 
         return $this;
     }
