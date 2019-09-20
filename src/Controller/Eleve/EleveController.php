@@ -338,7 +338,7 @@ class EleveController extends AbstractController
         return $this->render('security/forgotten_password.html.twig');
     }
 
-        /**
+    /**
      * @Route("/reset_password/{token}", name="app_reset_password")
      */
     public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
@@ -368,4 +368,5 @@ class EleveController extends AbstractController
         }
  
     }
-}
+
+ }

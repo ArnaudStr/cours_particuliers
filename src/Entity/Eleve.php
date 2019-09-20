@@ -101,8 +101,14 @@ class Eleve implements UserInterface
      */
     protected $resetToken;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $aConfirme;
+
     public function __construct()
     {
+        $this->aConfirme = false;
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
@@ -372,5 +378,17 @@ class Eleve implements UserInterface
     public function setResetToken(?string $resetToken): void
     {
         $this->resetToken = $resetToken;
+    }
+
+    public function getAConfirme(): ?bool
+    {
+        return $this->aConfirme;
+    }
+
+    public function setAConfirme(bool $aConfirme): self
+    {
+        $this->aConfirme = $aConfirme;
+
+        return $this;
     }
 }

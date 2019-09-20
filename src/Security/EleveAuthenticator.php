@@ -71,6 +71,11 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
+        if (!$user->getAConfirme()) {
+            throw new CustomUserMessageAuthenticationException('Veuillez confirmer votre compte');
+
+        }
+
         return $user;
     }
 
@@ -90,6 +95,6 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
 
     protected function getLoginUrl()
     {
-        return $this->urlGenerator->generate('                                                                                                                                                                                                                                                                      ');
+        return $this->urlGenerator->generate('login_eleve');
     }
 }

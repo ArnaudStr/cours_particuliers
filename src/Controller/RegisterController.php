@@ -10,8 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 class RegisterController extends AbstractController
@@ -20,7 +22,8 @@ class RegisterController extends AbstractController
      /**
      * @Route("/register", name="register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer,
+    TokenGeneratorInterface $tokenGenerator): Response
     {       
 
         $form = $this->createForm(RegistrationType::class);
@@ -78,13 +81,28 @@ class RegisterController extends AbstractController
                 $form->get('adresse')->getData()
             );
 
+            $token = $tokenGenerator->generateToken();
 
-
+            $user->setResetToken($token);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
+
+            $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $message = (new \Swift_Message('Forgot Password'))
+            ->setFrom('arnaud6757@gmail.com')
+            // ->setFrom('arnaud.straumann@free.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                "blablabla voici le token pour confirmer votre inscription : " . $url,
+                'text/html'
+            );
+
+            $mailer->send($message);
+
+            $this->addFlash('user-error', 'Votre inscription a été validée, vous allez recevoir un mail de confirmation pour activer votre compte');
 
             return $route;
         }
@@ -94,49 +112,29 @@ class RegisterController extends AbstractController
         ]);
     }
 
-    // /**
-    //  * @Route("/confirm_account/{token}/{username}", name="confirm_account")
-    //  */
-    // public function confirmAccount($token, $username): Response
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-    //     $user = $em->getRepository(Prof::class)->findOneBy(['username' => $username]);
-    //     $tokenExist = $user->getConfirmationToken();
-    //     if($token === $tokenExist) {
-    //        $user->setConfirmationToken(null);
-    //        $user->setEnabled(true);
-    //        $em->persist($user);
-    //        $em->flush();
-    //        return $this->redirectToRoute('login_prof');
-    //     } else {
-    //         return $this->render('registration/token-expire.html.twig');
-    //     }
-    // }
-    // /**
-    //  * @Route("/send_confirmation_token", name="send_confirmation_token")
-    //  */
-    // public function sendConfirmationToken(Request $request, MailerService $mailerService, \Swift_Mailer $mailer): RedirectResponse
-    // {
-    //     $em = $this->getDoctrine()->getManager();
-    //     $email = $request->request->get('email');
-    //     $user = $this->getDoctrine()->getRepository(Prof::class)->findOneBy(['email' => $email]);
-    //     if($user === null) {
-    //         $this->addFlash('not-user-exist', 'utilisateur non trouvé');
-    //         return $this->redirectToRoute('register');
-    //     }
-    //     $user->setConfirmationToken($this->generateToken());
-    //     $em->persist($user);
-    //     $em->flush();
-    //     $token = $user->getConfirmationToken();
-    //     $email = $user->getEmail();
-    //     $username = $user->getUsername();
-    //     $mailerService->sendToken($mailer, $token, $email, $username, 'register.html.twig');
-    //     return $this->redirectToRoute('login_prof');
-    // }
+    /**
+     * @Route("/confirmAccount/{token}", name="app_confirm_account")
+     */
+    public function confirmAccount(string $token)
+    { 
+        $entityManager = $this->getDoctrine()->getManager();
 
-    // private function generateToken()
-    // {
-    //     return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-    // }
+        $user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token);
+        /* @var $user User */
+
+        if ($user === null) {
+            $this->addFlash('danger', 'Token Inconnu');
+            return $this->redirectToRoute('home');
+        }
+
+        $user->setResetToken(null);
+        $user->setAConfirme(true);
+        $entityManager->flush();
+
+        $this->addFlash('notice', 'Compte activé');
+
+        return $this->redirectToRoute('login_eleve');
+
+    }
 
 }
