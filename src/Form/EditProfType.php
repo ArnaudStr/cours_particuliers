@@ -3,12 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Prof;
+use App\Form\CreneauType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 
 
@@ -40,6 +42,15 @@ class EditProfType extends AbstractType
                 'label' => 'Modifier image',
                 'required' => false,
                 'data_class' => null,
+            ])
+
+            ->add('creneaux', CollectionType::class, [
+                'entry_type' => CreneauType::class,
+                'entry_options' => ['label' => "Selectionnez un creneau :", ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                "by_reference" => false,
+                'label' => false,
             ])
             
             ->add('submit', SubmitType::class, [

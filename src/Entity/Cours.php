@@ -31,11 +31,6 @@ class Cours
     private $activite;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="cours",cascade={"persist"}, orphanRemoval=true)
-     */
-    private $creneaux;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $tarifHoraire;
@@ -55,11 +50,15 @@ class Cours
      */
     private $chezEleve;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="cours", orphanRemoval=true)
+     */
+    private $sessions;
+
     public function __construct()
     {
-        $this->creneaux = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -87,38 +86,6 @@ class Cours
     public function setActivite(?Activite $activite): self
     {
         $this->activite = $activite;
-
-        return $this;
-    }
-
- 
-    /**
-     * @return Collection|Creneau[]
-     */
-    public function getCreneaux(): Collection
-    {
-        return $this->creneaux;
-    }
-
-    public function addCreneau(Creneau $creneau): self
-    {
-        if (!$this->creneaux->contains($creneau)) {
-            $this->creneaux[] = $creneau;
-            $creneau->setCours($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreneau(Creneau $creneau): self
-    {
-        if ($this->creneaux->contains($creneau)) {
-            $this->creneaux->removeElement($creneau);
-            // set the owning side to null (unless already changed)
-            if ($creneau->getCours() === $this) {
-                $creneau->setCours(null);
-            }
-        }
 
         return $this;
     }
@@ -175,6 +142,37 @@ class Cours
     public function setChezEleve(bool $chezEleve): self
     {
         $this->chezEleve = $chezEleve;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getCours() === $this) {
+                $session->setCours(null);
+            }
+        }
 
         return $this;
     }

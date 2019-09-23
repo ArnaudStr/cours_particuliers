@@ -59,21 +59,21 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+
         $token = new CsrfToken('authenticateEleve', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
+            throw new InvalidCsrfTokenException('Mot de passe invalide');
         }
 
         $user = $this->entityManager->getRepository(Eleve::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Nom de compte non reconnu');
         }
 
         if (!$user->getAConfirme()) {
             throw new CustomUserMessageAuthenticationException('Veuillez confirmer votre compte');
-
         }
 
         return $user;

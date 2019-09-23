@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var calendarEl = document.getElementById('calendar-holder');
     var elevejs = document.querySelector('[data-entry-ideleve]').dataset.entryIdeleve;
     var coursjs = document.querySelector('[data-entry-idcours]').dataset.entryIdcours;
+    var profjs = document.querySelector('[data-entry-idprof]').dataset.entryIdprof;
 
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 url: "/fc-load-events",
                 method: "POST",
                 extraParams: {
-                    filters: JSON.stringify({ eleve:elevejs, cours:coursjs })
+                    filters: JSON.stringify({ eleve:elevejs, cours:coursjs, prof:profjs })
                 },
                 failure: () => {
                     // alert("There was an error while fetching FullCalendar!");

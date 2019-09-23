@@ -61,14 +61,14 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator
     {
         $token = new CsrfToken('authenticateAdmin', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
+            throw new InvalidCsrfTokenException('Mot de passe invalide');
         }
 
         $user = $this->entityManager->getRepository(Admin::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Nom de compte non reconnu');
         }
 
         return $user;

@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
+
 class RegisterController extends AbstractController
 {
 
@@ -28,12 +29,15 @@ class RegisterController extends AbstractController
 
         $form = $this->createForm(RegistrationType::class);
         $form->handleRequest($request);
+        $token = $tokenGenerator->generateToken();
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ( $form->get('isEleve')->getData() ) {
 
                 $user = new Eleve();
+
+                $user->setResetToken($token);
 
                 $user->setRoles(["ROLE_ELEVE"]);
 
@@ -44,7 +48,7 @@ class RegisterController extends AbstractController
 
                 $user = new Prof();
 
-                $user->setConfirmationToken($this->generateToken());
+                $user->setResetToken($token);
 
                 $user->setRoles(["ROLE_PROF"]);
 
@@ -81,9 +85,7 @@ class RegisterController extends AbstractController
                 $form->get('adresse')->getData()
             );
 
-            $token = $tokenGenerator->generateToken();
 
-            $user->setResetToken($token);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -119,8 +121,10 @@ class RegisterController extends AbstractController
     { 
         $entityManager = $this->getDoctrine()->getManager();
 
-        $user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token);
-        /* @var $user User */
+        if ($user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token));
+        else {
+            $user = $entityManager->getRepository(Prof::class)->findOneByResetToken($token);
+        }
 
         if ($user === null) {
             $this->addFlash('danger', 'Token Inconnu');
@@ -134,7 +138,6 @@ class RegisterController extends AbstractController
         $this->addFlash('notice', 'Compte activé');
 
         return $this->redirectToRoute('login_eleve');
-
     }
 
 }

@@ -2,25 +2,37 @@
 
 {% block body %}
 
-    {{form_start(editForm, {
-        'attr' :{
-            'enctype' : 'multipart/form-data',
-        }})
-    }}  
-        {{form_row(editForm.nom) }}
-        {{form_row(editForm.prenom) }}
-        {{form_row(editForm.adresse) }}   
-        {{form_row(editForm.description) }}
-        <div id="prev"> </div>
-        {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
-        {{form_row(editForm.submit) }} 
-        {{ form_rest(editForm) }}
+     {{form_start(editForm, {
+          'attr' :{
+               'enctype' : 'multipart/form-data',
+          }})
+     }}  
+          {{form_row(editForm.nom) }}
+          {{form_row(editForm.prenom) }}
+          {{form_row(editForm.adresse) }}   
+          {{form_row(editForm.description) }}
+          <div id="prev"> </div>
+          {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
+          <ul id="creneaux" data-prototype="{{ form_row(editForm.creneaux.vars.prototype)|e('html_attr') }}">
+          
+               {% for creneau in editForm.creneaux %}
+                    <li>
+                         {{ form_row(creneau) }}
+                    </li>
+               {% endfor %}
+
+          </ul>
+          {{form_row(editForm.submit) }}
+          {{ form_rest(editForm) }}
         
-    {{ form_end(editForm, {'render_rest': false}) }}
+     {{ form_end(editForm, {'render_rest': false}) }}
 
 {% endblock %}
 
 {% block javascripts %}
+
+{{ parent()}}
+<script src="/js/creneauHandler.js"></script>
 
 <script>
     function miniature(fileInput, prev) {

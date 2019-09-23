@@ -14,10 +14,7 @@ use App\Entity\Message;
 use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditEleveType;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
+
 
 
 /**
@@ -65,6 +64,19 @@ class EleveController extends AbstractController
      */
     public function indexEleve()
     {
+        $nbMsgNonLus = 0;
+
+        foreach($this->getUser()->getMessages() as $message){
+            if ( $message->getAuteur() != $this->getUser()->getUsername() ){
+                if (!$message->getLu()){
+                    $nbMsgNonLus++;
+                }
+            }
+        }
+
+        $session = new SessionUser();
+        $session->set('nbMsgNonLus', $nbMsgNonLus);
+
         return $this->render('eleve/indexEleve.html.twig', [
         ]);
     }
@@ -206,24 +218,29 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @Route("/inscriptionCoursEleve/{id}", name="inscription_cours_eleve")
+     * @Route("/inscriptionCoursEleve/{idProf}/{idCours}", name="inscription_cours_eleve")
+     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function inscriptionCoursEleve(Cours $cours) {
+    public function inscriptionCoursEleve(Prof $prof, Cours $cours) {
 
         return $this->render('course/inscriptionCours.html.twig', [
+            'prof' => $prof,
             'cours' => $cours,
         ]);
     }
     
     /**
-     * @Route("/demandeInscriptionSession/{idSession}/{idEleve}", name="demande_inscription_session")
+     * @Route("/demandeInscriptionSession/{idSession}/{idEleve}/{idCours}", name="demande_inscription_session")
      * @ParamConverter("session", options={"id" = "idSession"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function demandeInscriptionSession(Session $session, Eleve $eleve) {
+    public function demandeInscriptionSession(Session $session, Eleve $eleve, Cours $cours) {
 
         // Inscription élève au cours
         $session->setEleve($eleve);
+        $session->setCours($cours);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($session);
@@ -233,8 +250,6 @@ class EleveController extends AbstractController
         ]);
     }
 
-
-    
     /**
      * @Route("/calendarEleve", name="calendar_eleve")
      */
@@ -289,7 +304,6 @@ class EleveController extends AbstractController
      */
     public function forgottenPassword(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
         \Swift_Mailer $mailer,
         TokenGeneratorInterface $tokenGenerator
     )
@@ -361,7 +375,7 @@ class EleveController extends AbstractController
  
             $this->addFlash('notice', 'Mot de passe mis à jour');
  
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('login_eleve');
         }else {
  
             return $this->render('security/reset_password.html.twig', ['token' => $token]);

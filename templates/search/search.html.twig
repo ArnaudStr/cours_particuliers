@@ -8,8 +8,6 @@
     {{ categorie.nom }}
         {% for activite in categorie.activites %}
             {% for cours in activite.coursS %}
-            {{ cours.id }}
-
                 {{ cours.prof.nom }}
                 <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
             {% endfor %}
@@ -18,7 +16,6 @@
 
     {% for activite in activites %}
         {% for cours in activite.coursS %}
-        {{ cours.id }}
             {{ cours.prof.nom }}
             <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
             {% if is_granted('ROLE_ELEVE') %}
@@ -26,7 +23,7 @@
                  <p><a href="{{ path('send_message_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Envoyer un message</button></a></p>
                 
             {% endif %}
-            <p><a href="{{ path('inscription_cours_eleve', {'id':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">S'inscrire au cours</button></a></p>
+            <p><a href="{{ path('inscription_cours_eleve', {'idProf':cours.prof.id, 'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">S'inscrire au cours</button></a></p>
         {% endfor %}
     {% endfor %}
 

@@ -5,21 +5,17 @@
 {% block body %}
 
     <h1> Session à valider de {{ app.user.username }} </h1>
-    {% for cours in app.user.coursS %}
-        {% for creneau in cours.creneaux %}
-            {% for session in creneau.sessions %}
-                {% if session.eleve and not session.validee %}
-                    <p>Demande de {{ session.eleve.nom }} pour le cours de {{ session.creneau.cours.activite.nom }} du {{ session.dateDebut|date('m/d/Y') }} de {{ session.dateDebut|date('H:i') }} à {{ session.dateFin|date('H:i') }}</p>
-                    
-                    <p><a href="{{ path('validation_sessions_prof', {'id':session.id, 'valider':1}) }}"><button type="button" class="btn btn-warning btn-lg">Valider la session</button></a></p>
-                
-                    <p><a href="{{ path('validation_sessions_prof', {'id':session.id, 'valider':0}) }}"><button type="button" class="btn btn-warning btn-lg">Refuser la session</button></a></p>
-                
-                    {% endif %}
-            {% endfor %}
-        {% endfor %}
+    {% for session in app.user.sessions %}
+        {% if session.eleve and not session.validee %}
+            <p>Demande de {{ session.eleve.nom }} pour le cours de {{ session.cours.activite.nom }} du {{ session.dateDebut|date('m/d/Y') }} de {{ session.dateDebut|date('H:i') }} à {{ session.dateFin|date('H:i') }}</p>
+            
+            <p><a href="{{ path('validation_sessions_prof', {'id':session.id, 'valider':1}) }}"><button type="button" class="btn btn-warning btn-lg">Valider la session</button></a></p>
         
+            <p><a href="{{ path('validation_sessions_prof', {'id':session.id, 'valider':0}) }}"><button type="button" class="btn btn-warning btn-lg">Refuser la session</button></a></p>
+        
+            {% endif %}
     {% endfor %}
+        
 
 
 {% endblock %}

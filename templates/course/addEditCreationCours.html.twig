@@ -9,16 +9,6 @@
         {{form_row(form.domicile) }}
         {{form_row(form.chezEleve) }}
 
-        <ul id="creneaux" data-prototype="{{ form_row(form.creneaux.vars.prototype)|e('html_attr') }}">
-        
-            {% for creneau in form.creneaux %}
-                <li>
-                    {{ form_row(creneau) }}
-                </li>
-            {% endfor %}
-
-        </ul>
-
         {{form_row(form.submit) }} 
 
     {{ form_end(form) }}
@@ -26,8 +16,5 @@
 {% endblock %}
 
 {% block javascripts %}
-
-    {{ parent()}}
-    <script src="/js/creneauHandler.js"></script>
 
 {% endblock %}

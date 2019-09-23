@@ -61,14 +61,18 @@ class ProfAuthenticator extends AbstractFormLoginAuthenticator
     {
         $token = new CsrfToken('authenticateProf', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
+            throw new InvalidCsrfTokenException('Mot de passe invalide');
         }
 
         $user = $this->entityManager->getRepository(Prof::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Nom de compte non reconnu');
+        }
+
+        if (!$user->getAConfirme()) {
+            throw new CustomUserMessageAuthenticationException('Veuillez confirmer votre compte');
         }
 
         return $user;

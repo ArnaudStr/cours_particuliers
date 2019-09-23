@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\Session;
 use App\Repository\SessionRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use CalendarBundle\Entity\Event;
@@ -32,14 +31,13 @@ class CalendarListener
             // SESSIONS DISPONIBLES POUR UN COURS
             $sessions = $this->sessionRepository
                 ->createQueryBuilder('session')
-                ->innerJoin('session.creneau', 'cr')
-                ->innerJoin('cr.cours', 'c')
+                ->innerJoin('session.prof', 'p')
                 ->where('session.dateDebut BETWEEN :start and :end')
-                ->andWhere('c.id = :id')
+                ->andWhere('p.id = :id')
                 // ->and('formation.dateDebut BETWEEN :start and :end')
                 ->setParameter('start', $start->format('Y-m-d H:i:s'))
                 ->setParameter('end', $end->format('Y-m-d H:i:s'))
-                ->setParameter('id', $filters['cours'])
+                ->setParameter('id', $filters['prof'])
                 ->getQuery()
                 ->getResult()
             ;
@@ -65,9 +63,7 @@ class CalendarListener
             // SESSIONS D'UN PROF
             $sessions = $this->sessionRepository
             ->createQueryBuilder('session')
-            ->innerJoin('session.creneau', 'cr')
-            ->innerJoin('cr.cours', 'c')
-            ->innerJoin('c.prof', 'p')
+            ->innerJoin('session.prof', 'p')
             ->where('session.dateDebut BETWEEN :start and :end')
             ->andWhere('p.id = :id')
             // ->and('formation.dateDebut BETWEEN :start and :end')
@@ -95,18 +91,18 @@ class CalendarListener
             }
 
             // Sessions d'un eleve
-            else if (array_key_exists('eleve', $filters)) {
+            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
                 $sessionEvent = new Event(
-                    $session->getCreneau()->getCours()->getActivite()->getNom().' avec '.$session->getCreneau()->getCours()->getProf()->getNom(),
+                    $session->getCours()->getActivite()->getNom().' avec '.$session->getProf()->getNom(),
                     $session->getDateDebut(),
                     $session->getDateFin() // If the end date is null or not defined, a all day event is created.
                 );
             }
             // Sessions d'un prof
-            else {
+            else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
                 if ( $session->getEleve() ) {
                     $sessionEvent = new Event(
-                        $session->getCreneau()->getCours()->getActivite()->getNom().' avec '.$session->getEleve()->getNom(),
+                        $session->getCours()->getActivite()->getNom().' avec '.$session->getEleve()->getNom(),
                         $session->getDateDebut(),
                         $session->getDateFin() // If the end date is null or not defined, a all day event is created.
                     );
@@ -128,22 +124,23 @@ class CalendarListener
             }
 
 
-            // Cours di
+            // Cours disponible
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$session->getEleve() ) {
 
                 $sessionEvent->addOption(
                     'url',
                     $this->router->generate('demande_inscription_session', [
                         'idSession' => $session->getId(),
-                        'idEleve' => $filters['eleve']
+                        'idEleve' => $filters['eleve'],
+                        'idCours' => $filters['cours'],
                     ])
                 );
             }
-            else if (array_key_exists('eleve', $filters)) {
+            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
                 $sessionEvent->addOption(
                     'url',
                     $this->router->generate('emettre_avis', [
-                        'idProf' => $session->getCreneau()->getCours()->getProf()->getId(),
+                        'idProf' => $session->getProf()->getId(),
                         'idEleve' => $filters['eleve']
                     ])
                 );

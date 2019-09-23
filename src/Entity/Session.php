@@ -27,12 +27,6 @@ class Session
     private $dateFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Creneau", inversedBy="sessions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $creneau;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="sessions")
      */
     private $eleve;
@@ -42,9 +36,22 @@ class Session
      */
     private $validee;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $cours;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $prof;
+
     public function __construct()
     {
         $this->validee = false;
+        // $this->cours=null;
     }
 
     public function getId(): ?int
@@ -76,18 +83,6 @@ class Session
         return $this;
     }
 
-    public function getCreneau(): ?Creneau
-    {
-        return $this->creneau;
-    }
-
-    public function setCreneau(?Creneau $creneau): self
-    {
-        $this->creneau = $creneau;
-
-        return $this;
-    }
-
     public function getEleve(): ?Eleve
     {
         return $this->eleve;
@@ -108,6 +103,30 @@ class Session
     public function setValidee(bool $validee): self
     {
         $this->validee = $validee;
+
+        return $this;
+    }
+
+    public function getCours(): ?Cours
+    {
+        return $this->cours;
+    }
+
+    public function setCours(?Cours $cours): self
+    {
+        $this->cours = $cours;
+
+        return $this;
+    }
+
+    public function getProf(): ?Prof
+    {
+        return $this->prof;
+    }
+
+    public function setProf(?Prof $prof): self
+    {
+        $this->prof = $prof;
 
         return $this;
     }

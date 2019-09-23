@@ -49,15 +49,6 @@ class CreationCoursType extends AbstractType
 
             ])
 
-            ->add('creneaux', CollectionType::class, [
-                'entry_type' => CreneauType::class,
-                'entry_options' => ['label' => "Selectionnez un creneau :", ],
-                'allow_add' => true,
-                'allow_delete' => true,
-                "by_reference" => false,
-                'label' => false,
-            ])
-
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'
             ])        

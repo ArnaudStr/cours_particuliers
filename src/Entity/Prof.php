@@ -13,11 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProfRepository")
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @UniqueEntity(fields={"username"}, message="Nom d'utilisateur déjà utilisé")
  */
 class Prof implements UserInterface
 {
@@ -30,6 +28,7 @@ class Prof implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -60,7 +59,9 @@ class Prof implements UserInterface
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email
      */
     private $email;
 
@@ -95,11 +96,6 @@ class Prof implements UserInterface
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $confirmationToken;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cours", mappedBy="prof", orphanRemoval=true)
      */
     private $coursS;
@@ -109,12 +105,37 @@ class Prof implements UserInterface
      */
     private $notes = [];
 
+    /**
+     * @var string le token qui servira lors de l'oubli de mot de passe
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $resetToken;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $aConfirme;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="prof", orphanRemoval=true)
+     */
+    private $sessions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="prof", orphanRemoval=true, cascade={"persist"})
+     */
+    private $creneaux;
+
     public function __construct()
     {
+        $this->aConfirme = false;
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->coursS = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->creneaux = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -404,12 +425,103 @@ class Prof implements UserInterface
         return $this;
     }
     
+
+        /**
+     * @return string
+     */
+    public function getResetToken(): string
+    {
+        return $this->resetToken;
+    }
+ 
+    /**
+     * @param string $resetToken
+     */
+    public function setResetToken(?string $resetToken): void
+    {
+        $this->resetToken = $resetToken;
+    }
+
+    public function getAConfirme(): ?bool
+    {
+        return $this->aConfirme;
+    }
+
+    public function setAConfirme(bool $aConfirme): self
+    {
+        $this->aConfirme = $aConfirme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setProf($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getProf() === $this) {
+                $session->setProf(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * toString
      * @return string
      */
     public function __toString(){
         return $this->getPrenom().' '.$this->getNom();
+    }
+
+    /**
+     * @return Collection|creneau[]
+     */
+    public function getCreneaux(): Collection
+    {
+        return $this->creneaux;
+    }
+
+    public function addCreneau(creneau $creneau): self
+    {
+        if (!$this->creneaux->contains($creneau)) {
+            $this->creneaux[] = $creneau;
+            $creneau->setProf($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreneau(creneau $creneau): self
+    {
+        if ($this->creneaux->contains($creneau)) {
+            $this->creneaux->removeElement($creneau);
+            // set the owning side to null (unless already changed)
+            if ($creneau->getProf() === $this) {
+                $creneau->setProf(null);
+            }
+        }
+
+        return $this;
     }
 
 

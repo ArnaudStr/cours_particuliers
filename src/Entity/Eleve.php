@@ -14,12 +14,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="Nom d'utilisateur déjà utilisé"
+ * )
  */
+
 class Eleve implements UserInterface
 {
     /**
@@ -31,6 +33,7 @@ class Eleve implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Veuillez entrer un nom d'utilisateur")
      */
     private $username;
 
@@ -62,6 +65,8 @@ class Eleve implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez entrer un email")
+     * @Assert\Email
      */
     private $email;
 

@@ -34,19 +34,11 @@ class Creneau
     private $heureFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="creneaux")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="creneaux")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $cours;
+    private $prof;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="creneau", orphanRemoval=true)
-     */
-    private $sessions;
-
-    public function __construct()
-    {
-        $this->sessions = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -89,45 +81,14 @@ class Creneau
         return $this;
     }
 
-    public function getCours(): ?Cours
+    public function getProf(): ?Prof
     {
-        return $this->cours;
+        return $this->prof;
     }
 
-    public function setCours(?Cours $cours): self
+    public function setProf(?Prof $prof): self
     {
-        $this->cours = $cours;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Session[]
-     */
-    public function getSessions(): Collection
-    {
-        return $this->sessions;
-    }
-
-    public function addSession(Session $session): self
-    {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setCreneau($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSession(Session $session): self
-    {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
-            // set the owning side to null (unless already changed)
-            if ($session->getCreneau() === $this) {
-                $session->setCreneau(null);
-            }
-        }
+        $this->prof = $prof;
 
         return $this;
     }

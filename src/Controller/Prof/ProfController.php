@@ -20,23 +20,21 @@ use App\Form\CreationCoursType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 /**
  * @Route("/prof")
  */
 class ProfController extends AbstractController
-{
-
-    
+{    
     /**
      * @Route("/home", name="home_prof")
      */
@@ -114,7 +112,7 @@ class ProfController extends AbstractController
      * @Route("/editProf/{id}", name="edit_prof")
      */
     // public function editProf(Prof $prof, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
-    public function editProf(Prof $prof, Request $request)
+    public function editProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
 
         $pictureBeforeForm = $prof->getPictureFilename();
@@ -138,12 +136,14 @@ class ProfController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($prof);
+            
+            // On parcours les disponibilités du prof
+            foreach ($prof->getCreneaux() as $creneau){             
+                $this->ajoutSessions(4, $creneau, $manager);              
+            }
+                
             $entityManager->flush();
-
-            // dump($pictureFilename);
-            // dump($filename);
-            // dd($prof);
-
+                 
             // do anything else you need here, like send an email
 
             return $this->redirectToRoute('show_profile_prof');
@@ -155,15 +155,11 @@ class ProfController extends AbstractController
         ]);
     }
 
-
-
-
-
     public function ajoutSessions($nbSemaines, Creneau $creneau, ObjectManager $manager){
         for ($i=0; $i<$nbSemaines; $i++){
 
             $session = new Session();
-            $session->setCreneau($creneau);
+            $session->setProf($creneau->getProf());
 
             // On crée la crée la session pour la semaine suivante
             $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
@@ -202,11 +198,11 @@ class ProfController extends AbstractController
 
         else{
             $title = 'Modification de cours '.$cours;
-            $coursAvantForm = $cours->getCreneaux();
-            $idCoursAvantForm = [];
-            foreach ($coursAvantForm as $creneauxAvantForm){
-                array_push($idCoursAvantForm, $creneauxAvantForm->getId());
-            }
+            // $coursAvantForm = $cours->getCreneaux();
+            // $idCoursAvantForm = [];
+            // foreach ($coursAvantForm as $creneauxAvantForm){
+            //     array_push($idCoursAvantForm, $creneauxAvantForm->getId());
+            // }
         }
 
         $form = $this->createForm(CreationCoursType::class, $cours);
@@ -215,46 +211,46 @@ class ProfController extends AbstractController
                
         if($form->isSubmitted() && $form->isValid()) {
 
-            // On met les creneaux dans le cours
+            // // On met les creneaux dans le cours
             $manager->persist($cours);
 
-            // On parcours les disponibilités du prof
-            foreach ($cours->getCreneaux() as $creneau){
+            // // On parcours les disponibilités du prof
+            // foreach ($cours->getCreneaux() as $creneau){
 
-                if (!$modif){
+            //     if (!$modif){
 
-                    $this->ajoutSessions(4, $creneau, $manager);
-                }
+            //         $this->ajoutSessions(4, $creneau, $manager);
+            //     }
 
-                else{
+            //     else{
 
-                    foreach ($cours->getCreneaux() as $creneau){
+            //         foreach ($cours->getCreneaux() as $creneau){
 
-                        $coursApresForm = $cours->getCreneaux();
-                        $idCoursApresForm = [];
-                        foreach ($coursApresForm as $creneauxApresForm){
-                            array_push($idCoursApresForm, $creneauxApresForm->getId());
-                        }
+            //             $coursApresForm = $cours->getCreneaux();
+            //             $idCoursApresForm = [];
+            //             foreach ($coursApresForm as $creneauxApresForm){
+            //                 array_push($idCoursApresForm, $creneauxApresForm->getId());
+            //             }
 
-                        // Si c'est un nouveau créneau
-                        if (!in_array($creneau->getId(), $idCoursAvantForm))
-                        {
-                            $this->ajoutSessions(4, $creneau, $manager);
+            //             // Si c'est un nouveau créneau
+            //             if (!in_array($creneau->getId(), $idCoursAvantForm))
+            //             {
+            //                 $this->ajoutSessions(4, $creneau, $manager);
 
-                        }
-                    }
+            //             }
+            //         }
 
-                    foreach ($coursAvantForm as $creneau){
+            //         foreach ($coursAvantForm as $creneau){
 
-                        // Si c'est un ancien creneau qui a été modifié / supprimé
-                        if (!in_array($creneau->getId(), $idCoursApresForm))
-                        {
-                            $manager->remove($creneau);
-                        }
-                    }
+            //             // Si c'est un ancien creneau qui a été modifié / supprimé
+            //             if (!in_array($creneau->getId(), $idCoursApresForm))
+            //             {
+            //                 $manager->remove($creneau);
+            //             }
+            //         }
 
-                }
-            }
+            //     }
+            // }
 
             $manager->flush();
  
@@ -393,6 +389,7 @@ class ProfController extends AbstractController
         }
         else {
             $session->setEleve(null);
+            $session->setCours(null);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -401,6 +398,91 @@ class ProfController extends AbstractController
 
         return $this->redirectToRoute('home_prof');
 
+    }
+
+    
+    /**
+     * @Route("/forgotten_password", name="app_forgotten_password")
+     */
+    public function forgottenPassword(
+        Request $request,
+        \Swift_Mailer $mailer,
+        TokenGeneratorInterface $tokenGenerator
+    )
+    {
+ 
+        if ($request->isMethod('POST')) {
+ 
+            $email = $request->request->get('email');
+ 
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $entityManager->getRepository(Prof::class)->findOneByEmail($email);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Email Inconnu');
+                return $this->redirectToRoute('home');
+            }
+            $token = $tokenGenerator->generateToken();
+ 
+            try{
+                $user->setResetToken($token);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+                return $this->redirectToRoute('home');
+            }
+ 
+            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $message = (new \Swift_Message('Forgot Password'))
+                ->setFrom('arnaud6757@gmail.com')
+                // ->setFrom('arnaud.straumann@free.fr')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    'text/html'
+                );
+ 
+            $mailer->send($message);
+
+            $this->addFlash('notice', 'Mail envoyé');
+
+            return $this->redirectToRoute('home');
+        }
+ 
+        return $this->render('security/forgotten_password.html.twig');
+    }
+
+    /**
+     * @Route("/reset_password/{token}", name="app_reset_password")
+     */
+    public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+    {
+ 
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getDoctrine()->getManager();
+ 
+            $user = $entityManager->getRepository(Prof::class)->findOneByResetToken($token);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Token Inconnu');
+                return $this->redirectToRoute('home');
+            }
+ 
+            $user->setResetToken(null);
+            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $entityManager->flush();
+ 
+            $this->addFlash('notice', 'Mot de passe mis à jour');
+ 
+            return $this->redirectToRoute('login_prof');
+        }else {
+ 
+            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+        }
+ 
     }
 
     
