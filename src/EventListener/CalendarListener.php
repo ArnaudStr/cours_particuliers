@@ -91,7 +91,7 @@ class CalendarListener
             }
 
             // Sessions d'un eleve
-            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
+            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters)) {
                 $sessionEvent = new Event(
                     $session->getCours()->getActivite()->getNom().' avec '.$session->getProf()->getNom(),
                     $session->getDateDebut(),
@@ -99,7 +99,7 @@ class CalendarListener
                 );
             }
             // Sessions d'un prof
-            else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
+            else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters)) {
                 if ( $session->getEleve() ) {
                     $sessionEvent = new Event(
                         $session->getCours()->getActivite()->getNom().' avec '.$session->getEleve()->getNom(),
@@ -136,7 +136,7 @@ class CalendarListener
                     ])
                 );
             }
-            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getValidee()) {
+            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getEleve()) {
                 $sessionEvent->addOption(
                     'url',
                     $this->router->generate('emettre_avis', [

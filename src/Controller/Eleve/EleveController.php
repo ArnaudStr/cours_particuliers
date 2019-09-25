@@ -7,7 +7,7 @@ use App\Entity\Avis;
 
 use App\Entity\Prof;
 use App\Entity\Cours;
-
+use App\Entity\DemandeCours;
 use App\Entity\Eleve;
 use App\Form\AvisType;
 use App\Entity\Message;
@@ -86,7 +86,7 @@ class EleveController extends AbstractController
      */
     public function showProfileEleve()
     {
-        return $this->render('member/showProfile.html.twig', [
+        return $this->render('eleve/showProfileEleve.html.twig', [
             'controller_name' => 'MemberController',
         ]);
     }   
@@ -239,11 +239,15 @@ class EleveController extends AbstractController
     public function demandeInscriptionSession(Session $session, Eleve $eleve, Cours $cours) {
 
         // Inscription élève au cours
-        $session->setEleve($eleve);
-        $session->setCours($cours);
+        // $session->setEleve($eleve);
+        // $session->setCours($cours);
+        $demandeCours = new DemandeCours();
+        $demandeCours->setSession($session);
+        $demandeCours->setEleve($eleve);
+        $demandeCours->setCours($cours);
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($session);
+        $entityManager->persist($demandeCours);
         $entityManager->flush();
             return $this->render('eleve/indexEleve.html.twig', [
                 'title' => 'Planning'
@@ -324,7 +328,7 @@ class EleveController extends AbstractController
             $token = $tokenGenerator->generateToken();
  
             try{
-                $user->setResetToken($token);
+                $user->setToken($token);
                 $entityManager->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
@@ -361,7 +365,7 @@ class EleveController extends AbstractController
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();
  
-            $user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token);
+            $user = $entityManager->getRepository(Eleve::class)->findOneByToken($token);
             /* @var $user User */
  
             if ($user === null) {
@@ -369,7 +373,7 @@ class EleveController extends AbstractController
                 return $this->redirectToRoute('home');
             }
  
-            $user->setResetToken(null);
+            $user->setToken(null);
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  

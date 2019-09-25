@@ -18,10 +18,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
  * @UniqueEntity(
  *     fields={"email"},
- *     message="Nom d'utilisateur déjà utilisé"
+ *     message="Email déjà utilisé"
  * )
  */
-
 class Eleve implements UserInterface
 {
     /**
@@ -30,12 +29,6 @@ class Eleve implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(message="Veuillez entrer un nom d'utilisateur")
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -104,12 +97,17 @@ class Eleve implements UserInterface
      * @var string le token qui servira lors de l'oubli de mot de passe
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $resetToken;
+    protected $token;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $aConfirme;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DemandeCours", mappedBy="eleve", orphanRemoval=true)
+     */
+    private $demandesCours;
 
     public function __construct()
     {
@@ -118,6 +116,7 @@ class Eleve implements UserInterface
         $this->avis = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->sessions = new ArrayCollection();
+        $this->demandesCours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,23 +124,16 @@ class Eleve implements UserInterface
         return $this->id;
     }
 
-    /**
+        /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
+    
     /**
      * @see UserInterface
      */
@@ -331,14 +323,6 @@ class Eleve implements UserInterface
     }  
     
     /**
-     * toString
-     * @return string
-     */
-    public function __toString(){
-        return $this->getPrenom().' '.$this->getNom();
-    }
-
-    /**
      * @return Collection|Session[]
      */
     public function getSessions(): Collection
@@ -372,17 +356,17 @@ class Eleve implements UserInterface
     /**
      * @return string
      */
-    public function getResetToken(): string
+    public function getToken(): string
     {
-        return $this->resetToken;
+        return $this->token;
     }
  
     /**
-     * @param string $resetToken
+     * @param string $token
      */
-    public function setResetToken(?string $resetToken): void
+    public function setToken(?string $token): void
     {
-        $this->resetToken = $resetToken;
+        $this->token = $token;
     }
 
     public function getAConfirme(): ?bool
@@ -396,4 +380,44 @@ class Eleve implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|DemandeCours[]
+     */
+    public function getDemandesCours(): Collection
+    {
+        return $this->demandesCours;
+    }
+
+    public function addDemandesCour(DemandeCours $demandesCour): self
+    {
+        if (!$this->demandesCours->contains($demandesCour)) {
+            $this->demandesCours[] = $demandesCour;
+            $demandesCour->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandesCour(DemandeCours $demandesCour): self
+    {
+        if ($this->demandesCours->contains($demandesCour)) {
+            $this->demandesCours->removeElement($demandesCour);
+            // set the owning side to null (unless already changed)
+            if ($demandesCour->getEleve() === $this) {
+                $demandesCour->setEleve(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return ucfirst($this->getPrenom()).' '.strtoupper($this->getNom());
+    }
+
 }

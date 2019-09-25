@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProfRepository")
- * @UniqueEntity(fields={"username"}, message="Nom d'utilisateur déjà utilisé")
+ * @UniqueEntity(fields={"email"}, message="Email déjà utilisé")
  */
 class Prof implements UserInterface
 {
@@ -25,12 +25,6 @@ class Prof implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank()
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -109,7 +103,7 @@ class Prof implements UserInterface
      * @var string le token qui servira lors de l'oubli de mot de passe
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $resetToken;
+    protected $token;
 
     /**
      * @ORM\Column(type="boolean")
@@ -150,14 +144,7 @@ class Prof implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
+        return (string) $this->email;
     }
 
     /**
@@ -361,18 +348,6 @@ class Prof implements UserInterface
         return $this;
     }
 
-    public function getConfirmationToken(): ?string
-    {
-        return $this->confirmationToken;
-    }
-
-    public function setConfirmationToken(string $confirmationToken): self
-    {
-        $this->confirmationToken = $confirmationToken;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Cours[]
      */
@@ -429,17 +404,17 @@ class Prof implements UserInterface
         /**
      * @return string
      */
-    public function getResetToken(): string
+    public function getToken(): string
     {
-        return $this->resetToken;
+        return $this->token;
     }
  
     /**
-     * @param string $resetToken
+     * @param string $token
      */
-    public function setResetToken(?string $resetToken): void
+    public function setToken(?string $token): void
     {
-        $this->resetToken = $resetToken;
+        $this->token = $token;
     }
 
     public function getAConfirme(): ?bool
@@ -486,14 +461,6 @@ class Prof implements UserInterface
     }
 
     /**
-     * toString
-     * @return string
-     */
-    public function __toString(){
-        return $this->getPrenom().' '.$this->getNom();
-    }
-
-    /**
      * @return Collection|creneau[]
      */
     public function getCreneaux(): Collection
@@ -522,6 +489,14 @@ class Prof implements UserInterface
         }
 
         return $this;
+    }
+
+        /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return ucfirst($this->getPrenom()).' '.strtoupper($this->getNom());
     }
 
 

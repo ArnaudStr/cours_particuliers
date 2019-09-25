@@ -1,8 +1,10 @@
+.wrapper{
+    width: 1000px;
+    min-height: 100vh;
+    margin: auto;
+}
+
 .profile_pic {
     height: 250px;
     width: 250px;
-}
-
-h1{
-    color: red;
 }

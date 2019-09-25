@@ -6,6 +6,9 @@ security:
             algorithm: auto
         App\Entity\Admin:
             algorithm: auto
+        App\Entity\User:
+            algorithm: auto
+
 
 
 
@@ -15,17 +18,17 @@ security:
         admin_provider:
             entity:
                 class: App\Entity\Admin
-                property: username
+                property: email
                 # manager_name: user
         prof_provider:
             entity:
                 class: App\Entity\Prof
-                property: username
+                property: email
                 # manager_name: user
         eleve_provider:
             entity:
                 class: App\Entity\Eleve
-                property: username
+                property: email
                 # manager_name: eleve
         chain_provider:
             chain:
@@ -39,7 +42,7 @@ security:
         #         users:
         #             foo: { password: test }
         # user_db:
-        #     entity: { class: App\Entity\Prof, property: username }
+        #     entity: { class: App\Entity\Prof, property: email }
         # used to reload user from session & other features (e.g. switch_user)
 
     firewalls:
@@ -94,7 +97,6 @@ security:
         default:
             pattern: ^/
             anonymous: true
-
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

@@ -13,7 +13,7 @@
         {% set idEleve = message.eleve.id %}
         {% set listEleves = listEleves|merge([idEleve]) %}
 
-        <p>Discution avec {{ message.eleve.username }}</p>
+        <p>Discution avec {{ message.eleve }}</p>
         <p><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':message.eleve.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
     {% endif %}
 

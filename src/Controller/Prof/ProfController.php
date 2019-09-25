@@ -3,8 +3,6 @@
 namespace App\Controller\Prof;
 
 use DateTime;
-
-
 use DateTimeZone;
 use App\Entity\Prof;
 
@@ -16,6 +14,7 @@ use App\Entity\Session;
 use App\Form\MessageType;
 use App\Form\EditProfType;
 use App\Form\CreationCoursType;
+use App\Entity\DemandeCours;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -198,11 +197,6 @@ class ProfController extends AbstractController
 
         else{
             $title = 'Modification de cours '.$cours;
-            // $coursAvantForm = $cours->getCreneaux();
-            // $idCoursAvantForm = [];
-            // foreach ($coursAvantForm as $creneauxAvantForm){
-            //     array_push($idCoursAvantForm, $creneauxAvantForm->getId());
-            // }
         }
 
         $form = $this->createForm(CreationCoursType::class, $cours);
@@ -213,44 +207,6 @@ class ProfController extends AbstractController
 
             // // On met les creneaux dans le cours
             $manager->persist($cours);
-
-            // // On parcours les disponibilités du prof
-            // foreach ($cours->getCreneaux() as $creneau){
-
-            //     if (!$modif){
-
-            //         $this->ajoutSessions(4, $creneau, $manager);
-            //     }
-
-            //     else{
-
-            //         foreach ($cours->getCreneaux() as $creneau){
-
-            //             $coursApresForm = $cours->getCreneaux();
-            //             $idCoursApresForm = [];
-            //             foreach ($coursApresForm as $creneauxApresForm){
-            //                 array_push($idCoursApresForm, $creneauxApresForm->getId());
-            //             }
-
-            //             // Si c'est un nouveau créneau
-            //             if (!in_array($creneau->getId(), $idCoursAvantForm))
-            //             {
-            //                 $this->ajoutSessions(4, $creneau, $manager);
-
-            //             }
-            //         }
-
-            //         foreach ($coursAvantForm as $creneau){
-
-            //             // Si c'est un ancien creneau qui a été modifié / supprimé
-            //             if (!in_array($creneau->getId(), $idCoursApresForm))
-            //             {
-            //                 $manager->remove($creneau);
-            //             }
-            //         }
-
-            //     }
-            // }
 
             $manager->flush();
  
@@ -382,17 +338,18 @@ class ProfController extends AbstractController
     /**
      * @Route("/validationSessionProf/{id}/{valider}", name="validation_sessions_prof")
      */
-    public function validationSessionProf(Session $session, int $valider) {
+    public function validationSessionProf(DemandeCours $demandeCours, int $valider) {
 
+        $session = $demandeCours->getSession();
         if ($valider == 1) {
-            $session->setValidee(true);
+            $session->setEleve($demandeCours->getEleve());
+            $session->setCours($demandeCours->getCours());
         }
-        else {
-            $session->setEleve(null);
-            $session->setCours(null);
-        }
+
+        $demandeCours->setRepondue(true);
 
         $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($demandeCours);
         $entityManager->persist($session);
         $entityManager->flush();
 
@@ -426,7 +383,7 @@ class ProfController extends AbstractController
             $token = $tokenGenerator->generateToken();
  
             try{
-                $user->setResetToken($token);
+                $user->setToken($token);
                 $entityManager->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
@@ -463,7 +420,7 @@ class ProfController extends AbstractController
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();
  
-            $user = $entityManager->getRepository(Prof::class)->findOneByResetToken($token);
+            $user = $entityManager->getRepository(Prof::class)->findOneByToken($token);
             /* @var $user User */
  
             if ($user === null) {
@@ -471,7 +428,7 @@ class ProfController extends AbstractController
                 return $this->redirectToRoute('home');
             }
  
-            $user->setResetToken(null);
+            $user->setToken(null);
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  
@@ -484,7 +441,5 @@ class ProfController extends AbstractController
         }
  
     }
-
-    
     
 }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,11 +34,6 @@ class Session
     private $eleve;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $validee;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="sessions")
      * @ORM\JoinColumn(nullable=true)
      */
@@ -48,9 +45,15 @@ class Session
      */
     private $prof;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DemandeCours", mappedBy="session", orphanRemoval=true)
+     */
+    private $demandesCours;
+
     public function __construct()
     {
         $this->validee = false;
+        $this->demandesCours = new ArrayCollection();
         // $this->cours=null;
     }
 
@@ -95,18 +98,6 @@ class Session
         return $this;
     }
 
-    public function getValidee(): ?bool
-    {
-        return $this->validee;
-    }
-
-    public function setValidee(bool $validee): self
-    {
-        $this->validee = $validee;
-
-        return $this;
-    }
-
     public function getCours(): ?Cours
     {
         return $this->cours;
@@ -127,6 +118,37 @@ class Session
     public function setProf(?Prof $prof): self
     {
         $this->prof = $prof;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DemandeCours[]
+     */
+    public function getDemandesCours(): Collection
+    {
+        return $this->demandesCours;
+    }
+
+    public function addDemandesCour(DemandeCours $demandesCour): self
+    {
+        if (!$this->demandesCours->contains($demandesCour)) {
+            $this->demandesCours[] = $demandesCour;
+            $demandesCour->setSession($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandesCour(DemandeCours $demandesCour): self
+    {
+        if ($this->demandesCours->contains($demandesCour)) {
+            $this->demandesCours->removeElement($demandesCour);
+            // set the owning side to null (unless already changed)
+            if ($demandesCour->getSession() === $this) {
+                $demandesCour->setSession(null);
+            }
+        }
 
         return $this;
     }

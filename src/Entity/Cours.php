@@ -43,7 +43,7 @@ class Cours
     /**
      * @ORM\Column(type="boolean")
      */
-    private $domicile;
+    private $chezProf;
 
     /**
      * @ORM\Column(type="boolean")
@@ -54,6 +54,16 @@ class Cours
      * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="cours", orphanRemoval=true)
      */
     private $sessions;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $niveaux;
 
     public function __construct()
     {
@@ -122,14 +132,14 @@ class Cours
         return $this;
     }
 
-    public function getDomicile(): ?bool
+    public function getChezProf(): ?bool
     {
-        return $this->domicile;
+        return $this->chezProf;
     }
 
-    public function setDomicile(bool $domicile): self
+    public function setChezProf(bool $chezProf): self
     {
-        $this->domicile = $domicile;
+        $this->chezProf = $chezProf;
 
         return $this;
     }
@@ -173,6 +183,30 @@ class Cours
                 $session->setCours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getNiveaux(): ?string
+    {
+        return $this->niveaux;
+    }
+
+    public function setNiveaux(?string $niveaux): self
+    {
+        $this->niveaux = $niveaux;
 
         return $this;
     }

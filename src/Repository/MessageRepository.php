@@ -65,12 +65,6 @@ class MessageRepository extends ServiceEntityRepository
 
     }
 
-
-    // SELECT count(*) from eleve e, message m
-	// where e.id = m.eleve_id
-	// and e.username != m.auteur
-    // and m.lu = 0
-
     public function findNonLusEleve(Eleve $eleve): array
     {
 

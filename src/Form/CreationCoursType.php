@@ -2,18 +2,17 @@
 
 namespace App\Form;
 
-use App\Entity\Activite;
-use App\Form\CreneauType;
 use App\Entity\Cours;
+use App\Entity\Activite;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CreationCoursType extends AbstractType
 {
@@ -33,21 +32,29 @@ class CreationCoursType extends AbstractType
             ])
 
             ->add('webcam', CheckboxType::class, [
-                "label" => "Cours par Webcam",
+                "label" => "Téléprésentiel",
                 'required' => false,
             ])
 
-            ->add('domicile', CheckboxType::class, [
-                "label" => "Cours à domicile",
+            ->add('chezProf', CheckboxType::class, [
+                "label" => "Cours chez le professeur",
                 'required' => false,
 
             ])
 
             ->add('chezEleve', CheckboxType::class, [
-                "label" => "Cours chez le professeur",
+                "label" => "Cours chez l'élève",
                 'required' => false,
 
             ])
+
+            ->add('description', TextareaType::class, [
+            ])
+
+            ->add('niveaux', TextareaType::class, [
+                'label' => 'Veuillez renseigner les niveaux pour lesquels vous voulez enseigner',
+                'required' => false,
+                ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'

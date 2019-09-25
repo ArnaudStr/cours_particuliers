@@ -37,7 +37,7 @@ class RegisterController extends AbstractController
 
                 $user = new Eleve();
 
-                $user->setResetToken($token);
+                $user->setToken($token);
 
                 $user->setRoles(["ROLE_ELEVE"]);
 
@@ -48,7 +48,7 @@ class RegisterController extends AbstractController
 
                 $user = new Prof();
 
-                $user->setResetToken($token);
+                $user->setToken($token);
 
                 $user->setRoles(["ROLE_PROF"]);
 
@@ -56,10 +56,6 @@ class RegisterController extends AbstractController
             }
     
             $user->setPictureFilename('default.jpg');
-
-            $user->setUsername(
-                $form->get('username')->getData()
-            );
 
             // encode the plain password
             $user->setPassword(
@@ -121,9 +117,9 @@ class RegisterController extends AbstractController
     { 
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($user = $entityManager->getRepository(Eleve::class)->findOneByResetToken($token));
+        if ($user = $entityManager->getRepository(Eleve::class)->findOneByToken($token));
         else {
-            $user = $entityManager->getRepository(Prof::class)->findOneByResetToken($token);
+            $user = $entityManager->getRepository(Prof::class)->findOneByToken($token);
         }
 
         if ($user === null) {
@@ -131,7 +127,7 @@ class RegisterController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $user->setResetToken(null);
+        $user->setToken(null);
         $user->setAConfirme(true);
         $entityManager->flush();
 
