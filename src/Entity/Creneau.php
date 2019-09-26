@@ -92,4 +92,13 @@ class Creneau
 
         return $this;
     }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return ucfirst($this->getJour()).' de ';
+        // .$this->getHeureDebut().' à '.$this->getHeureFin();
+    }
 }

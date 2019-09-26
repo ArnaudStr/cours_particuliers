@@ -4,13 +4,71 @@
 
 {% block body %}
 
-    <h1> {{ app.user }} </h1>
-    <p>Adresse : {{ app.user.adresse }}</p>
-    <p>Email : {{ app.user.email }}</p>
-    <p>Photo : {{ app.user.pictureFilename }} </p>
-    <p>Description : {{ app.user.description }}</p>
-    <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
-        
-    <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier mon profil</button></a></p>
+    <!-- <h1>Votre profil</h1> -->
+    <div class="up">
+        <div class="infosEtDescription">
+            <div class="infos">
+                <div class="photo">
+                    <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
+                </div>
+                <div class="coordonnees">
+                    <p>{{ app.user }}</p>
+                    <p>{{ app.user.email }}</p>
+                    <p>{{ app.user.adresse }}</p>
+                    <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes informtions</button></a></p>
+                </div>
+            </div>
+            <div class="description">
+                <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita praesentium suscipit voluptatibus dolorem
+                    a ipsum cum non magnam esse unde nemo illo aliquid ullam ipsa ex dolore, molestiae enim! Voluptate!
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
+                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
+                    quis provident quam pariatur quasi laborum?
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
+                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
+                    quis provident quam pariatur quasi laborum?
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
+                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
+                    quis provident quam pariatur quasi laborum?
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
+                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
+                    quis provident quam pariatur quasi laborum?
+                </p>
+            </div>
+        </div>
+
+        <div class="creneaux">
+            <h2>Mes creneaux</h2>
+            {% for creneau in app.user.creneaux %}
+                <p>{{ creneau }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="down">
+        <div class="avis">
+            <h2>Note : {{ noteMoyenne }}</h2>
+            {% if nbEtoiles >= 1 %}
+                {% for i in 1..nbEtoiles %}
+                    <i class="fas fa-star"></i>
+                {% endfor %}
+            {% endif %}
+
+            {% if nbEtoiles != 5 %}         
+                {% for i in nbEtoiles .. 4 %}
+                    <i class="far fa-star"></i>
+                {% endfor %}
+            {% endif %}
+
+
+        </div>
+        <div class="coursProf">
+
+        </div>
+    </div>
+
 
 {% endblock %}

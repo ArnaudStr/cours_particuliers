@@ -401,7 +401,7 @@ class Prof implements UserInterface
     }
     
 
-        /**
+    /**
      * @return string
      */
     public function getToken(): string

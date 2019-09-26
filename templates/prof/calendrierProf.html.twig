@@ -9,9 +9,12 @@
 {% block body %}
 
     <div data-entry-idprof={{app.user.id}}>
+    <a class="btnA" href="#" type="button" data-btn="up">Haut</a>
+    <a class="btnA" href='#' type="button" data-btn="down">Bas</a>
 
-    {% include '@Calendar/calendar.html' %} 
-
+    <div class="calendarProf">
+        {% include '@Calendar/calendar.html' %} 
+    </div>
 {% endblock %}
 
 

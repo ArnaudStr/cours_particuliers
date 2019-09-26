@@ -100,12 +100,35 @@ class CalendarListener
             }
             // Sessions d'un prof
             else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters)) {
+
+                // COURS VALIDE
                 if ( $session->getEleve() ) {
                     $sessionEvent = new Event(
                         $session->getCours()->getActivite()->getNom().' avec '.$session->getEleve()->getNom(),
                         $session->getDateDebut(),
                         $session->getDateFin() // If the end date is null or not defined, a all day event is created.
                     );
+
+                    $sessionEvent->setOptions([
+                        'backgroundColor' => 'orange',
+                        'borderColor' => 'orange',
+                        'font-color' => 'blue'
+                    ]);
+                }
+
+                // CRENEAU LIBRE
+                else {
+                    $sessionEvent = new Event(
+                        'Creneau libre',
+                        $session->getDateDebut(),
+                        $session->getDateFin() // If the end date is null or not defined, a all day event is created.
+                    );
+
+                    $sessionEvent->setOptions([
+                        'backgroundColor' => 'blue',
+                        'borderColor' => 'blue',
+                        'font-color' => 'red'
+                    ]);
                 }
             }
             /*
@@ -115,13 +138,13 @@ class CalendarListener
             * and: https://github.com/fullcalendar/fullcalendar/blob/master/src/core/options.ts
             */
 
-            if ($sessionEvent) {
-                $sessionEvent->setOptions([
-                    'backgroundColor' => 'orange',
-                    'borderColor' => 'orange',
-                    'font-color' => 'black'
-                ]);
-            }
+            // if ($sessionEvent) {
+            //     $sessionEvent->setOptions([
+            //         'backgroundColor' => 'orange',
+            //         'borderColor' => 'orange',
+            //         'font-color' => 'black'
+            //     ]);
+            // }
 
 
             // Cours disponible

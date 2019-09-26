@@ -35,7 +35,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class ProfController extends AbstractController
 {    
     /**
-     * @Route("/home", name="home_prof")
+     * @Route("/", name="home_prof")
      */
     public function indexProf()
     {
@@ -52,7 +52,8 @@ class ProfController extends AbstractController
         $session = new SessionUser();
         $session->set('nbMsgNonLus', $nbMsgNonLus);
         
-        return $this->render('prof/indexProf.html.twig', [
+        return $this->render('prof/calendrierProf.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 
@@ -86,12 +87,21 @@ class ProfController extends AbstractController
     }
 
     /**
-     * @Route("/showProfileProf", name="show_profile_prof")
+     * @Route("/showProfileProf/{id}", name="show_profile_prof")
      */
-    public function showProfileProf()
+    public function showProfileProf(Prof $prof)
     {
+        // dd($prof->getNotes());
+        if ($notes = $prof->getNotes()){
+            $noteMoyenne = round(array_sum($notes)/count($notes),1);
+            $nbEtoiles = round($noteMoyenne);
+        }
+        else $noteMoyenne = 'Pas encore noté';
+
         return $this->render('prof/showProfileProf.html.twig', [
-            'controller_name' => 'MemberController',
+            'noteMoyenne' => $noteMoyenne,
+            'nbEtoiles' => $nbEtoiles
+
         ]);
     }
 
