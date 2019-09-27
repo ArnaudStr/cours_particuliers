@@ -3,8 +3,22 @@ document.addEventListener('DOMContentLoaded', () => {
     var elevejs = document.querySelector('[data-entry-ideleve]').dataset.entryIdeleve;
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'fr',
         defaultView: 'timeGridWeek',
-        editable: false,
+        height:'auto',
+        allDaySlot: false,
+        minTime:'07:00:00',
+        maxTime:'23:00:00',
+        buttonText: 
+        { 
+            today:    'Aujourd\'hui',
+            month:    'Mois',
+            week:     'Semaine',
+            day:      'Jour',
+            list:     'list'
+        
+        },
+        firstDay:1,
         eventSources: [
             {
                 url: "/fc-load-events",

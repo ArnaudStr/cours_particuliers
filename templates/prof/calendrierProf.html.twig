@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% endblock %}
+{% block title %}Bienvenue {{ app.user ~ " !"}}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -9,8 +9,8 @@
 {% block body %}
 
     <div data-entry-idprof={{app.user.id}}>
-    <a class="btnA" href="#" type="button" data-btn="up">Haut</a>
-    <a class="btnA" href='#' type="button" data-btn="down">Bas</a>
+    <!-- <a class="btnA" href="#" type="button" data-btn="up">Haut</a>
+    <a class="btnA" href='#' type="button" data-btn="down">Bas</a> -->
 
     <div class="calendarProf">
         {% include '@Calendar/calendar.html' %} 

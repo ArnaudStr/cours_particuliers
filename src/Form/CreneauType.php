@@ -26,6 +26,18 @@ class CreneauType extends AbstractType
                             ],
             ])
 
+            // ->add('jour',ChoiceType::class, [
+            //     "label" => 'Module:',
+            //     'choices' => [  'Lundi' => "lundi",
+            //                     'Mardi' => "mardi",
+            //                     'Mercredi' => "mercredi",
+            //                     'Jeudi' => "jeudi",
+            //                     'Vendredi' => "vendredi",
+            //                     'Samedi' => "samedi",
+            //                     'Dimanche' => "dimanche",
+            //                 ],
+            // ])
+
             ->add('heureDebut',TimeType::class, [
                 "label" => 'Heure de début :',
             ])

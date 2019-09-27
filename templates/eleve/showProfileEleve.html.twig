@@ -3,14 +3,33 @@
 {% block title %}Votre profil !{% endblock %}
 
 {% block body %}
-
-    <h1> {{ app.user }} </h1>
-    <p>Nom d'utilisateur : {{ app.user.username }}</p>
-    <p>Adresse : {{ app.user.adresse }}</p>
-    <p>Email : {{ app.user.email }}</p>
-    <p>Photo : {{ app.user.pictureFilename }} </p>
-    <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
-        
-    <p><a href="{{ path('edit_eleve', {'id':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier mon profil</button></a></p>
-
+    <div class="up">
+        <div class="infosEtPhoto">
+            <div class="photo">
+                <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
+            </div>
+            <div class="coordonnees">
+                    <p>{{ app.user }}</p>
+                    <p>{{ app.user.email }}</p>
+                    <p>{{ app.user.adresse }}</p>
+                    <p><a href="{{ path('edit_eleve', {'id':app.user.id}) }}"><button type="button">Modifier mes informtions</button></a></p>
+            </div>
+        </div>
+        <div class="prochainesSeances">
+            <h2>Prochaines séances</h2>
+            {% for session in app.user.sessions %}
+                {% if session.dateDebut|date("m/d/y H:i") > "now"|date("m/d/Y H:i") %}
+                    <p>{{ session.cours }} le {{ session.dateDebut|date('m/d/Y') }} de {{ session.dateDebut|date('H:i') }} à {{ session.dateFin|date('H:i') }} avec {{ session.cours.prof }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="down">
+        <div class="coursEleve">
+            <h2>Liste des cours suivis</h2>
+            {% for cours in coursS %}
+                <p>{{ cours }} avec {{ cours.prof }}</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

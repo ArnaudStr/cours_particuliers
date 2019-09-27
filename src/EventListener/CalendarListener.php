@@ -88,6 +88,17 @@ class CalendarListener
                     $session->getDateFin() // If the end date is null or not defined, a all day event is created.
                 );
 
+                $sessionEvent->setOptions([
+                    'backgroundColor' => 'blue',
+                    'borderColor' => 'blue',
+                    'textColor' => 'white',
+                    'url'=> $this->router->generate('demande_inscription_session', [
+                                'idSession' => $session->getId(),
+                                'idEleve' => $filters['eleve'],
+                                'idCours' => $filters['cours'],
+                    ])
+                ]); 
+
             }
 
             // Sessions d'un eleve
@@ -97,7 +108,19 @@ class CalendarListener
                     $session->getDateDebut(),
                     $session->getDateFin() // If the end date is null or not defined, a all day event is created.
                 );
+
+                $sessionEvent->setOptions([
+                    'backgroundColor' => 'orange',
+                    'borderColor' => 'orange',
+                    'textColor' => 'white',
+                    'url' => $this->router->generate('emettre_avis', [
+                                'idProf' => $session->getProf()->getId(),
+                                'idEleve' => $filters['eleve']
+                    ])
+                ]);
+
             }
+
             // Sessions d'un prof
             else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters)) {
 
@@ -112,7 +135,7 @@ class CalendarListener
                     $sessionEvent->setOptions([
                         'backgroundColor' => 'orange',
                         'borderColor' => 'orange',
-                        'font-color' => 'blue'
+                        'textColor' => 'white'
                     ]);
                 }
 
@@ -127,7 +150,7 @@ class CalendarListener
                     $sessionEvent->setOptions([
                         'backgroundColor' => 'blue',
                         'borderColor' => 'blue',
-                        'font-color' => 'red'
+                        'textColor' => 'white'
                     ]);
                 }
             }
@@ -137,37 +160,6 @@ class CalendarListener
             * For more information see: https://fullcalendar.io/docs/event-object
             * and: https://github.com/fullcalendar/fullcalendar/blob/master/src/core/options.ts
             */
-
-            // if ($sessionEvent) {
-            //     $sessionEvent->setOptions([
-            //         'backgroundColor' => 'orange',
-            //         'borderColor' => 'orange',
-            //         'font-color' => 'black'
-            //     ]);
-            // }
-
-
-            // Cours disponible
-            if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$session->getEleve() ) {
-
-                $sessionEvent->addOption(
-                    'url',
-                    $this->router->generate('demande_inscription_session', [
-                        'idSession' => $session->getId(),
-                        'idEleve' => $filters['eleve'],
-                        'idCours' => $filters['cours'],
-                    ])
-                );
-            }
-            else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters) && $session->getEleve()) {
-                $sessionEvent->addOption(
-                    'url',
-                    $this->router->generate('emettre_avis', [
-                        'idProf' => $session->getProf()->getId(),
-                        'idEleve' => $filters['eleve']
-                    ])
-                );
-            }
 
             if ($sessionEvent) {
                 // finally, add the event to the CalendarEvent to fill the calendar

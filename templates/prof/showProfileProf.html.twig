@@ -17,6 +17,22 @@
                     <p>{{ app.user.adresse }}</p>
                     <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes informtions</button></a></p>
                 </div>
+                <div class="avis">
+                    <h3>Note : {{ noteMoyenne }}</h3>
+                    {% if nbEtoiles >= 1 %}
+                        {% for i in 1..nbEtoiles %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                    {% endif %}
+        
+                    {% if nbEtoiles != 5 %}         
+                        {% for i in nbEtoiles .. 4 %}
+                            <i class="far fa-star"></i>
+                        {% endfor %}
+                    {% endif %}
+        
+                    <p>VOIR MES AVIS</p>
+                </div>
             </div>
             <div class="description">
                 <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita praesentium suscipit voluptatibus dolorem
@@ -43,32 +59,36 @@
 
         <div class="creneaux">
             <h2>Mes creneaux</h2>
-            {% for creneau in app.user.creneaux %}
-                <p>{{ creneau }}</p>
-            {% endfor %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Jour</th>
+                    <th scope="col">Début</th>
+                    <th scope="col">Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for creneau in creneaux %}
+                    <tr>
+                        <td>{{ creneau[0] }}</td>
+                        <td>{{ creneau[1]|date("H:i") }}</td>
+                        <td>{{ creneau[2]|date("H:i") }}</td>
+                    </tr>
+                {% endfor %} 
+                
+                </tbody>
+            </table>
+
+            <div class="coursProf">
+                <h2>Nombre de cours enseignés : {{ app.user.coursS|length }}</h2>
+                {% for cours in app.user.coursS %}
+                    <p>{{ cours.activite }}</p>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
-    <div class="down">
-        <div class="avis">
-            <h2>Note : {{ noteMoyenne }}</h2>
-            {% if nbEtoiles >= 1 %}
-                {% for i in 1..nbEtoiles %}
-                    <i class="fas fa-star"></i>
-                {% endfor %}
-            {% endif %}
 
-            {% if nbEtoiles != 5 %}         
-                {% for i in nbEtoiles .. 4 %}
-                    <i class="far fa-star"></i>
-                {% endfor %}
-            {% endif %}
-
-
-        </div>
-        <div class="coursProf">
-
-        </div>
-    </div>
 
 
 {% endblock %}

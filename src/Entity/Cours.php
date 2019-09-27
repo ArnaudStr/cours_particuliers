@@ -112,14 +112,6 @@ class Cours
         return $this;
     }
 
-    /**
-     * toString
-     * @return string
-     */
-    public function __toString(){
-        return $this->getActivite()->getNom();
-    }
-
     public function getWebcam(): ?bool
     {
         return $this->webcam;
@@ -211,4 +203,11 @@ class Cours
         return $this;
     }
 
+        /**
+     * toString
+     * @return string
+     */
+    public function __toString(){
+        return $this->getActivite()->getNom();
+    }
 }

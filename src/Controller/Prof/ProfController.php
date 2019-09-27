@@ -62,10 +62,6 @@ class ProfController extends AbstractController
      */
     public function loginProf(AuthenticationUtils $authenticationUtils)
     {
-        // if ($this->getUser()) {
-        //    $this->redirectToRoute('target_path');
-        // }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -91,17 +87,54 @@ class ProfController extends AbstractController
      */
     public function showProfileProf(Prof $prof)
     {
-        // dd($prof->getNotes());
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
             $nbEtoiles = round($noteMoyenne);
         }
         else $noteMoyenne = 'Pas encore noté';
 
+        // Pour bien classer les creneaux et obtenir le jour en Français
+        $creneauxFr = [];
+        $creneauFr = [];
+        foreach ($prof->getCreneaux() as $creneau) {
+            switch ($creneau->getJour()) {
+                case 'monday':
+                    array_push($creneauFr, 'Lundi');
+                    break;
+                case 'tuesday':
+                    array_push($creneauFr, 'Mardi');
+                    break;
+                case 'wednesday':
+                    array_push($creneauFr, 'Mercredi');
+                    break;
+                case 'thursday':
+                    array_push($creneauFr, 'Jeudi');
+                    break;
+                case 'friday':
+                    array_push($creneauFr, 'Vendredi');
+                    break;
+                case 'saturday':
+                    array_push($creneauFr, 'Samedi');
+                    break;
+                case 'sunday':
+                    array_push($creneauFr, 'Dimanche');
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            array_push($creneauFr, $creneau->getHeureDebut());
+            array_push($creneauFr, $creneau->getHeureFin());
+
+            array_push($creneauxFr, $creneauFr);
+            $creneauFr = [];
+        }
+
         return $this->render('prof/showProfileProf.html.twig', [
             'noteMoyenne' => $noteMoyenne,
-            'nbEtoiles' => $nbEtoiles
-
+            'nbEtoiles' => $nbEtoiles,
+            'creneaux' => $creneauxFr
         ]);
     }
 
@@ -155,7 +188,9 @@ class ProfController extends AbstractController
                  
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('show_profile_prof');
+            return $this->redirectToRoute('show_profile_prof', [
+                'id' => $prof->getId()
+            ]);
         }
 
         return $this->render('prof/editProfileProf.html.twig', [

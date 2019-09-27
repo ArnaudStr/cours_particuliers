@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         height:'auto',
         allDaySlot: false,
         minTime:'07:00:00',
-        maxTime:'15:00:00',
+        maxTime:'23:00:00',
         buttonText: 
             { 
                 today:    'Aujourd\'hui',
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         header: {
             left: 'prev,next today',
-            // left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },

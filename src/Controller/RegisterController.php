@@ -55,7 +55,7 @@ class RegisterController extends AbstractController
                 $route = $this->redirectToRoute('login_prof');
             }
     
-            $user->setPictureFilename('default.jpg');
+            $user->setPictureFilename('default_avatar.png');
 
             // encode the plain password
             $user->setPassword(

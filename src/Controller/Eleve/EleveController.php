@@ -77,17 +77,25 @@ class EleveController extends AbstractController
         $session = new SessionUser();
         $session->set('nbMsgNonLus', $nbMsgNonLus);
 
-        return $this->render('eleve/indexEleve.html.twig', [
+        return $this->render('eleve/calendrierEleve.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 
     /**
-     * @Route("/showProfileEleve", name="show_profile_eleve")
+     * @Route("/showProfileEleve/{id}", name="show_profile_eleve")
      */
-    public function showProfileEleve()
+    public function showProfileEleve(Eleve $eleve)
     {
+        $coursS=[];
+
+        foreach($eleve->getSessions() as $session){
+            if (!in_array($session->getCours(), $coursS)) {
+                array_push($coursS, $session->getCours());
+            }
+        }
         return $this->render('eleve/showProfileEleve.html.twig', [
-            'controller_name' => 'MemberController',
+            'coursS' => $coursS,
         ]);
     }   
 
@@ -249,17 +257,8 @@ class EleveController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($demandeCours);
         $entityManager->flush();
-            return $this->render('eleve/indexEleve.html.twig', [
+            return $this->render('eleve/calendrierEleve.html.twig', [
                 'title' => 'Planning'
-        ]);
-    }
-
-    /**
-     * @Route("/calendarEleve", name="calendar_eleve")
-     */
-    public function calendarEleve() {
-        return $this->render('eleve/calendrierEleve.html.twig', [
-            'title' => 'Planning'
         ]);
     }
 

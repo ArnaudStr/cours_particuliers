@@ -8,7 +8,7 @@
     {% for session in app.user.sessions %}
         {% for demandeCours in session.demandesCours %}
             {% if not demandeCours.repondue %}
-                <p>Demande de {{ demandeCours.eleve.nom }} pour le cours de {{ demandeCours.cours.activite.nom }} du {{ demandeCours.session.dateDebut|date('m/d/Y') }} de {{ demandeCours.session.dateDebut|date('H:i') }} à {{ demandeCours.session.dateFin|date('H:i') }}</p>
+                <p>Demande de {{ demandeCours.eleve.nom }} pour le cours de {{ demandeCours.cours }} du {{ demandeCours.session.dateDebut|date('m/d/Y') }} de {{ demandeCours.session.dateDebut|date('H:i') }} à {{ demandeCours.session.dateFin|date('H:i') }}</p>
                 
                 <p><a href="{{ path('validation_sessions_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn btn-warning btn-lg">Valider la session</button></a></p>
             
