@@ -65,9 +65,15 @@ class Cours
      */
     private $niveaux;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Eleve", inversedBy="cours")
+     */
+    private $eleves;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -209,5 +215,31 @@ class Cours
      */
     public function __toString(){
         return $this->getActivite()->getNom();
+    }
+
+    /**
+     * @return Collection|Eleve[]
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addEleve(Eleve $eleve): self
+    {
+        if (!$this->eleves->contains($eleve)) {
+            $this->eleves[] = $eleve;
+        }
+
+        return $this;
+    }
+
+    public function removeEleve(Eleve $eleve): self
+    {
+        if ($this->eleves->contains($eleve)) {
+            $this->eleves->removeElement($eleve);
+        }
+
+        return $this;
     }
 }

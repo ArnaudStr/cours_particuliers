@@ -31,7 +31,11 @@
                         {% endfor %}
                     {% endif %}
         
-                    <p>VOIR MES AVIS</p>
+                    <a href="#">VOIR MES AVIS</a>
+                    {#{% for avis in app.user.avis %}
+                        <p>{{ avis.eleve }}</p>
+                        <p>{{ avis.commentaire }}</p>
+                    {% endfor %} #}
                 </div>
             </div>
             <div class="description">
@@ -62,7 +66,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Jour</th>
+                    <th scope="col">Jour</th>
                     <th scope="col">Début</th>
                     <th scope="col">Fin</th>
                     </tr>
@@ -82,13 +86,40 @@
             <div class="coursProf">
                 <h2>Nombre de cours enseignés : {{ app.user.coursS|length }}</h2>
                 {% for cours in app.user.coursS %}
-                    <p>{{ cours.activite }}</p>
+                <button class="accordion">{{ cours.activite }}</button>
+                    <div class="panel">
+                        {% for prochaineSeance in prochainesSeances %}
+                            {% if cours == prochaineSeance[0] %}                          
+                                <p>Prochaine séance avec {{ prochaineSeance[1] }} le {{ prochaineSeance[2].dateDebut|date('m/d/Y') }}
+                                    de {{ prochaineSeance[2].dateDebut|date('H:i') }} à {{ prochaineSeance[2].dateFin|date('H:i') }}
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 {% endfor %}
             </div>
-
         </div>
     </div>
 
+{% endblock %}
 
+{% block javascripts %}
+<script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+            } else {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+          });
+        }
 
+        
+</script>
 {% endblock %}

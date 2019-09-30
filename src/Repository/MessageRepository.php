@@ -3,9 +3,10 @@
 namespace App\Repository;
 
 use DateTime;
+use App\Entity\Prof;
 use App\Entity\Eleve;
-use App\Entity\Message;
 // use Symfony\Component\Validator\Constraints\DateTime;
+use App\Entity\Message;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -67,7 +68,6 @@ class MessageRepository extends ServiceEntityRepository
 
     public function findNonLusEleve(Eleve $eleve): array
     {
-
         $entityManager = $this->getEntityManager();
 
         $query = $entityManager->createQuery(
@@ -79,20 +79,23 @@ class MessageRepository extends ServiceEntityRepository
         )->setParameter('eleve', $eleve)
         ->setParameter('eleveUsername', $eleve->getUsername());
     
-        // dd($query->execute());
         // returns an array of Product objects
         return $query->getOneorNullresult();
+    }
 
-        // $qb = $this->createQueryBuilder('m')
-        //         ->andWhere('m.eleve = :eleve')
-        //         ->andWhere('m.auteur != :eleveUsername')
-        //         ->andWhere('m.lu = 0')
-                // ->setParameter('eleveId', $eleve->getId())
-                // ->setParameter('eleveId', $eleve->getUsername())
-        //         ->getQuery()
-        //         ->getResult();
+    public function findConversation(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
 
-        // return count($qb);
-
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof);
+    
+        // returns an array of Product objects
+        return $query->execute();
     }
 }

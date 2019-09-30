@@ -87,15 +87,17 @@ class EleveController extends AbstractController
      */
     public function showProfileEleve(Eleve $eleve)
     {
-        $coursS=[];
+        $prochainesSeances=[];
+        foreach($eleve->getCours() as $cours){
+            $proSeance = $this->getDoctrine()
+            ->getRepository(Session::class)
+            ->findNextSessionEleve($eleve, $cours);
 
-        foreach($eleve->getSessions() as $session){
-            if (!in_array($session->getCours(), $coursS)) {
-                array_push($coursS, $session->getCours());
-            }
+            array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
         }
+        
         return $this->render('eleve/showProfileEleve.html.twig', [
-            'coursS' => $coursS,
+            'prochainesSeances' => $prochainesSeances
         ]);
     }   
 
@@ -385,5 +387,26 @@ class EleveController extends AbstractController
         }
  
     }
+
+    /**
+     * @Route("/voirProfilProf/{id}", name="voir_profil_prof")
+     */
+    public function voirProfilProf(Prof $prof)
+    {
+        if ($notes = $prof->getNotes()){
+            $noteMoyenne = round(array_sum($notes)/count($notes),1);
+            $nbEtoiles = round($noteMoyenne);
+        }
+        else $noteMoyenne = 'Pas encore noté';
+
+ 
+        return $this->render('prof/pagePubliqueProf.html.twig', [
+            'prof' => $prof,
+            'noteMoyenne' => $noteMoyenne,
+            'nbEtoiles' => $nbEtoiles,
+        ]);
+ 
+    }
+
 
  }

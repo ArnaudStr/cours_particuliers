@@ -133,8 +133,8 @@ class CalendarListener
                     );
 
                     $sessionEvent->setOptions([
-                        'backgroundColor' => 'orange',
-                        'borderColor' => 'orange',
+                        'backgroundColor' => '#1A252F',
+                        'borderColor' => '#',
                         'textColor' => 'white'
                     ]);
                 }
@@ -148,8 +148,8 @@ class CalendarListener
                     );
 
                     $sessionEvent->setOptions([
-                        'backgroundColor' => 'blue',
-                        'borderColor' => 'blue',
+                        'backgroundColor' => '#76818D',
+                        'borderColor' => '#76818D',
                         'textColor' => 'white'
                     ]);
                 }

@@ -109,6 +109,11 @@ class Eleve implements UserInterface
      */
     private $demandesCours;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Cours", mappedBy="eleves")
+     */
+    private $cours;
+
     public function __construct()
     {
         $this->aConfirme = false;
@@ -117,6 +122,7 @@ class Eleve implements UserInterface
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->sessions = new ArrayCollection();
         $this->demandesCours = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -418,6 +424,34 @@ class Eleve implements UserInterface
      */
     public function __toString(){
         return ucfirst($this->getPrenom()).' '.strtoupper($this->getNom());
+    }
+
+    /**
+     * @return Collection|Cours[]
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours[] = $cour;
+            $cour->addElefe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->contains($cour)) {
+            $this->cours->removeElement($cour);
+            $cour->removeElefe($this);
+        }
+
+        return $this;
     }
 
 }

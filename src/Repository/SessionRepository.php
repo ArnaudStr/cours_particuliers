@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Cours;
+use App\Entity\Eleve;
 use App\Entity\Session;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Session|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,6 +37,24 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findNextSessionEleve(Eleve $eleve, Cours $cours): Session
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT s
+            FROM App\Entity\Session s
+            WHERE s.eleve = :eleve
+            AND s.cours = :cours
+            AND s.dateDebut > CURRENT_TIMESTAMP()'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('cours', $cours)
+        ->setMaxResults(1);
+    
+        // returns an array of Product objects
+        return $query->getOneorNullresult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Session

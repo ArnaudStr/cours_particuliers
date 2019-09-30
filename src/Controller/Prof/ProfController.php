@@ -15,7 +15,7 @@ use App\Form\MessageType;
 use App\Form\EditProfType;
 use App\Form\CreationCoursType;
 use App\Entity\DemandeCours;
-
+use App\Repository\SessionRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -96,6 +96,9 @@ class ProfController extends AbstractController
         // Pour bien classer les creneaux et obtenir le jour en Français
         $creneauxFr = [];
         $creneauFr = [];
+
+        // pour ranger les creneaux dans l'ordre
+        $creneauTmp = [];
         foreach ($prof->getCreneaux() as $creneau) {
             switch ($creneau->getJour()) {
                 case 'monday':
@@ -131,10 +134,29 @@ class ProfController extends AbstractController
             $creneauFr = [];
         }
 
+        $elevesProchaineSeanceCours = [];
+        $prochaineSeanceCours = [];
+        foreach($prof->getCoursS() as $cours){
+            foreach ($cours->getEleves() as $eleve) {
+                array_push($prochaineSeanceCours, $cours);
+                array_push($prochaineSeanceCours, $eleve);
+
+                $proSeance = $this->getDoctrine()
+                    ->getRepository(Session::class)
+                    ->findNextSessionEleve($eleve, $cours);               
+
+                array_push($prochaineSeanceCours, $proSeance);
+                array_push($elevesProchaineSeanceCours, $prochaineSeanceCours);
+                $prochaineSeanceCours = [];
+            }
+        }
+
+        // dd($elevesProchaineSeanceCours);
         return $this->render('prof/showProfileProf.html.twig', [
             'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
-            'creneaux' => $creneauxFr
+            'creneaux' => $creneauxFr,
+            'prochainesSeances' => $elevesProchaineSeanceCours
         ]);
     }
 
@@ -317,12 +339,49 @@ class ProfController extends AbstractController
 
 
     /**
-     * @Route("/showMessagesProf", name="show_messages_prof")
+     * @Route("/showMessagesProf/{id}", name="show_messages_prof")
      */
-    public function showMessagesProf() {
+    public function showMessagesProf(Prof $prof) {
 
+        $elevesMsgNonlus = [];
+        $messageEleve = null;
+        $msgNonLus=0;
+        $premier = true;
+
+        foreach($prof->getMessages() as $message){
+            
+            if ($message->getEleve() != $messageEleve){
+                if ($messageEleve == null)
+                {
+                    $premierEleve = $message->getEleve();
+                }
+                else {
+                    if ($premier){
+                        array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
+                    }
+                    array_push($elevesMsgNonlus, array('eleve' => $messageEleve, 'nbMsg' => $msgNonLus));
+                    $msgNonLus=0;
+                    $premier = false;
+                }
+                $messageEleve = $message->getEleve();
+
+            }
+            else {
+                if ($message->getAuteur() != $prof->getUsername()) {
+                    if (!$message->getLu()){
+                        $msgNonLus++;
+                    }
+                }
+            }
+        }
+
+        if ($premier && $messageEleve) {
+            array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
+        }
+
+        // dd($elevesMsgNonlus);
         return $this->render('prof/showMessageProf.html.twig', [
-            'title' => 'Planning'
+            'msgNonLus' => $elevesMsgNonlus
         ]);
     }
 
@@ -334,6 +393,9 @@ class ProfController extends AbstractController
     public function conversationProf(Prof $prof, Eleve $eleve) {
 
         $session = new SessionUser();
+        $allMsg = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversation($eleve, $prof);
         $msgLus = [];
         $msgNonLus = [];
         $entityManager = $this->getDoctrine()->getManager();
@@ -357,6 +419,7 @@ class ProfController extends AbstractController
         return $this->render('prof/conversationProf.html.twig', [
             'prof' => $prof,
             'eleve' => $eleve,
+            'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
         ]);
@@ -389,6 +452,9 @@ class ProfController extends AbstractController
         if ($valider == 1) {
             $session->setEleve($demandeCours->getEleve());
             $session->setCours($demandeCours->getCours());
+            if (!$session->getCours()->getEleves()->contains($demandeCours->getEleve())){
+                $session->getCours()->addEleve($demandeCours->getEleve());
+            };
         }
 
         $demandeCours->setRepondue(true);

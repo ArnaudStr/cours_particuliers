@@ -17,19 +17,26 @@
         </div>
         <div class="prochainesSeances">
             <h2>Prochaines séances</h2>
-            {% for session in app.user.sessions %}
-                {% if session.dateDebut|date("m/d/y H:i") > "now"|date("m/d/Y H:i") %}
-                    <p>{{ session.cours }} le {{ session.dateDebut|date('m/d/Y') }} de {{ session.dateDebut|date('H:i') }} à {{ session.dateFin|date('H:i') }} avec {{ session.cours.prof }}</p>
-                {% endif %}
-            {% endfor %}
+            <ul class="list-group">
+                {% for prochaineSeance in prochainesSeances %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ prochaineSeance.cours }} prochaine séance :  le {{ prochaineSeance.proSeance.dateDebut|date('m/d/Y') }}
+                        de {{ prochaineSeance.proSeance.dateDebut|date('H:i') }} à {{ prochaineSeance.proSeance.dateFin|date('H:i') }}    
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
-    <div class="down">
+    {# <div class="down">
         <div class="coursEleve">
             <h2>Liste des cours suivis</h2>
-            {% for cours in coursS %}
-                <p>{{ cours }} avec {{ cours.prof }}</p>
-            {% endfor %}
+            <ul class="list-group">
+                {% for cours in coursS %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ cours }} avec {{ cours.prof }}
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
+    </div> #}
 {% endblock %}

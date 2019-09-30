@@ -1,13 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% endblock %}
+{% block title %}Bienvenue {{ app.user ~ " !"}}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
-
+<div class="testCouleur">
+<h1>TEST COULEUR DES FAMILLES</h1>
+</div>
     <div data-entry-ideleve={{app.user.id}}>
 
     {% include '@Calendar/calendar.html' %} 

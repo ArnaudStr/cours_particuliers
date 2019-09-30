@@ -25,15 +25,13 @@
     <body>
         <div class="wrapper"> 
             <header>
-                <!-- <div class="topnav"> -->
 
-                    <!-- ADMIN -->
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('show_list_activites_categories') }}">Liste des activités</a>
-                        <a href="{{ path('delete_messages') }}">Supprimer messages</a>
-                        <a href="{{path('logout_admin')}}">Déconnexion</a>
-                    {% else %}
-
+                <!-- ADMIN -->
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('show_list_activites_categories') }}">Liste des activités</a>
+                    <a href="{{ path('delete_messages') }}">Supprimer messages</a>
+                    <a href="{{path('logout_admin')}}">Déconnexion</a>
+                {% else %}
                     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                         <!-- LOGO ? -->
                         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
@@ -41,86 +39,87 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarColor02">
-
-                        <!-- VISITOR -->
-                        {% if not is_granted('ROLE_USER') %}
-                        <div class="left">
-                            <a href="{{ path('home') }}">Acceuil</a>
-                        </div>
-                        <div class="right">
-                            <a href="{{ path('register') }}">Inscription</a>
-                            <a href="{{ path('login_prof') }}">Connexion professeur</a>
-                            <a href="{{ path('login_eleve') }}">Connexion élève</a>
-                        </div>
-
-                        {% endif %}
-
-                        <!-- ELEVE -->
-                        {% if is_granted('ROLE_ELEVE') %}
-
-                            <ul class="navbar-nav mr-auto __flexBetween">
-                                <div class="navLeft">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" href="{{ path('home_eleve') }}">Planning <span class="sr-only">(current)</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}">Profil</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{path('show_messages_eleve')}}">Messagerie</a>
-                                    </li>
-                                </div>
-
-                                <div class="navRight">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#">S'inscrire à un cours</a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{path('logout_eleve')}}">Déconnexion</a>
-                                    </li>
-                                </div>
-                            </ul>
-
-                           {#<form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
-                                <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
-                                <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
-                            </form> #}
-                        <!-- PROF -->
-                        {% elseif is_granted('ROLE_PROF') %}
                             
-                            <ul class="navbar-nav mr-auto __flexBetween">
+                            <!-- VISITOR -->
+                            {% if not is_granted('ROLE_USER') %}
+                                <ul class="navbar-nav mr-auto __flexBetween">
+                                    <div class="navLeft">
+                                        <li class="nav-item activeNav">
+                                            <a class="nav-link" href="{{ path('home') }}">Acceuil<span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('register') }}">Inscription</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('login_prof')}}">Connexion professeur</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('login_eleve')}}">Connexion élève</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            {% endif %}
 
-                                <div class="navLeft">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}">Profil</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{path('show_messages_prof')}}">Messagerie</a>
-                                    </li>
-                                </div>
+                            <!-- ELEVE -->
+                            {% if is_granted('ROLE_ELEVE') %}
+                                <ul class="navbar-nav mr-auto __flexBetween">
+                                    <div class="navLeft">
+                                        <li class="nav-item activeNav">
+                                            <a class="nav-link" href="{{ path('home_eleve') }}">Planning <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}">Profil</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Messagerie</a>
+                                        </li>
+                                    </div>
+                                    <div class="navRight">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">S'inscrire à un cours</a>
+                                        </li>
 
-                                <div class="navRight">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
-                                    </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('logout_eleve')}}">Déconnexion</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                                <form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
+                                    <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
+                                    <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
+                                </form>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
-                                    </li>
-                                </div>
-                            </ul>
-                                
-                        {% endif %}
-                            </div>
-                        </nav>
-                    {% endif %} 
+                            <!-- PROF -->
+                            {% elseif is_granted('ROLE_PROF') %}
+                                <ul class="navbar-nav mr-auto __flexBetween">
+                                    <div class="navLeft">
+                                        <li class="nav-item activeNav">
+                                            <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}">Profil</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('show_messages_prof', {'id':app.user.id} )}}">Messagerie</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('demande_sessions_prof')}}">Deamandes de cours</a>
+                                        </li>
+                                    </div>
+                                    <div class="navRight">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </nav>
+                {% endif %}
             </header>
-
-        
         {% block body %}
 
         {% endblock %}
