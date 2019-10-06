@@ -17,10 +17,17 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('email',EmailType::class,[
-                "mapped" => false
+                'attr' => [
+                    'placeholder' => 'Email',
+                ],
+                "mapped" => false,
+                'label' => false,
             ])
   
             ->add('plainPassword', PasswordType::class, [
+                'attr' => [
+                    'placeholder' => 'Mot de passe',
+                ],
                 'mapped' => false,
                 'constraints' => [
                     new Length([
@@ -29,23 +36,47 @@ class RegistrationType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'label' => false
             ])
             ->add('nom',TextType::class, [
-                "mapped" => false
+                'attr' => [
+                    'placeholder' => 'Nom',
+                ],
+                "mapped" => false,
+                'label' => false
+
             ])
             ->add('prenom',TextType::class, [
-                "mapped" => false
+                'attr' => [
+                    'placeholder' => 'Prenom',
+                ],
+                "mapped" => false,
+                'label' => false
+
             ])
-            ->add('adresse',TextType::class, [
-                "mapped" => false
-            ])
+            
+            // ->add('adresse',TextType::class, [
+            //     'attr' => [
+            //         'placeholder' => 'Adresse',
+            //     ],
+            //     "mapped" => false,
+            //     'label' => false
+            // ])
+
+
 
             ->add('isEleve', ChoiceType::class, [
+                'attr' => [
+                    'placeholder' => 'email',
+                ],
                 "choices" => [
                     'Eleve' => true,
                     'Prof' => false
                 ],
-                "mapped" => false
+                "mapped" => false,
+                'label' => false,
+                'expanded' => true,
+                'multiple' => false,
             ])
 
             ->add('submit', SubmitType::class, [

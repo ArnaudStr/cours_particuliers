@@ -308,33 +308,46 @@ class ProfController extends AbstractController
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function sendMessageProf(Prof $prof, Eleve $eleve, Request $request)
+    public function sendMessageProf(Prof $prof, Eleve $eleve)
+    // public function sendMessageProf(Prof $prof, Eleve $eleve, Request $request)
     {
 
-        $form = $this->createForm(MessageType::class);
+        // $form = $this->createForm(MessageType::class);
 
-        $form->handleRequest($request);
+        // $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // if ($form->isSubmitted() && $form->isValid()) {
 
+            // $message = new Message();
+            // $message->setProf($prof);
+            // $message->setEleve($eleve);
+            // $message->setAuteur($prof->getUsername());
+            // $message->setContenu($form->get("contenu")->getData());
+
+            // $entityManager = $this->getDoctrine()->getManager();
+            // $entityManager->persist($message);
+            // $entityManager->flush();
+
+            // do anything else you need here, like send an email
+
+            $contenu = $_POST['text'];
+            // $contenu = 'ta mere la grosse pute';
             $message = new Message();
             $message->setProf($prof);
             $message->setEleve($eleve);
             $message->setAuteur($prof->getUsername());
-            $message->setContenu($form->get("contenu")->getData());
+            $message->setContenu($contenu);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($message);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
+            return $this->redirectToRoute('conversation_prof', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
+        // }
 
-            return $this->redirectToRoute('home_prof');
-        }
-
-        return $this->render('message/sendMessage.html.twig', [
-            'messageForm' => $form->createView(),
-        ]);
+        // return $this->render('message/sendMessage.html.twig', [
+        //     'messageForm' => $form->createView(),
+        // ]);
     }
 
 
@@ -386,7 +399,7 @@ class ProfController extends AbstractController
     }
 
     /**
-     * @Route("/conversationProf/{idProf}/{idEleve}", name="conversation_prof")
+     * @Route("/conversationProf/{idProf}/{idEleve}/", name="conversation_prof")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
@@ -398,9 +411,10 @@ class ProfController extends AbstractController
             ->findConversation($eleve, $prof);
         $msgLus = [];
         $msgNonLus = [];
+        $msgEnvoyes = [];
         $entityManager = $this->getDoctrine()->getManager();
 
-        foreach($prof->getMessages() as $message){
+        foreach($allMsg as $message){
             if ( $message->getAuteur() != $prof->getUsername() ){
                 if ($message->getLu()){
                     array_push($msgLus, $message);
@@ -412,9 +426,16 @@ class ProfController extends AbstractController
                     $session->set('nbMsgNonLus', ($session->get('nbMsgNonLus'))-1);
                 }
             }
+            else {
+                array_push($msgEnvoyes, $message);
+            }
         }
 
         $entityManager->flush();
+
+        // dump($allMsg);
+        // dump($msgLus);
+        // dd($msgNonLus);
 
         return $this->render('prof/conversationProf.html.twig', [
             'prof' => $prof,
@@ -424,6 +445,31 @@ class ProfController extends AbstractController
             'msgNonLus' => $msgNonLus,
         ]);
     }
+
+    /**     
+     * @Route("/conversationProf/{idProf}/{idEleve}/ajax", name="conversation_prof_ajax")
+     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     */
+    public function ajax(Prof $prof, Eleve $eleve) {
+    
+        $msgNonLus = $this->getDoctrine()
+        ->getRepository(Message::class)
+        ->findNonLusConversationProf($eleve, $prof);
+
+        $nouveauMessage = false;
+
+        if ($msgNonLus){
+            $nouveauMessage = true;
+        }   
+
+        return $this->render('prof/test.html.twig', [
+            'prof' => $prof,
+            'eleve' => $eleve,
+            'nouveauMessage' => $nouveauMessage,
+        ]);
+    }
+
 
     /**
      * @Route("/calendarProf", name="calendar_prof")

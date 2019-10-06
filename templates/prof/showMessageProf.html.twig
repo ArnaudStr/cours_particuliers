@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h2>Messagerie</h2>
+<h2 class="titre" data-test="messagerie">Messagerie</h2>
 
 {# {% set listEleves = [] %} #}
 {# {% set idEleve = null %} #}
@@ -28,5 +28,8 @@
 {% endblock %}
 
 {% block javascripts %}
-    
+    <script>
+        var active = document.getElementById('navMsg')
+        active.classList.add('activeNav')
+    </script>
 {% endblock %}

@@ -35,10 +35,12 @@
                     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                         <!-- LOGO ? -->
                         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
+                        <! class="collapse navbar-collapse" id="navbarColor02"> -->
                         <div class="collapse navbar-collapse" id="navbarColor02">
+
                             
                             <!-- VISITOR -->
                             {% if not is_granted('ROLE_USER') %}
@@ -91,30 +93,32 @@
 
                             <!-- PROF -->
                             {% elseif is_granted('ROLE_PROF') %}
-                                <ul class="navbar-nav mr-auto __flexBetween">
-                                    <div class="navLeft">
-                                        <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}">Profil</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('show_messages_prof', {'id':app.user.id} )}}">Messagerie</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('demande_sessions_prof')}}">Deamandes de cours</a>
-                                        </li>
-                                    </div>
-                                    <div class="navRight">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
-                                        </li>
-                                    </div>
-                                </ul>
+                            <ul class="navbar-nav mr-auto __flexBetween">
+                            <!-- <ul class="navbar-nav mr-auto __flexBetween"> -->
+                                <div class="navLeft">
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navCalendar" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a>
+                                       {# <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a> #}
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}">Profil</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}">Messagerie</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navValideCours" href="{{path('demande_sessions_prof')}}">Deamandes de cours</a>
+                                    </li>
+                                </div>
+                                <div class="navRight">
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navCours" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
+                                    </li>
+                                </div>
+                            </ul>
                             {% endif %}
                         </div>
                     </nav>

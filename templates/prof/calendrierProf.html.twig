@@ -20,5 +20,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="/js/calendarProf.js"></script>
+    <script src="/js/calendarProf.js">
+    
+        var active = document.getElementById('navCalendar')
+        active.classList.add('activeNav')
+
+    </script>
 {% endblock %}

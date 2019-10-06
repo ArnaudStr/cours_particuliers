@@ -40,7 +40,7 @@ class Session
     private $cours;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="sessions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;

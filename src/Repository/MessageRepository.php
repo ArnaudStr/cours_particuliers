@@ -98,4 +98,41 @@ class MessageRepository extends ServiceEntityRepository
         // returns an array of Product objects
         return $query->execute();
     }
+
+    public function findNonLusConversationProf(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :eleveUsername
+            AND m.lu = 0'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        // returns an array of Product objects
+        return $query->execute();
+    }
+
+    public function findNonLusConversationEleve(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :profUsername'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        // returns an array of Product objects
+        return $query->execute();
+    }
 }

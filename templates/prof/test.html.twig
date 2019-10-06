@@ -1,0 +1,11 @@
+{# {% for message in msgNonLus %}
+    <p class="nvMessage">{{ message.eleve }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
+    {{ message.contenu }}</p>       
+{% endfor %} #}
+
+{% if nouveauMessage %}
+    <!-- <script>setJnterval(location.reload(), 10000) -->
+    <script>
+        location.reload()
+    </script>
+{% endif %} 

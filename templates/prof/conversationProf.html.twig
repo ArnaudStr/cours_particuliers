@@ -2,27 +2,43 @@
 
 {% block body %}
 
-<h2>Conversation avec {{ eleve }}</h2>
+{#<h2>Conversation avec {{ eleve }}</h2> #}
 <div class="conversation">
     {% for message in allMsg %}
         {% if message in msgLus %}
-            <p class="messageEnvoi">{{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
-            {{ message.contenu }}</br>
+            <p class="messageRecu">{{ message.eleve }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}}<br>
+            {{ message.contenu }}</p>
         {# Si ce n'est pas un message lu ou non lu, c'est un message du prof #}
         {% elseif message not in msgNonLus %}
-            <p class="messageRecu">{{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}}<br>
-            {{ message.contenu }}</p>
+            <p class="messageEnvoi">{{ message.prof }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
+            {{ message.contenu }}</br>
+        {# Sinon c'est un message non lu (nouveau message) #} 
         {% else %}
-            <p class="nvMessage">{{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
-            {{ message.contenu }}</p>        
+            <p class="nvMessage">{{ message.eleve }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
+            {{ message.contenu }}</p>       
         {% endif %}
     {% endfor %}
+
 </div>
-    <p><a href="{{ path('send_message_prof', {'idProf':app.user.id, 'idEleve':eleve.id}) }}"><button type="button" class="btn btn-warning btn-lg">Répondre</button></a></p>
+
+<div class="test">
+
+</div>
+
+<form action='{{ path('send_message_prof', {'idProf':app.user.id, 'idEleve':eleve.id}) }}' method='POST'>
+    <input type="text" name="text" id="textMessage">
+    <button type='submit'>Envoyer message</button>
+</form>
 
 
 {% endblock %}
 
 {% block javascripts %}
-    
-{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+setInterval(function(){
+    $('.test').load('ajax');
+ }, 10000) /* time in milliseconds (ie 2 seconds)*/
+</script>
+
+ {% endblock %}

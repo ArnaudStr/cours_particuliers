@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Register</h1>
 
-    <div>
+    <div class="col-lg-5">
         {{ form_start(registrationForm) }}
 
             {{ form_row(registrationForm.email) }}
@@ -17,8 +17,6 @@
             {{ form_row(registrationForm.submit) }}
             
         {{ form_end(registrationForm) }} 
-       {# {{ form_end(registrationForm, {'render_rest': false}) }}#}
-
 
     </div>
 
