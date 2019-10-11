@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire au cours {{ cours }} !{% endblock %}
+
+{% block body %}
+    <h2>Inscription au cours de {{ cours }}</h2>
+    <div class="displayCourse">
+        <div class="displayCourseLeft">
+            <div class="photoAndInfos">
+                <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
+                <div class="infos2">
+                    <p>{{ cours.prof }}</p>
+                    <p>Note : {{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
+                    <a href="{{ path('voir_profil_prof', {'id':cours.prof.id}) }}"><button type="button">
+                        Voir profil du prof
+                        </button>
+                    </a> 
+                </div>
+            </div>
+            <div class="descriptifCours">
+                <p>{{ cours.description }}</p>
+                {% for niveau in cours.niveaux %}
+                    {{ niveau }}
+                {% endfor %}
+
+            </div>
+            <a href="{{ path('send_message_prof', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
+                <button type="button">
+                    Contacter le prof
+                </button>
+            </a>
+        </div>
+
+        <div class="displayCourseRight">
+            <div data-entry-ideleve={{app.user.id}}>
+            <div data-entry-idcours={{cours.id}}>
+            <div data-entry-idprof={{cours.prof.id}}>
+            <!-- PLANNING DES DISPONIBILITES DU COURS -->
+            {% include '@Calendar/calendar.html' %} 
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/js/calendarInscriptionCours.js"></script>
+{% endblock %}

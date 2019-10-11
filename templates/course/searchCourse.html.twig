@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue !{% endblock %}
+
+{% block body %}
+    <h2> Recherche de cours </h2>
+    <form action='{{ path('search_cours_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
+        <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
+
+        <button type='submit' class='btn my-2 my-sm-0'>Recherche </button>
+    </form>
+
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+   <h2 style="text-align: center">Inscription</h2>
 
-    <div class="col-lg-5">
+    <div class="col-lg-5 registerForm">
         {{ form_start(registrationForm) }}
 
-            {{ form_row(registrationForm.email) }}
             {{ form_row(registrationForm.nom) }}
             {{ form_row(registrationForm.prenom) }}
-            {{ form_row(registrationForm.adresse) }}
+            {{ form_row(registrationForm.email) }}
             {{ form_row(registrationForm.plainPassword) }}
             {{ form_row(registrationForm.isEleve) }}
             {{ form_row(registrationForm.submit) }}

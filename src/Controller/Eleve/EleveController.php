@@ -96,6 +96,7 @@ class EleveController extends AbstractController
             array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
         }
         
+        // dd($prochainesSeances);
         return $this->render('eleve/showProfileEleve.html.twig', [
             'prochainesSeances' => $prochainesSeances
         ]);
@@ -130,12 +131,6 @@ class EleveController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($eleve);
             $entityManager->flush();
-
-            // dump($pictureFilename);
-            // dump($filename);
-            // dd($eleve);
-
-            // do anything else you need here, like send an email
 
             return $this->redirectToRoute('show_profile_eleve');
         }
@@ -288,6 +283,8 @@ class EleveController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($avis);
             $prof->addNote($form->get('note')->getData());
+            $noteMoyenne = round(array_sum($prof->getNotes())/count($prof->getNotes()),1);
+            $prof->setNoteMoyenne($noteMoyenne);
             $entityManager->persist($prof);
 
             $entityManager->flush();
@@ -362,7 +359,6 @@ class EleveController extends AbstractController
      */
     public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {
- 
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();
  
@@ -385,7 +381,6 @@ class EleveController extends AbstractController
  
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
- 
     }
 
     /**
@@ -408,5 +403,23 @@ class EleveController extends AbstractController
  
     }
 
+    /**
+     * @Route("/searchCourseEleve", name="search_course_eleve")
+     */
+    public function searchCourseEleve()
+    {
+        return $this->render('course/searchCourse.html.twig', [
+        ]);
+    }
 
- }
+    /**
+     * @Route("/displayCourseEleve/{id}", name="display_course_eleve")
+     */
+    public function displayCoursEleve(Cours $cours)
+    {
+        return $this->render('course/displayCourse.html.twig', [
+            'cours' => $cours
+        ]);
+    }
+
+}

@@ -12,25 +12,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SearchController extends AbstractController {
 
     /**
-     * @Route("/eleve/search/result", name="search_result_eleve")
+     * @Route("/eleve/searchCoursEleve", name="search_cours_eleve")
      */
     public function search(Request $request)
     {
 
-        $search = $request->query->get('s');
+        $searchActivite = $request->query->get('s');
+        // $searchLocalisation = $request->query->get('p');
         // dd($search);
         $categories = $this->getDoctrine()
             ->getRepository(Categorie::class)
-            ->findAllWithSearch(ucfirst($search));  
+            ->findAllWithSearch(ucfirst($searchActivite));  
                     
         $activites = $this->getDoctrine()
             ->getRepository(Activite::class)
-            ->findAllWithSearch(ucfirst($search));
+            ->findAllWithSearch(ucfirst($searchActivite));
+
+        // $profs = $this->getDoctrine()
+        //     ->getRepository(Prof::class)
+        //     ->findAllWithSearch(ucfirst($searchLocalisation));
         
 
         return $this->render('search/search.html.twig', [
             'categories' => $categories,
-            'activites' => $activites
+            'activites' => $activites,
+            'recherche' => $searchActivite
+            // 'profs' => $profs
         ]);
     }
 

@@ -5,17 +5,25 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
 class VisitorController extends AbstractController
 {
 
+    // /**
+    //  * @Route("/", name="home")
+    //  */
+    // public function index()
+    // {
+    //     return $this->render('visitor/index.html.twig', [
+    //         'controller_name' => 'HomeController',
+    //     ]);
+    // }
+
     /**
-     * @Route("/", name="home")
+     * @Route("/", name="search_course")
      */
-    public function index()
+    public function searchCourse()
     {
-        return $this->render('visitor/index.html.twig', [
-            'controller_name' => 'HomeController',
+        return $this->render('course/searchCourse.html.twig', [
         ]);
     }
 

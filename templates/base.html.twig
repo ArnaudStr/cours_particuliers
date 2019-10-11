@@ -9,9 +9,12 @@
         {% endblock %}
         </title>
         {% block stylesheets %}
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+            crossorigin=""/>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">
-        
+
             <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
             <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.9.0/css/all.css">
@@ -25,21 +28,36 @@
     <body>
         <div class="wrapper"> 
             <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <div class="collapse navbar-collapse" id="navbarColor02">
 
                 <!-- ADMIN -->
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('show_list_activites_categories') }}">Liste des activités</a>
-                    <a href="{{ path('delete_messages') }}">Supprimer messages</a>
-                    <a href="{{path('logout_admin')}}">Déconnexion</a>
+                <ul class="navbar-nav mr-auto __flexBetween">
+                    <div class="navLeft">
+                        <li class="nav-item activeNav">
+                            <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activites <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('show_list_members') }}">Liste des membres</a>
+                        </li>
+                    </div>
+                    <div class="navRight">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('logout_admin')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+                        </li>
+                    </div>
+                </ul>
                 {% else %}
-                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                         <!-- LOGO ? -->
                         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
                         <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <! class="collapse navbar-collapse" id="navbarColor02"> -->
-                        <div class="collapse navbar-collapse" id="navbarColor02">
 
                             
                             <!-- VISITOR -->
@@ -47,18 +65,21 @@
                                 <ul class="navbar-nav mr-auto __flexBetween">
                                     <div class="navLeft">
                                         <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('home') }}">Acceuil<span class="sr-only">(current)</span></a>
+                                            <a class="nav-link" href="{{ path('search_course') }}"><i class="fas fa-search"></i>Recherche de cours<span class="sr-only">(current)</span></a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('register') }}">Inscription</a>
+                                            <a class="nav-link" href="{{ path('register') }}"><i class="fas fa-user-plus"></i>Inscription</a>
+                                        </li>
+
+                                        
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{path('login_prof')}}"><i class="fas fa-sign-in-alt"></i>Connexion professeur</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{path('login_prof')}}">Connexion professeur</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('login_eleve')}}">Connexion élève</a>
+                                            <a class="nav-link" href="{{path('login_eleve')}}"><i class="fas fa-sign-in-alt"></i>Connexion élève</a>
                                         </li>
                                     </div>
+
                                 </ul>
                             {% endif %}
 
@@ -67,29 +88,25 @@
                                 <ul class="navbar-nav mr-auto __flexBetween">
                                     <div class="navLeft">
                                         <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('home_eleve') }}">Planning <span class="sr-only">(current)</span></a>
+                                            <a class="nav-link" href="{{ path('home_eleve') }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}">Profil</a>
+                                            <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{path('show_messages_eleve')}}">Messagerie</a>
+                                            <a class="nav-link" href="{{path('show_messages_eleve')}}"><i class="far fa-comment-alt"></i>Messagerie</a>
                                         </li>
                                     </div>
                                     <div class="navRight">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#">S'inscrire à un cours</a>
+                                        <li class="nav-item activeNav">
+                                            <a class="nav-link" href="{{ path('search_course_eleve') }}"><i class="fas fa-search"></i>Recherche de cours<span class="sr-only">(current)</span></a>
                                         </li>
 
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{path('logout_eleve')}}">Déconnexion</a>
+                                            <a class="nav-link" href="{{path('logout_eleve')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
                                         </li>
                                     </div>
                                 </ul>
-                                <form action='{{ path('search_result_eleve') }}' class='form-inline my-2 my-lg-2' method="GET">
-                                    <input type="search" name='s' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
-                                    <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
-                                </form>
 
                             <!-- PROF -->
                             {% elseif is_granted('ROLE_PROF') %}
@@ -97,17 +114,20 @@
                             <!-- <ul class="navbar-nav mr-auto __flexBetween"> -->
                                 <div class="navLeft">
                                     <li class="nav-item">
-                                        <a class="nav-link" id="navCalendar" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a>
+                                        <a class="nav-link" id="navCalendar" href="{{ path('home_prof') }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
                                        {# <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a> #}
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}">Profil</a>
+                                        <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}">Messagerie</a>
+                                        <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="navValideCours" href="{{path('demande_sessions_prof')}}">Deamandes de cours</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="navLeaflet" href="{{path('leaflet')}}">Leaflet</a>
                                     </li>
                                 </div>
                                 <div class="navRight">
@@ -115,7 +135,7 @@
                                         <a class="nav-link" id="navCours" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{path('logout_prof')}}">Déconnexion</a>
+                                        <a class="nav-link" href="{{path('logout_prof')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
                                     </li>
                                 </div>
                             </ul>
@@ -142,7 +162,18 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+            <script>
 
+            // Get the modal
+            var modal = document.getElementById('id01');
+            
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            </script>
         {% endblock %}
 
     </body>

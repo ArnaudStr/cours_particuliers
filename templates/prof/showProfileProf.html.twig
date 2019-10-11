@@ -89,7 +89,7 @@
                 <button class="accordion">{{ cours.activite }}</button>
                     <div class="panel">
                         {% for prochaineSeance in prochainesSeances %}
-                            {% if cours == prochaineSeance[0] %}                          
+                            {% if cours == prochaineSeance[0] and prochaineSeance[2] != null %}                          
                                 <p>Prochaine séance avec {{ prochaineSeance[1] }} le {{ prochaineSeance[2].dateDebut|date('m/d/Y') }}
                                     de {{ prochaineSeance[2].dateDebut|date('H:i') }} à {{ prochaineSeance[2].dateFin|date('H:i') }}
                                 </p>

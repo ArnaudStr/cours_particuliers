@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <table class="table ">
+        <thead>
+            <tr>
+                <th scope="col">Prof / Eleve</th>
+                <th scope="col">Email</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">Adresse</th>
+                <th scope="col">Profil</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+
+            {% for prof in profs %}
+                <tr>
+                    <td><strong>Prof</strong></td>
+                    <td><strong>{{  prof.username  }}</strong></td>
+                    <td><strong>{{  prof.nom  }}</strong></td>
+                    <td><strong>{{  prof.prenom  }}</strong></td>
+                    <td><strong>{{  prof.adresse  }}</strong></td>
+                    <td><strong>PROFIL</strong></td>
+                    <td><a href="{{ path('delete_prof',{'id':prof.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+                </tr>
+            {% endfor %}
+
+            {% for eleve in eleves %}
+                <tr>
+                    <td><strong>Eleve</strong></td>
+                    <td><strong>{{  eleve.username  }}</strong></td>
+                    <td><strong>{{  eleve.nom  }}</strong></td>
+                    <td><strong>{{  eleve.prenom  }}</strong></td>
+                    <td><strong>{{  eleve.adresse  }}</strong></td>
+                    <td><strong>PROFIL</strong></td>
+                    <td><a href="{{ path('delete_eleve',{'id':eleve.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}

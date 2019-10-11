@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test géoloc{% endblock %}
+
+
+{% block body %}
+
+    <div id="mapid"></div>
+
+ 
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+crossorigin=""></script>
+<script>
+var mymap = L.map('mapid').setView([48.570052, 7.776376], 13);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	id: 'mapbox.streets',
+	accessToken: 'pk.eyJ1IjoiYXJuYXVkc3RyIiwiYSI6ImNrMWY4cGpmZDBiNXQzbHFsNm92aXpycXIifQ.ejS9Oq5OpEqvFzeFVdpzBw'
+}).addTo(mymap);
+var popup = L.popup()
+	.setLatLng([48.570052, 7.776376])
+	.setContent("On y est")
+	.openOn(mymap);
+	var geocoder = L.Control.geocoder()
+.on('markgeocode', function(event) {
+    var center = event.geocode.center;
+    L.marker(center).addTo(mymap);
+    mymap.setView(center, mymap.getZoom());
+})
+.addTo(mymap);
+
+
+</script>
+{% endblock %}

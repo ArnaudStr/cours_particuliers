@@ -77,9 +77,9 @@ class RegisterController extends AbstractController
                 $form->get('prenom')->getData()
             );
 
-            $user->setAdresse(
-                $form->get('adresse')->getData()
-            );
+            // $user->setAdresse(
+            //     $form->get('adresse')->getData()
+            // );
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -94,7 +94,7 @@ class RegisterController extends AbstractController
             // ->setFrom('arnaud.straumann@free.fr')
             ->setTo($user->getEmail())
             ->setBody(
-                "blablabla voici le token pour confirmer votre inscription : " . $url,
+                "blablabla voici le token pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
                 'text/html'
             );
 

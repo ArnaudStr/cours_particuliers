@@ -38,7 +38,7 @@ class SessionRepository extends ServiceEntityRepository
     }
     */
 
-    public function findNextSessionEleve(Eleve $eleve, Cours $cours): Session
+    public function findNextSessionEleve(Eleve $eleve, Cours $cours)
     {
         $entityManager = $this->getEntityManager();
 

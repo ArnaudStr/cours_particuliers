@@ -48,7 +48,7 @@ class Prof implements UserInterface
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresse;
 
@@ -119,6 +119,11 @@ class Prof implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="prof", orphanRemoval=true, cascade={"persist"})
      */
     private $creneaux;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $noteMoyenne;
 
     public function __construct()
     {
@@ -497,6 +502,18 @@ class Prof implements UserInterface
      */
     public function __toString(){
         return ucfirst($this->getPrenom()).' '.strtoupper($this->getNom());
+    }
+
+    public function getNoteMoyenne(): ?float
+    {
+        return $this->noteMoyenne;
+    }
+
+    public function setNoteMoyenne(?float $noteMoyenne): self
+    {
+        $this->noteMoyenne = $noteMoyenne;
+
+        return $this;
     }
 
 

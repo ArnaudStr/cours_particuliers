@@ -19,10 +19,12 @@
             <h2>Prochaines séances</h2>
             <ul class="list-group">
                 {% for prochaineSeance in prochainesSeances %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ prochaineSeance.cours }} prochaine séance :  le {{ prochaineSeance.proSeance.dateDebut|date('m/d/Y') }}
-                        de {{ prochaineSeance.proSeance.dateDebut|date('H:i') }} à {{ prochaineSeance.proSeance.dateFin|date('H:i') }}    
-                    </li>
+                    {% if prochaineSeance.proSeance %}                          
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ prochaineSeance.cours }} prochaine séance :  le {{ prochaineSeance.proSeance.dateDebut|date('m/d/Y') }}
+                            de {{ prochaineSeance.proSeance.dateDebut|date('H:i') }} à {{ prochaineSeance.proSeance.dateFin|date('H:i') }}    
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>

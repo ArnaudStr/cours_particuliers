@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Prof;
+use App\Entity\Eleve;
 use App\Entity\Admin;
 use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use App\Form\ActiviteType;
 use App\Form\CategorieType;
-use App\Security\AdminAuthenticator;
 
+use App\Security\AdminAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -227,5 +229,41 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('home_admin');
 
+    }
+
+    
+    /**
+     * @Route("/showListMembers", name="show_list_members")
+     */
+    public function showListMembers() {
+        // On enregistre les formations
+        $profs = $this->getDoctrine()->getRepository(Prof::class)->findAll();
+        $eleves = $this->getDoctrine()->getRepository(Eleve::class)->findAll();
+        // Appel à la vue d'affichage des formations
+        return $this->render('admin/showListMembers.html.twig', [
+            'title' => 'Liste des membres',
+            'profs' => $profs,
+            'eleves' => $eleves,
+        ]);
+    }
+
+    /**
+     * @Route("/deleteProf/{id}", name="delete_prof")
+     */
+    public function deleteProf(Prof $prof, ObjectManager $manager) {
+        $manager->remove($prof);
+        $manager->flush();
+  
+        return $this->redirectToRoute('show_list_members');
+    }
+
+    /**
+     * @Route("/deleteEleve/{id}", name="delete_eleve")
+     */
+    public function deleteEleve(Eleve $eleve, ObjectManager $manager) {
+        $manager->remove($eleve);
+        $manager->flush();
+  
+        return $this->redirectToRoute('show_list_members');
     }
 }

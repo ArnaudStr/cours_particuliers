@@ -11,11 +11,9 @@ use App\Entity\Eleve;
 use App\Entity\Creneau;
 use App\Entity\Message;
 use App\Entity\Session;
-use App\Form\MessageType;
 use App\Form\EditProfType;
 use App\Form\CreationCoursType;
 use App\Entity\DemandeCours;
-use App\Repository\SessionRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -331,7 +329,6 @@ class ProfController extends AbstractController
             // do anything else you need here, like send an email
 
             $contenu = $_POST['text'];
-            // $contenu = 'ta mere la grosse pute';
             $message = new Message();
             $message->setProf($prof);
             $message->setEleve($eleve);
@@ -597,6 +594,14 @@ class ProfController extends AbstractController
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
  
+    }
+
+    /**
+     * @Route("/leaflet", name="leaflet")
+     */
+    public function leaflet() {
+        return $this->render('leaflet.html.twig');
+
     }
     
 }

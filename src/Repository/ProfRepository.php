@@ -19,6 +19,24 @@ class ProfRepository extends ServiceEntityRepository
         parent::__construct($registry, Prof::class);
     }
 
+
+    /**
+     * @param string $term
+     * @return Result[]
+     */
+    public function findAllWithSearch(string $term)
+    {
+        $Result = $this->createQueryBuilder('r');
+            $Result->andWhere('r.nom LIKE :term')
+                ->setParameter('term', '%' .$term. '%');    
+        
+                return $Result
+                    ->orderBy('r.nom', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+        
+    }
+
     // /**
     //  * @return Prof[] Returns an array of Prof objects
     //  */
