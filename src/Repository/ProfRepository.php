@@ -65,4 +65,14 @@ class ProfRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneById($id): ?Prof
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

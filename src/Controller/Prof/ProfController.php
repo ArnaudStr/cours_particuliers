@@ -14,6 +14,7 @@ use App\Entity\Session;
 use App\Form\EditProfType;
 use App\Form\CreationCoursType;
 use App\Entity\DemandeCours;
+use DateTimeImmutable;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -75,7 +76,7 @@ class ProfController extends AbstractController
         
         $this->clear();
 
-        return $this->redirectToRoute("home");
+        return $this->redirectToRoute("search_course");
         // return $this->redirectToRoute("login_prof");
         // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
@@ -85,52 +86,53 @@ class ProfController extends AbstractController
      */
     public function showProfileProf(Prof $prof)
     {
+        $nbEtoiles = null;
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
             $nbEtoiles = round($noteMoyenne);
         }
         else $noteMoyenne = 'Pas encore noté';
 
-        // Pour bien classer les creneaux et obtenir le jour en Français
-        $creneauxFr = [];
-        $creneauFr = [];
+        // // Pour bien classer les creneaux et obtenir le jour en Français
+        // $creneauxFr = [];
+        // $creneauFr = [];
+        
 
-        // pour ranger les creneaux dans l'ordre
-        $creneauTmp = [];
-        foreach ($prof->getCreneaux() as $creneau) {
-            switch ($creneau->getJour()) {
-                case 'monday':
-                    array_push($creneauFr, 'Lundi');
-                    break;
-                case 'tuesday':
-                    array_push($creneauFr, 'Mardi');
-                    break;
-                case 'wednesday':
-                    array_push($creneauFr, 'Mercredi');
-                    break;
-                case 'thursday':
-                    array_push($creneauFr, 'Jeudi');
-                    break;
-                case 'friday':
-                    array_push($creneauFr, 'Vendredi');
-                    break;
-                case 'saturday':
-                    array_push($creneauFr, 'Samedi');
-                    break;
-                case 'sunday':
-                    array_push($creneauFr, 'Dimanche');
-                    break;
+        // // pour ranger les creneaux dans l'ordre
+        // foreach ($prof->getCreneaux() as $creneau) {
+        //     switch ($creneau->getJour()) {
+        //         case 'monday':
+        //             array_push($creneauFr, 'Lundi');
+        //             break;
+        //         case 'tuesday':
+        //             array_push($creneauFr, 'Mardi');
+        //             break;
+        //         case 'wednesday':
+        //             array_push($creneauFr, 'Mercredi');
+        //             break;
+        //         case 'thursday':
+        //             array_push($creneauFr, 'Jeudi');
+        //             break;
+        //         case 'friday':
+        //             array_push($creneauFr, 'Vendredi');
+        //             break;
+        //         case 'saturday':
+        //             array_push($creneauFr, 'Samedi');
+        //             break;
+        //         case 'sunday':
+        //             array_push($creneauFr, 'Dimanche');
+        //             break;
                 
-                default:
-                    # code...
-                    break;
-            }
-            array_push($creneauFr, $creneau->getHeureDebut());
-            array_push($creneauFr, $creneau->getHeureFin());
+        //         default:
+        //             # code...
+        //             break;
+        //     }
+        //     array_push($creneauFr, $creneau->getHeureDebut());
+        //     array_push($creneauFr, $creneau->getHeureFin());
 
-            array_push($creneauxFr, $creneauFr);
-            $creneauFr = [];
-        }
+        //     array_push($creneauxFr, $creneauFr);
+        //     $creneauFr = [];
+        // }
 
         $elevesProchaineSeanceCours = [];
         $prochaineSeanceCours = [];
@@ -153,7 +155,7 @@ class ProfController extends AbstractController
         return $this->render('prof/showProfileProf.html.twig', [
             'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
-            'creneaux' => $creneauxFr,
+            // 'creneaux' => $creneauxFr,
             'prochainesSeances' => $elevesProchaineSeanceCours
         ]);
     }
@@ -171,12 +173,24 @@ class ProfController extends AbstractController
 
 
     /**
-     * @Route("/editProf/{id}", name="edit_prof")
+     * @Route("/editProfileProf/{id}", name="edit_profile_prof")
      */
-    // public function editProf(Prof $prof, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
-    public function editProf(Prof $prof, Request $request, ObjectManager $manager)
+    public function editProfileProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
 
+        // $disponibilites = [
+        //     "monday" => [[17,18], [10,15]],
+        //     "tuesday" => [[7,12], [18,19]],
+        // ];
+
+        $this->ajoutSessions(2, $prof->getDisponibilites(), $manager, $prof);
+        // $prof->setDisponibilites($disponibilites);
+        $manager->persist($prof);
+
+        $manager->flush();
+
+        dd($prof->getDisponibilites());
+        
         $pictureBeforeForm = $prof->getPictureFilename();
         
         $form = $this->createForm(EditProfType::class, $prof);
@@ -196,17 +210,9 @@ class ProfController extends AbstractController
                 $prof->setPictureFilename($pictureBeforeForm);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($prof);
-            
-            // On parcours les disponibilités du prof
-            foreach ($prof->getCreneaux() as $creneau){             
-                $this->ajoutSessions(4, $creneau, $manager);              
-            }
-                
-            $entityManager->flush();
-                 
-            // do anything else you need here, like send an email
+            $manager->persist($prof);
+
+            $manager->flush();
 
             return $this->redirectToRoute('show_profile_prof', [
                 'id' => $prof->getId()
@@ -219,26 +225,35 @@ class ProfController extends AbstractController
         ]);
     }
 
-    public function ajoutSessions($nbSemaines, Creneau $creneau, ObjectManager $manager){
-        for ($i=0; $i<$nbSemaines; $i++){
+    /**
+     * @Route("/editDisponibilitesProf/{id}", name="edit_disponibilites_prof")
+     */
+    public function editDisponibilitesProf(Prof $prof, Request $request, ObjectManager $manager)
+    {       
+        return $this->render('prof/disposProf.html.twig', [
+            'title' => 'Disponibilites prof'
+        ]);
 
-            $session = new Session();
-            $session->setProf($creneau->getProf());
+    }
 
-            // On crée la crée la session pour la semaine suivante
-            $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
-            $dateDebut->modify('next '.$creneau->getJour().' +'.($i*7).' days');
-            $dateDebut->setTime($creneau->getHeureDebut()->format('H'), $creneau->getHeureDebut()->format('i'));
-            
-            $session->setDateDebut($dateDebut);
+    public function ajoutSessions($nbSemaines, $disponibilites, ObjectManager $manager, Prof $prof){
+        foreach($disponibilites as $jour=>$creneaux) {
+            foreach($creneaux as $creneau) {
+                for ($i=0; $i<$nbSemaines; $i++) {
+                    for($heure=$creneau[0]; $heure<$creneau[1]; $heure++) {
 
-            $dateFin = new DateTime('now',new DateTimeZone('Europe/Paris'));
-            $dateFin->modify('next '.$creneau->getJour().' +'.($i*7).' days');
-            $dateFin->setTime($creneau->getHeureFin()->format('H'), $creneau->getHeureFin()->format('i'));
-        
-            $session->setDateFin($dateFin);
+                        $session = new Session();
+                        $session->setProf($prof);
+                        $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
+                        $dateDebut->modify('next '.$jour.' +'.($i*7).' days');
+                        $dateDebut->setTime($heure, 0);
+                        
+                        $session->setDateDebut($dateDebut);
 
-            $manager->persist($session);
+                        $manager->persist($session);
+                    }
+                }
+            }
         }
     }
 
@@ -310,23 +325,7 @@ class ProfController extends AbstractController
     // public function sendMessageProf(Prof $prof, Eleve $eleve, Request $request)
     {
 
-        // $form = $this->createForm(MessageType::class);
-
-        // $form->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-
-            // $message = new Message();
-            // $message->setProf($prof);
-            // $message->setEleve($eleve);
-            // $message->setAuteur($prof->getUsername());
-            // $message->setContenu($form->get("contenu")->getData());
-
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($message);
-            // $entityManager->flush();
-
-            // do anything else you need here, like send an email
+           // do anything else you need here, like send an email
 
             $contenu = $_POST['text'];
             $message = new Message();
@@ -538,6 +537,14 @@ class ProfController extends AbstractController
  
             try{
                 $user->setToken($token);
+
+                $date = new DateTime('now',new DateTimeZone('Europe/Paris'));
+                $date->add(new \DateInterval('P1D'));
+    
+                $user->setTokenExpire(
+                    $date
+                );
+
                 $entityManager->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
@@ -579,10 +586,15 @@ class ProfController extends AbstractController
  
             if ($user === null) {
                 $this->addFlash('danger', 'Token Inconnu');
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('login_prof');
+            }
+            else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
+                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
+                return $this->redirectToRoute('login_prof');
             }
  
             $user->setToken(null);
+            $user->setTokenExpire(null);
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  
@@ -594,14 +606,6 @@ class ProfController extends AbstractController
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
  
-    }
-
-    /**
-     * @Route("/leaflet", name="leaflet")
-     */
-    public function leaflet() {
-        return $this->render('leaflet.html.twig');
-
     }
     
 }

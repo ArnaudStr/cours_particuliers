@@ -2,21 +2,30 @@
 
 namespace App\EventListener;
 
+use App\Repository\DemandeCoursRepository;
+use App\Repository\ProfRepository;
 use App\Repository\SessionRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use CalendarBundle\Entity\Event;
 use CalendarBundle\Event\CalendarEvent;
+use DateTime;
 
 class CalendarListener
 {
+    private $demandeCoursRepository;
     private $sessionRepository;
+    private $profRepository;
     private $router;
 
     public function __construct(
         SessionRepository $sessionRepository,
+        DemandeCoursRepository $demandeCoursRepository,
+        ProfRepository $profRepository,
         UrlGeneratorInterface $router
     ) {
         $this->sessionRepository = $sessionRepository;
+        $this->demandeCoursRepository = $demandeCoursRepository;
+        $this->profRepository = $profRepository;
         $this->router = $router;
     }
 
@@ -41,6 +50,7 @@ class CalendarListener
                 ->getQuery()
                 ->getResult()
             ;
+
         }
         else if (array_key_exists('eleve', $filters)) {
 
@@ -57,8 +67,10 @@ class CalendarListener
             ->setParameter('id', $filters['eleve'])
             ->getQuery()
             ->getResult();
+
         }
-        else {
+
+        else if (array_key_exists('prof', $filters)){
 
             // SESSIONS D'UN PROF
             $sessions = $this->sessionRepository
@@ -73,6 +85,40 @@ class CalendarListener
             ->getQuery()
             ->getResult()
             ;
+
+        }
+
+        else {
+            $prof = $this->profRepository
+                ->createQueryBuilder('p')
+                ->andWhere('p.id = :id')
+                ->setParameter('id', $filters['profDispos'])
+                ->getQuery()
+                ->getOneOrNullResult()
+                ;
+
+            $dispos = $prof->getDisponibilites();
+
+            $sessions = [];
+            $session = [];
+
+            foreach($dispos as $jour=>$creneaux) {
+                foreach($creneaux as $creneau) {
+                    $dateDebut = new DateTime($jour.' this week');
+                    $dateDebut->setTime($creneau[0], 0);
+
+                    array_push($session, $dateDebut);
+
+                    $dateFin = new DateTime($jour.' this week');
+                    $dateFin->setTime($creneau[1], 0);
+
+                    array_push($session, $dateFin);
+
+                    array_push($sessions, $session);
+
+                    $session=[];
+                }
+            }
         }
 
 
@@ -82,10 +128,13 @@ class CalendarListener
             // Sessions disponibles à l'inscription
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$session->getEleve()) {
                 // this create the events with your data (here formation data) to fill calendar
+                // $dateFin = $dateDebut;
+                // $dateFin->add(new \DateInterval('P1H'));
+
                 $sessionEvent = new Event(
                     "S'inscire",
                     $session->getDateDebut(),
-                    $session->getDateFin() // If the end date is null or not defined, a all day event is created.
+                    $dateFin // If the end date is null or not defined, a all day event is created.
                 );
 
                 $sessionEvent->setOptions([
@@ -139,12 +188,36 @@ class CalendarListener
                     ]);
                 }
 
-                // CRENEAU LIBRE
+                // CRENEAU AVEC DEMANDES DE COURS
+                else if ( $demandesCours = $this->demandeCoursRepository
+                            ->createQueryBuilder('d')
+                            ->andWhere('d.session = :session')
+                            ->andWhere('d.repondue = 0')
+                            ->setParameter('session', $session)
+                            ->getQuery()
+                            ->getResult() ) {
+                
+                    $sessionEvent = new Event(
+                        'Créneau libre avec '.count($demandesCours).' demandes de cours',
+                        $session->getDateDebut(),
+                        $session->getDateFin() // If the end date is null or not defined, a all day event is created.
+                    );
+
+                    $sessionEvent->setOptions([
+                        'backgroundColor' => 'blue',
+                        'borderColor' => 'blue',
+                        'textColor' => 'white'
+                    ]);
+                }
+
                 else {
+                    $dateFin = clone $session->getDateDebut();
+                    $dateFin->add(new \DateInterval('PT1H'));;
+                    
                     $sessionEvent = new Event(
                         'Creneau libre',
                         $session->getDateDebut(),
-                        $session->getDateFin() // If the end date is null or not defined, a all day event is created.
+                        $dateFin // If the end date is null or not defined, a all day event is created.
                     );
 
                     $sessionEvent->setOptions([
@@ -154,6 +227,21 @@ class CalendarListener
                     ]);
                 }
             }
+
+            else if (array_key_exists('profDispos', $filters)) {
+                $sessionEvent = new Event(
+                    'Creneau',
+                    $session[0],
+                    $session[1] // If the end date is null or not defined, a all day event is created.
+                );
+
+                $sessionEvent->setOptions([
+                    'backgroundColor' => '#1A252F',
+                    'borderColor' => '#',
+                    'textColor' => 'white'
+                ]);
+            }
+
             /*
             * Add custom options to events
             *

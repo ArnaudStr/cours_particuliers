@@ -5,9 +5,7 @@ namespace App\Controller;
 use App\Entity\Prof;
 use App\Entity\Eleve;
 use App\Form\RegistrationType;
-use App\Service\MailerService;
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -16,10 +14,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
-
 class RegisterController extends AbstractController
 {
-
      /**
      * @Route("/register", name="register")
      */
@@ -31,9 +27,44 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
         $token = $tokenGenerator->generateToken();
 
+    
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ( $form->get('isEleve')->getData() ) {
+                $allEleves = $this->getDoctrine()
+                ->getRepository(Eleve::class)
+                ->findAll();
+                $email = $form->get('email')->getData();
+
+                // TEST SI L'EMAIL EXISTE DEJA
+                foreach($allEleves as $eleve){ 
+                    if($eleve->getEmail() == $email) {
+
+                        if ($eleve->getAConfirme()) {
+                            $this->addFlash('info','Vous êtes déjà register');
+                            
+                        }
+                        else {
+
+                            $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+                            $message = (new \Swift_Message('Forgot Password'))
+                            ->setFrom('arnaud6757@gmail.com')
+                            ->setTo($eleve->getEmail())
+                            ->setBody(
+                                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                                'text/html'
+                            );
+                
+                            $mailer->send($message);
+
+                            $this->addFlash('info','Vous devez confirmer votre compte, un nouveau mail de confirmation vous a été envoyé');
+
+                        }
+
+                        return $this->redirectToRoute('login_eleve');
+                    }
+                }
 
                 $user = new Eleve();
 
@@ -45,6 +76,42 @@ class RegisterController extends AbstractController
             }
 
             else {
+
+                $allProfs = $this->getDoctrine()
+                ->getRepository(Prof::class)
+                ->findAll();
+                $email = $form->get('email')->getData();
+
+                // TEST SI L'EMAIL EXISTE DEJA
+                foreach($allProfs as $prof){ 
+                    if($prof->getEmail() == $email) {
+
+                        if ($prof->getAConfirme()) {
+                            $this->addFlash('info','Vous êtes déjà register');
+                            
+                        }
+                        else {
+
+                            $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+                            $message = (new \Swift_Message('Forgot Password'))
+                            ->setFrom('arnaud6757@gmail.com')
+                            ->setTo($prof->getEmail())
+                            ->setBody(
+                                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                                'text/html'
+                            );
+                
+                            $mailer->send($message);
+
+                            $this->addFlash('info','Vous devez confirmer votre compte, un nouveau mail de confirmation vous a été envoyé');
+
+                        }
+
+                        return $this->redirectToRoute('login_prof');
+                    }
+                }
+
 
                 $user = new Prof();
 
@@ -76,12 +143,7 @@ class RegisterController extends AbstractController
             $user->setPrenom(
                 $form->get('prenom')->getData()
             );
-
-            // $user->setAdresse(
-            //     $form->get('adresse')->getData()
-            // );
-
-
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -94,16 +156,18 @@ class RegisterController extends AbstractController
             // ->setFrom('arnaud.straumann@free.fr')
             ->setTo($user->getEmail())
             ->setBody(
-                "blablabla voici le token pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
                 'text/html'
             );
 
             $mailer->send($message);
 
-            $this->addFlash('user-error', 'Votre inscription a été validée, vous allez recevoir un mail de confirmation pour activer votre compte');
+            $this->addFlash('confirm', 'Vous avez reçu un email de validation de validation, veuillez confirmer votre compte');
 
             return $route;
         }
+
+        // $this->get('session')->getFlashBag()->add('error', 'Une erreur est survenue.');
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
@@ -114,17 +178,20 @@ class RegisterController extends AbstractController
      * @Route("/confirmAccount/{token}", name="app_confirm_account")
      */
     public function confirmAccount(string $token)
-    { 
+    {
+        $isEleve = false;
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($user = $entityManager->getRepository(Eleve::class)->findOneByToken($token));
+        if ($user = $entityManager->getRepository(Eleve::class)->findOneByToken($token)) {
+            $isEleve = true;
+        }
         else {
             $user = $entityManager->getRepository(Prof::class)->findOneByToken($token);
         }
 
         if ($user === null) {
             $this->addFlash('danger', 'Token Inconnu');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('register');
         }
 
         $user->setToken(null);
@@ -133,7 +200,13 @@ class RegisterController extends AbstractController
 
         $this->addFlash('notice', 'Compte activé');
 
-        return $this->redirectToRoute('login_eleve');
+
+        if ($isEleve) {
+            return $this->redirectToRoute('login_eleve');
+        }
+        else {
+            return $this->redirectToRoute('login_prof');
+        }
     }
 
 }

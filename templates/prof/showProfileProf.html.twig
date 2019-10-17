@@ -15,7 +15,8 @@
                     <p>{{ app.user }}</p>
                     <p>{{ app.user.email }}</p>
                     <p>{{ app.user.adresse }}</p>
-                    <p><a href="{{ path('edit_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes informtions</button></a></p>
+                    <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}"><button type="button">Modifier mon profil</button></a></p>
+                    <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes disponibilités</button></a></p>
                 </div>
                 <div class="avis">
                     <h3>Note : {{ noteMoyenne }}</h3>
@@ -64,7 +65,7 @@
         <div class="creneaux">
             <h2>Mes creneaux</h2>
             <table class="table table-hover">
-                <thead>
+                {#<thead>
                     <tr>
                     <th scope="col">Jour</th>
                     <th scope="col">Début</th>
@@ -80,7 +81,7 @@
                     </tr>
                 {% endfor %} 
                 
-                </tbody>
+                </tbody> #}
             </table>
 
             <div class="coursProf">

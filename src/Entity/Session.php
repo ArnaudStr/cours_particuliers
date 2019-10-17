@@ -24,11 +24,6 @@ class Session
     private $dateDebut;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $dateFin;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="sessions")
      */
     private $eleve;
@@ -70,18 +65,6 @@ class Session
     public function setDateDebut(\DateTimeInterface $dateDebut): self
     {
         $this->dateDebut = $dateDebut;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?\DateTimeInterface
-    {
-        return $this->dateFin;
-    }
-
-    public function setDateFin(\DateTimeInterface $dateFin): self
-    {
-        $this->dateFin = $dateFin;
 
         return $this;
     }

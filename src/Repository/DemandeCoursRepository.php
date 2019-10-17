@@ -19,22 +19,18 @@ class DemandeCoursRepository extends ServiceEntityRepository
         parent::__construct($registry, DemandeCours::class);
     }
 
-    // /**
-    //  * @return DemandeCours[] Returns an array of DemandeCours objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return DemandeCours[] Returns an array of DemandeCours objects
+     */
+    public function findBySession(Session $session)
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('d.session = :session')
+            ->setParameter('session', $session)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?DemandeCours

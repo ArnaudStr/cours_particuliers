@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Modifier profil
+
+{% endblock %}
+
 {% block body %}
 
      {{form_start(editForm, {
@@ -13,7 +17,7 @@
           {{form_row(editForm.description) }}
           <div id="prev"> </div>
           {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
-          <ul id="creneaux" data-prototype="{{ form_row(editForm.creneaux.vars.prototype)|e('html_attr') }}">
+          {#<ul id="creneaux" data-prototype="{{ form_row(editForm.creneaux.vars.prototype)|e('html_attr') }}">
           
                {% for creneau in editForm.creneaux %}
                     <li>
@@ -21,7 +25,7 @@
                     </li>
                {% endfor %}
 
-          </ul>
+          </ul> #}
           {{form_row(editForm.submit) }}
           {{ form_rest(editForm) }}
         

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
         defaultView: 'timeGridWeek',
+        selectable: true,
         height:'auto',
         allDaySlot: false,
         minTime:'07:00:00',

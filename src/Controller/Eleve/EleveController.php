@@ -48,13 +48,12 @@ class EleveController extends AbstractController
         return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-
     /**
      * @Route("/logoutEleve", name="logout_eleve")
      */
     public function logoutEleve() {
         
-        return $this->redirectToRoute("home");
+        return $this->redirectToRoute("search_course");
         // return $this->redirectToRoute("login_prof");
         // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
@@ -327,6 +326,12 @@ class EleveController extends AbstractController
  
             try{
                 $user->setToken($token);
+                $date = new DateTime('now',new DateTimeZone('Europe/Paris'));
+                $date->add(new \DateInterval('P1D'));
+    
+                $user->setTokenExpire(
+                    $date
+                );
                 $entityManager->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
@@ -367,10 +372,15 @@ class EleveController extends AbstractController
  
             if ($user === null) {
                 $this->addFlash('danger', 'Token Inconnu');
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('login_eleve');
+            }
+            else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
+                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
+                return $this->redirectToRoute('login_eleve');
             }
  
             $user->setToken(null);
+            $user->setTokenExpire(null);
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  
@@ -420,6 +430,15 @@ class EleveController extends AbstractController
         return $this->render('course/displayCourse.html.twig', [
             'cours' => $cours
         ]);
+    }
+
+    
+    /**
+     * @Route("/leaflet", name="leaflet")
+     */
+    public function leaflet() {
+        return $this->render('leaflet.html.twig');
+
     }
 
 }

@@ -4,7 +4,15 @@
 
 {% block body %}
 
-<form method="post">
+{% block flash %}
+    {% for flash_message in app.session.flashbag.get('confirm') %}
+    <div class="container alert alert-info" role="alert">
+        {{ flash_message }}
+    </div>
+    {% endfor %}
+{% endblock %}
+
+<form method="post" class="col-lg-5 registerForm">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -35,7 +43,7 @@
         Sign in
     </button>
 
-    <a  href="{{ path('app_forgotten_password') }}">Mot de passe oublié</a>
+    <a  href="{{ path('app_forgotten_password') }}">Mot de passe oublié ?</a>
 
 </form>
 {% endblock %}

@@ -16,10 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EleveRepository")
- * @UniqueEntity(
- *     fields={"email"},
- *     message="Email déjà utilisé"
- * )
+ * @UniqueEntity("email", message="Email déjà utilisé")
  */
 class Eleve implements UserInterface
 {
@@ -57,7 +54,7 @@ class Eleve implements UserInterface
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Veuillez entrer un email")
      * @Assert\Email
      */
@@ -113,6 +110,11 @@ class Eleve implements UserInterface
      * @ORM\ManyToMany(targetEntity="App\Entity\Cours", mappedBy="eleves")
      */
     private $cours;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $tokenExpire;
 
     public function __construct()
     {
@@ -450,6 +452,18 @@ class Eleve implements UserInterface
             $this->cours->removeElement($cour);
             $cour->removeElefe($this);
         }
+
+        return $this;
+    }
+
+    public function getTokenExpire(): ?\DateTimeInterface
+    {
+        return $this->tokenExpire;
+    }
+
+    public function setTokenExpire(?\DateTimeInterface $tokenExpire): self
+    {
+        $this->tokenExpire = $tokenExpire;
 
         return $this;
     }

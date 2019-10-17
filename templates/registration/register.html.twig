@@ -5,6 +5,15 @@
 {% block body %}
    <h2 style="text-align: center">Inscription</h2>
 
+   {% block flash %}
+         {% for flash_message in app.session.flashbag.get('info') %}
+            <div class="container alert alert-info" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+
+    {% endblock %}
+
     <div class="col-lg-5 registerForm">
         {{ form_start(registrationForm) }}
 
@@ -14,6 +23,7 @@
             {{ form_row(registrationForm.plainPassword) }}
             {{ form_row(registrationForm.isEleve) }}
             {{ form_row(registrationForm.submit) }}
+            {{ form_errors(registrationForm) }}
             
         {{ form_end(registrationForm) }} 
 

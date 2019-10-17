@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Prof;
-use App\Form\CreneauType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+
 
 
 
@@ -25,6 +26,7 @@ class EditProfType extends AbstractType
             ->add('prenom',TextType::class, [
             ])
             ->add('adresse',TextType::class, [
+                "required" => false              
             ])
             ->add('description',TextType::class, [
                 "required" => false              
@@ -44,15 +46,6 @@ class EditProfType extends AbstractType
                 'data_class' => null,
             ])
 
-            ->add('creneaux', CollectionType::class, [
-                'entry_type' => CreneauType::class,
-                'entry_options' => ['label' => "Selectionnez un creneau :", ],
-                'allow_add' => true,
-                'allow_delete' => true,
-                "by_reference" => false,
-                'label' => false,
-            ])
-            
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'
             ])

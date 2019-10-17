@@ -5,17 +5,18 @@ namespace App\Entity;
 use DateTime;
 use DateTimeZone;
 use App\Entity\Avis;
+use App\Entity\Cours;
 use App\Entity\Message;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProfRepository")
- * @UniqueEntity(fields={"email"}, message="Email déjà utilisé")
+ * @UniqueEntity("email", message="Email déjà utilisé")
  */
 class Prof implements UserInterface
 {
@@ -27,6 +28,13 @@ class Prof implements UserInterface
     private $id;
 
     /**
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email
+     */
+    private $email;
+
+    /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -34,6 +42,7 @@ class Prof implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -51,13 +60,6 @@ class Prof implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresse;
-
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Email
-     */
-    private $email;
 
     /**
      * @ORM\Column(type="datetime")
@@ -116,14 +118,19 @@ class Prof implements UserInterface
     private $sessions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Creneau", mappedBy="prof", orphanRemoval=true, cascade={"persist"})
-     */
-    private $creneaux;
-
-    /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $noteMoyenne;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpire;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $disponibilites = [];
 
     public function __construct()
     {
@@ -133,8 +140,6 @@ class Prof implements UserInterface
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->coursS = new ArrayCollection();
         $this->sessions = new ArrayCollection();
-        $this->creneaux = new ArrayCollection();
-
     }
 
     public function getId(): ?int
@@ -466,37 +471,6 @@ class Prof implements UserInterface
     }
 
     /**
-     * @return Collection|creneau[]
-     */
-    public function getCreneaux(): Collection
-    {
-        return $this->creneaux;
-    }
-
-    public function addCreneau(creneau $creneau): self
-    {
-        if (!$this->creneaux->contains($creneau)) {
-            $this->creneaux[] = $creneau;
-            $creneau->setProf($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreneau(creneau $creneau): self
-    {
-        if ($this->creneaux->contains($creneau)) {
-            $this->creneaux->removeElement($creneau);
-            // set the owning side to null (unless already changed)
-            if ($creneau->getProf() === $this) {
-                $creneau->setProf(null);
-            }
-        }
-
-        return $this;
-    }
-
-        /**
      * toString
      * @return string
      */
@@ -516,5 +490,28 @@ class Prof implements UserInterface
         return $this;
     }
 
+    public function getTokenExpire(): ?\DateTimeInterface
+    {
+        return $this->tokenExpire;
+    }
+
+    public function setTokenExpire(?\DateTimeInterface $tokenExpire): self
+    {
+        $this->tokenExpire = $tokenExpire;
+
+        return $this;
+    }
+
+    public function getDisponibilites(): ?array
+    {
+        return $this->disponibilites;
+    }
+
+    public function setDisponibilites(?array $disponibilites): self
+    {
+        $this->disponibilites = $disponibilites;
+
+        return $this;
+    }
 
 }
