@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\SessionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SeanceRepository")
  */
-class Session
+class Seance
 {
     /**
      * @ORM\Id()
@@ -24,24 +24,24 @@ class Session
     private $dateDebut;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="sessions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Eleve", inversedBy="seances")
      */
     private $eleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="sessions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cours", inversedBy="seances")
      * @ORM\JoinColumn(nullable=true)
      */
     private $cours;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="sessions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Prof", inversedBy="seances")
      * @ORM\JoinColumn(nullable=false)
      */
     private $prof;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DemandeCours", mappedBy="session", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\DemandeCours", mappedBy="seance", orphanRemoval=true)
      */
     private $demandesCours;
 
@@ -117,7 +117,7 @@ class Session
     {
         if (!$this->demandesCours->contains($demandesCour)) {
             $this->demandesCours[] = $demandesCour;
-            $demandesCour->setSession($this);
+            $demandesCour->setSeance($this);
         }
 
         return $this;
@@ -128,8 +128,8 @@ class Session
         if ($this->demandesCours->contains($demandesCour)) {
             $this->demandesCours->removeElement($demandesCour);
             // set the owning side to null (unless already changed)
-            if ($demandesCour->getSession() === $this) {
-                $demandesCour->setSession(null);
+            if ($demandesCour->getSeance() === $this) {
+                $demandesCour->setSeance(null);
             }
         }
 

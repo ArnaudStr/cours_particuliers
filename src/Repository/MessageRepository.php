@@ -66,8 +66,7 @@ class MessageRepository extends ServiceEntityRepository
 
     }
 
-    public function findNonLusEleve(Eleve $eleve): array
-    {
+    public function findNbNonLusEleve(Eleve $eleve) {
         $entityManager = $this->getEntityManager();
 
         $query = $entityManager->createQuery(
@@ -81,6 +80,44 @@ class MessageRepository extends ServiceEntityRepository
     
         // returns an array of Product objects
         return $query->getOneorNullresult();
+    }
+
+
+    // Nombre de messages non lu d'un prof pour chaque eleve
+    public function findNbNonLusProfEleves(Prof $prof)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m as msg, count(m) as nbMsg
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            AND m.auteur != :profUsername
+            AND m.lu = 0
+            GROUP BY m.eleve'
+        )->setParameter('prof', $prof)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        // returns an array of Product objects
+        return $query->execute();
+    }
+
+
+    public function findNbNonLusProf(Prof $prof)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT count(m)
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            AND m.auteur != :profUsername
+            AND m.lu = 0'
+        )->setParameter('prof', $prof)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        // returns an array of Product objects
+        return $query->getSingleScalarResult();
     }
 
     public function findConversation(Eleve $eleve, Prof $prof): array

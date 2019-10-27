@@ -23,6 +23,7 @@ class EditEleveType extends AbstractType
             ->add('prenom',TextType::class, [
             ])
             ->add('adresse',TextType::class, [
+                "required" => false              
             ])
 
             ->add('pictureFilename', FileType::class, [

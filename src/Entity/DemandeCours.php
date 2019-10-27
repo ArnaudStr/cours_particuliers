@@ -17,10 +17,10 @@ class DemandeCours
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="demandesCours")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Seance", inversedBy="demandesCours")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $session;
+    private $seance;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Cours")
@@ -49,14 +49,14 @@ class DemandeCours
         return $this->id;
     }
 
-    public function getSession(): ?Session
+    public function getSeance(): ?Seance
     {
-        return $this->session;
+        return $this->seance;
     }
 
-    public function setSession(?Session $session): self
+    public function setSeance(?Seance $seance): self
     {
-        $this->session = $session;
+        $this->seance = $seance;
 
         return $this;
     }

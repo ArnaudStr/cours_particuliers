@@ -1,4 +1,7 @@
 {
+    "beberlei/doctrineextensions": {
+        "version": "v1.2.3"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -131,6 +134,9 @@
     },
     "psr/log": {
         "version": "1.1.0"
+    },
+    "rogervila/array-diff-multidimensional": {
+        "version": "1.0.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

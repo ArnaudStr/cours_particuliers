@@ -51,9 +51,9 @@ class Cours
     private $chezEleve;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="cours", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Seance", mappedBy="cours", orphanRemoval=true)
      */
-    private $sessions;
+    private $seances;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -72,7 +72,7 @@ class Cours
 
     public function __construct()
     {
-        $this->sessions = new ArrayCollection();
+        $this->seances = new ArrayCollection();
         $this->eleves = new ArrayCollection();
     }
 
@@ -155,30 +155,30 @@ class Cours
     }
 
     /**
-     * @return Collection|Session[]
+     * @return Collection|Seance[]
      */
-    public function getSessions(): Collection
+    public function getSeances(): Collection
     {
-        return $this->sessions;
+        return $this->seances;
     }
 
-    public function addSession(Session $session): self
+    public function addSeance(Seance $seance): self
     {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setCours($this);
+        if (!$this->seances->contains($seance)) {
+            $this->seances[] = $seance;
+            $seance->setCours($this);
         }
 
         return $this;
     }
 
-    public function removeSession(Session $session): self
+    public function removeSeance(Seance $seance): self
     {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
+        if ($this->seances->contains($seance)) {
+            $this->seances->removeElement($seance);
             // set the owning side to null (unless already changed)
-            if ($session->getCours() === $this) {
-                $session->setCours(null);
+            if ($seance->getCours() === $this) {
+                $seance->setCours(null);
             }
         }
 

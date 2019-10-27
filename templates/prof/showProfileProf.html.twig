@@ -58,6 +58,7 @@
                     veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
                     quis provident quam pariatur quasi laborum?
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem provident quae tempore, pariatur asperiores delectus? Ea perferendis voluptates inventore. Laborum eaque rem mollitia debitis illo, reprehenderit amet omnis ratione rerum!
                 </p>
             </div>
         </div>
@@ -65,7 +66,7 @@
         <div class="creneaux">
             <h2>Mes creneaux</h2>
             <table class="table table-hover">
-                {#<thead>
+                <thead>
                     <tr>
                     <th scope="col">Jour</th>
                     <th scope="col">Début</th>
@@ -73,15 +74,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for creneau in creneaux %}
+                    {#<tr>{{ app.user.disponibilites }}</tr> #}
+                {% for jour, creneaux in app.user.disponibilites %}
+                    {% for creneau in creneaux %}
                     <tr>
-                        <td>{{ creneau[0] }}</td>
-                        <td>{{ creneau[1]|date("H:i") }}</td>
-                        <td>{{ creneau[2]|date("H:i") }}</td>
+                        {% if jour == 'Mon' %}
+                            <td>Lundi</td>
+                        {% elseif jour == 'Tue' %}
+                            <td>Mardi</td>
+                        {% elseif jour == 'Wed' %}
+                            <td>Mercredi</td>
+                        {% elseif jour == 'Thu' %}
+                            <td>Jeudi</td>
+                        {% elseif jour == 'Fri' %}
+                            <td>Vendredi</td>
+                        {% elseif jour == 'Sat' %}
+                            <td>Samedi</td>
+                        {% elseif jour == 'Sun' %}
+                            <td>Dimanche</td>
+                        {% endif %}
+
+                        <td>{{ creneau[0] }}:00</td>
+                        <td>{{ creneau[1] }}:00</td>
                     </tr>
+                    {% endfor %} 
                 {% endfor %} 
                 
-                </tbody> #}
+                </tbody> 
             </table>
 
             <div class="coursProf">

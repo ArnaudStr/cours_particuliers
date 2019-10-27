@@ -113,9 +113,9 @@ class Prof implements UserInterface
     private $aConfirme;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="prof", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Seance", mappedBy="prof", orphanRemoval=true)
      */
-    private $sessions;
+    private $seances;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -139,7 +139,7 @@ class Prof implements UserInterface
         $this->avis = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->coursS = new ArrayCollection();
-        $this->sessions = new ArrayCollection();
+        $this->seances = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -440,30 +440,30 @@ class Prof implements UserInterface
     }
 
     /**
-     * @return Collection|Session[]
+     * @return Collection|Seance[]
      */
-    public function getSessions(): Collection
+    public function getSeances(): Collection
     {
-        return $this->sessions;
+        return $this->seances;
     }
 
-    public function addSession(Session $session): self
+    public function addSeance(Seance $seance): self
     {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setProf($this);
+        if (!$this->seances->contains($seance)) {
+            $this->seances[] = $seance;
+            $seance->setProf($this);
         }
 
         return $this;
     }
 
-    public function removeSession(Session $session): self
+    public function removeSeance(Seance $seance): self
     {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
+        if ($this->seances->contains($seance)) {
+            $this->seances->removeElement($seance);
             // set the owning side to null (unless already changed)
-            if ($session->getProf() === $this) {
-                $session->setProf(null);
+            if ($seance->getProf() === $this) {
+                $seance->setProf(null);
             }
         }
 

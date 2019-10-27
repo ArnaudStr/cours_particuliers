@@ -18,7 +18,7 @@
         {% for message in msgNonLus %}
             {# {% set listEleves = listEleves|merge([idEleve]) %} #}
             <tr>
-                <td><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':message.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ message.eleve }} </strong> ({{ message.nbMsg }})
+                <td><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':message.msg.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ message.msg.eleve }} </strong> ({{ message.nbMsg }})
                 </a></td>
             </tr>
         {% endfor %}

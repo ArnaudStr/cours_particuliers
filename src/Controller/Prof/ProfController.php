@@ -8,13 +8,11 @@ use App\Entity\Prof;
 
 use App\Entity\Cours;
 use App\Entity\Eleve;
-use App\Entity\Creneau;
 use App\Entity\Message;
-use App\Entity\Session;
+use App\Entity\Seance;
 use App\Form\EditProfType;
 use App\Form\CreationCoursType;
 use App\Entity\DemandeCours;
-use DateTimeImmutable;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -26,7 +24,7 @@ use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
-
+use Rogervila\ArrayDiffMultidimensional;
 
 /**
  * @Route("/prof")
@@ -38,19 +36,13 @@ class ProfController extends AbstractController
      */
     public function indexProf()
     {
-        $nbMsgNonLus = 0;
-
-        foreach($this->getUser()->getMessages() as $message){
-            if ( $message->getAuteur() != $this->getUser()->getUsername() ){
-                if (!$message->getLu()){
-                    $nbMsgNonLus++;
-                }
-            }
-        }
+        $nbMessagesNonLus = $this->getDoctrine()
+        ->getRepository(Message::class)
+        ->findNbNonLusProf($this->getUser());
 
         $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMsgNonLus);
-        
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'
         ]);
@@ -93,61 +85,22 @@ class ProfController extends AbstractController
         }
         else $noteMoyenne = 'Pas encore noté';
 
-        // // Pour bien classer les creneaux et obtenir le jour en Français
-        // $creneauxFr = [];
-        // $creneauFr = [];
-        
-
-        // // pour ranger les creneaux dans l'ordre
-        // foreach ($prof->getCreneaux() as $creneau) {
-        //     switch ($creneau->getJour()) {
-        //         case 'monday':
-        //             array_push($creneauFr, 'Lundi');
-        //             break;
-        //         case 'tuesday':
-        //             array_push($creneauFr, 'Mardi');
-        //             break;
-        //         case 'wednesday':
-        //             array_push($creneauFr, 'Mercredi');
-        //             break;
-        //         case 'thursday':
-        //             array_push($creneauFr, 'Jeudi');
-        //             break;
-        //         case 'friday':
-        //             array_push($creneauFr, 'Vendredi');
-        //             break;
-        //         case 'saturday':
-        //             array_push($creneauFr, 'Samedi');
-        //             break;
-        //         case 'sunday':
-        //             array_push($creneauFr, 'Dimanche');
-        //             break;
-                
-        //         default:
-        //             # code...
-        //             break;
-        //     }
-        //     array_push($creneauFr, $creneau->getHeureDebut());
-        //     array_push($creneauFr, $creneau->getHeureFin());
-
-        //     array_push($creneauxFr, $creneauFr);
-        //     $creneauFr = [];
-        // }
-
-        $elevesProchaineSeanceCours = [];
+        // Prochaine séances pour chaque élève du cours du prof
+        // $elevesProchaineSeanceCours = [];
         $prochaineSeanceCours = [];
         foreach($prof->getCoursS() as $cours){
             foreach ($cours->getEleves() as $eleve) {
-                array_push($prochaineSeanceCours, $cours);
-                array_push($prochaineSeanceCours, $eleve);
+                // array_push($prochaineSeanceCours, $cours);
+                // array_push($prochaineSeanceCours, $eleve);
 
                 $proSeance = $this->getDoctrine()
-                    ->getRepository(Session::class)
-                    ->findNextSessionEleve($eleve, $cours);               
+                    ->getRepository(Seance::class)
+                    ->findNextSeanceEleve($eleve, $cours);               
 
+                // array_push($prochaineSeanceCours, $proSeance);
+                // array_push($elevesProchaineSeanceCours, $prochaineSeanceCours);
                 array_push($prochaineSeanceCours, $proSeance);
-                array_push($elevesProchaineSeanceCours, $prochaineSeanceCours);
-                $prochaineSeanceCours = [];
+                // $prochaineSeanceCours = [];
             }
         }
 
@@ -156,7 +109,7 @@ class ProfController extends AbstractController
             'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
             // 'creneaux' => $creneauxFr,
-            'prochainesSeances' => $elevesProchaineSeanceCours
+            'prochainesSeances' => $prochaineSeanceCours
         ]);
     }
 
@@ -177,20 +130,6 @@ class ProfController extends AbstractController
      */
     public function editProfileProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
-
-        // $disponibilites = [
-        //     "monday" => [[17,18], [10,15]],
-        //     "tuesday" => [[7,12], [18,19]],
-        // ];
-
-        $this->ajoutSessions(2, $prof->getDisponibilites(), $manager, $prof);
-        // $prof->setDisponibilites($disponibilites);
-        $manager->persist($prof);
-
-        $manager->flush();
-
-        dd($prof->getDisponibilites());
-        
         $pictureBeforeForm = $prof->getPictureFilename();
         
         $form = $this->createForm(EditProfType::class, $prof);
@@ -230,31 +169,55 @@ class ProfController extends AbstractController
      */
     public function editDisponibilitesProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
+
+
         return $this->render('prof/disposProf.html.twig', [
             'title' => 'Disponibilites prof'
         ]);
 
     }
 
-    public function ajoutSessions($nbSemaines, $disponibilites, ObjectManager $manager, Prof $prof){
+    public function ajoutSeances($nbSemaines, $disponibilites, ObjectManager $manager, Prof $prof){
         foreach($disponibilites as $jour=>$creneaux) {
             foreach($creneaux as $creneau) {
                 for ($i=0; $i<$nbSemaines; $i++) {
                     for($heure=$creneau[0]; $heure<$creneau[1]; $heure++) {
 
-                        $session = new Session();
-                        $session->setProf($prof);
+                        $seance = new Seance();
+                        $seance->setProf($prof);
                         $dateDebut = new DateTime('now',new DateTimeZone('Europe/Paris'));
                         $dateDebut->modify('next '.$jour.' +'.($i*7).' days');
                         $dateDebut->setTime($heure, 0);
                         
-                        $session->setDateDebut($dateDebut);
+                        $seance->setDateDebut($dateDebut);
 
-                        $manager->persist($session);
+                        $manager->persist($seance);
                     }
                 }
             }
         }
+    }
+
+    public function supprSeances($disponibilites, ObjectManager $manager, Prof $prof){
+        foreach($disponibilites as $jour=>$creneaux) {
+            foreach($creneaux as $creneau) {
+
+                dump($creneau);
+                $seances = $this->getDoctrine()
+                ->getRepository(Seance::class)
+                ->findToDelete($jour,$creneau[0],$creneau[1]-1, $prof);
+
+                dump($seances);
+
+                foreach($seances as $seance){
+                    $manager->remove($seance);
+
+                    $manager->flush();
+                }
+            }
+        }
+
+        // dd($seances);
     }
 
     /**
@@ -291,10 +254,62 @@ class ProfController extends AbstractController
             $manager->flush();
  
             return $this->redirectToRoute('home_prof');
-            // return $this->redirectToRoute('showInfosessionCours', ['id' => $sessionCours->getId()]);
+            // return $this->redirectToRoute('showInfoseanceCours', ['id' => $seanceCours->getId()]);
         }
         return $this->render('course/addEditCreationCours.html.twig', ['form' => $form->createView(),
         'title' => $title, 'editMode' => $modif, 'cours' => $cours
+        ]);
+    }
+
+    /**
+     * @Route("/changementsDispos/{id}", name="changements_dispos")
+     */
+    public function changementsDispos(Prof $prof,  ObjectManager $manager) {
+
+        $dispoAvantModif = $prof->getDisponibilites();
+        $nouvellesDispos = json_decode($_COOKIE['dispos'], true);
+        
+        $prof->setDisponibilites($nouvellesDispos);
+        
+        $manager->persist($prof);
+        
+        // $manager->flush();
+
+
+        // dump($dispoAvantModif);
+        // dump($nouvellesDispos);
+
+        // Nouvelles dispos
+        // dump($toAdd = ArrayDiffMultidimensional::compare($nouvellesDispos, $dispoAvantModif));
+        $toAdd = ArrayDiffMultidimensional::compare($nouvellesDispos, $dispoAvantModif);
+
+        // dd($toAdd);
+        $this->ajoutSeances(4, $toAdd, $manager, $prof);
+        
+        // Anciennes dispos
+        // dd($toDelete = ArrayDiffMultidimensional::compare($dispoAvantModif,$nouvellesDispos));
+        $toDelete = ArrayDiffMultidimensional::compare($dispoAvantModif,$nouvellesDispos);
+
+        dump($toDelete);
+        $this->supprSeances($toDelete, $manager, $prof);
+
+        $manager->flush();
+
+        // unset($_COOKIE["test"]);
+        // setcookie("test", '', time() - 3600);
+
+
+        return $this->redirectToRoute('show_profile_prof', [
+            'id' => $prof->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/ajouterSeances/{id}", name="ajouter_seances")
+     */
+    public function ajouterSeances() {
+        return $this->render('prof/calendrierProf.html.twig', [
+            'title' => 'Planning'
         ]);
     }
 
@@ -310,7 +325,7 @@ class ProfController extends AbstractController
     /**
      * @Route("/show_course/{id}", name="showCourse")
      */
-    public function inscriptionSession() {
+    public function inscriptionSeance() {
         return $this->render('course/showCourse.html.twig', [
             'title' => 'Planning'
         ]);
@@ -352,45 +367,51 @@ class ProfController extends AbstractController
      */
     public function showMessagesProf(Prof $prof) {
 
-        $elevesMsgNonlus = [];
-        $messageEleve = null;
-        $msgNonLus=0;
-        $premier = true;
+        $nbMessagesNonLusParEleve = $this->getDoctrine()
+        ->getRepository(Message::class)
+        ->findNbNonLusProfEleves($this->getUser());
 
-        foreach($prof->getMessages() as $message){
+        // dd($nbMessagesNonLusParEleve);
+
+        // $elevesMsgNonlus = [];
+        // $messageEleve = null;
+        // $msgNonLus=0;
+        // $premier = true;
+
+        // foreach($prof->getMessages() as $message){
             
-            if ($message->getEleve() != $messageEleve){
-                if ($messageEleve == null)
-                {
-                    $premierEleve = $message->getEleve();
-                }
-                else {
-                    if ($premier){
-                        array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
-                    }
-                    array_push($elevesMsgNonlus, array('eleve' => $messageEleve, 'nbMsg' => $msgNonLus));
-                    $msgNonLus=0;
-                    $premier = false;
-                }
-                $messageEleve = $message->getEleve();
+        //     if ($message->getEleve() != $messageEleve){
+        //         if ($messageEleve == null)
+        //         {
+        //             $premierEleve = $message->getEleve();
+        //         }
+        //         else {
+        //             if ($premier){
+        //                 array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
+        //             }
+        //             array_push($elevesMsgNonlus, array('eleve' => $messageEleve, 'nbMsg' => $msgNonLus));
+        //             $msgNonLus=0;
+        //             $premier = false;
+        //         }
+        //         $messageEleve = $message->getEleve();
 
-            }
-            else {
-                if ($message->getAuteur() != $prof->getUsername()) {
-                    if (!$message->getLu()){
-                        $msgNonLus++;
-                    }
-                }
-            }
-        }
+        //     }
+        //     else {
+        //         if ($message->getAuteur() != $prof->getUsername()) {
+        //             if (!$message->getLu()){
+        //                 $msgNonLus++;
+        //             }
+        //         }
+        //     }
+        // }
 
-        if ($premier && $messageEleve) {
-            array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
-        }
+        // if ($premier && $messageEleve) {
+        //     array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
+        // }
 
         // dd($elevesMsgNonlus);
         return $this->render('prof/showMessageProf.html.twig', [
-            'msgNonLus' => $elevesMsgNonlus
+            'msgNonLus' => $nbMessagesNonLusParEleve
         ]);
     }
 
@@ -419,6 +440,7 @@ class ProfController extends AbstractController
                     array_push($msgNonLus, $message);
                     $message->setLu(true);
                     $entityManager->persist($message);
+                    dd($session->get('nbMsgNonlus'));
                     $session->set('nbMsgNonLus', ($session->get('nbMsgNonLus'))-1);
                 }
             }
@@ -428,10 +450,6 @@ class ProfController extends AbstractController
         }
 
         $entityManager->flush();
-
-        // dump($allMsg);
-        // dump($msgLus);
-        // dd($msgNonLus);
 
         return $this->render('prof/conversationProf.html.twig', [
             'prof' => $prof,
@@ -477,25 +495,25 @@ class ProfController extends AbstractController
     }
 
     /**
-     * @Route("/demandeSessionProf", name="demande_sessions_prof")
+     * @Route("/demandeSeanceProf", name="demande_seances_prof")
      */
-    public function demandeSessionProf() {
-        return $this->render('prof/validationSessions.html.twig', [
+    public function demandeSeanceProf() {
+        return $this->render('prof/validationSeances.html.twig', [
             'title' => 'Planning'
         ]);
     }
 
     /**
-     * @Route("/validationSessionProf/{id}/{valider}", name="validation_sessions_prof")
+     * @Route("/validationSeanceProf/{id}/{valider}", name="validation_seances_prof")
      */
-    public function validationSessionProf(DemandeCours $demandeCours, int $valider) {
+    public function validationSeanceProf(DemandeCours $demandeCours, int $valider) {
 
-        $session = $demandeCours->getSession();
+        $seance = $demandeCours->getSeance();
         if ($valider == 1) {
-            $session->setEleve($demandeCours->getEleve());
-            $session->setCours($demandeCours->getCours());
-            if (!$session->getCours()->getEleves()->contains($demandeCours->getEleve())){
-                $session->getCours()->addEleve($demandeCours->getEleve());
+            $seance->setEleve($demandeCours->getEleve());
+            $seance->setCours($demandeCours->getCours());
+            if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
+                $seance->getCours()->addEleve($demandeCours->getEleve());
             };
         }
 
@@ -503,7 +521,7 @@ class ProfController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($demandeCours);
-        $entityManager->persist($session);
+        $entityManager->persist($seance);
         $entityManager->flush();
 
         return $this->redirectToRoute('home_prof');

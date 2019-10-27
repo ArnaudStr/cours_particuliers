@@ -94,7 +94,7 @@ class RegisterController extends AbstractController
 
                             $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-                            $message = (new \Swift_Message('Forgot Password'))
+                            $message = (new \Swift_Message('Lien pour valider votre inscription'))
                             ->setFrom('arnaud6757@gmail.com')
                             ->setTo($prof->getEmail())
                             ->setBody(
@@ -151,9 +151,8 @@ class RegisterController extends AbstractController
 
             $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $message = (new \Swift_Message('Forgot Password'))
+            $message = (new \Swift_Message('Lien pour valider votre inscription'))
             ->setFrom('arnaud6757@gmail.com')
-            // ->setFrom('arnaud.straumann@free.fr')
             ->setTo($user->getEmail())
             ->setBody(
                 "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
@@ -192,6 +191,9 @@ class RegisterController extends AbstractController
         if ($user === null) {
             $this->addFlash('danger', 'Token Inconnu');
             return $this->redirectToRoute('register');
+        }
+        else {
+            $this->addFlash('confirmation', 'Votre compté a été activé, veuillez vous connecter');
         }
 
         $user->setToken(null);

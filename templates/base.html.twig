@@ -88,7 +88,7 @@
                                 <ul class="navbar-nav mr-auto __flexBetween">
                                     <div class="navLeft">
                                         <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('home_eleve') }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
+                                            <a class="nav-link" href="{{ path('home_eleve', {'id':app.user.id}) }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
@@ -124,10 +124,11 @@
                                         <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie</a>
+                                        <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie {{ app.session.get('nbMsgNonLus') }}</a>
+                                       {# <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie</a>#}
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="navValideCours" href="{{path('demande_sessions_prof')}}">Deamandes de cours</a>
+                                        <a class="nav-link" id="navValideCours" href="{{path('demande_seances_prof')}}">Deamandes de cours</a>
                                     </li>
                                 </div>
                                 <div class="navRight">
@@ -153,8 +154,7 @@
 
         {% block javascripts %}
 
-            <script src='fullcalendar/core/main.js'></script>
-            <script src='fullcalendar/core/locales/fr.js'></script>
+            <script src='fullcalendar/core/locales/fr.js'></script> -->
             <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>

@@ -12,18 +12,58 @@
     <!-- <a class="btnA" href="#" type="button" data-btn="up">Haut</a>
     <a class="btnA" href='#' type="button" data-btn="down">Bas</a> -->
 
-    <div class="calendarProf">
+    <div id='external-events'>
+        <p>
+            <strong>Draggable Events</strong>
+        </p>
+        <div class='fc-event'>My Event 1</div>
+    </div>
+
+    <div id="calendarContainer">
         {% include '@Calendar/calendar.html' %} 
     </div>
+    <p>{{ app.session.get('allEvents') }}</p>
+
+   {# <a id="boutton" href="{{ path('ajouter_seances', {'id': app.user.id}) }}"><button type="button">#}
+    <a id="boutton" href="#"><button type="button">
+        Valider création nouvelles séances
+    </button></a>
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="/js/calendarProf.js">
+    <script src="/js/calendarProf.js"></script>
+    <script>
     
         var active = document.getElementById('navCalendar')
-        active.classList.add('activeNav')
+        active.classList.add('activeNav')  
 
+        //btn.addEventListener('click', function(){
+            //console.log(4*2);
+            /*var tabA = Array.from(document.getElementsByClassName('fc-time-grid-event'));
+            var jour=null;
+
+            tabA.forEach(function(e) {
+                var test = e.firstChild.childNodes[0].attributes[2].value.split(' - ');
+
+                plageHoraire.push(test[0].replace(':00',''));
+                plageHoraire.push(test[1].replace(':00',''));
+
+                if (jour == e.fcSeg.start.toString().substr(0,3));
+                else {
+                    jour = e.fcSeg.start.toString().substr(0,3);
+                    tabJourHoraire[jour]= [];
+                }
+
+                tabJourHoraire[jour].push(plageHoraire);
+
+                plageHoraire = [];
+                
+                })
+
+                document.cookie = 'dispos='+JSON.stringify(tabJourHoraire)+'; path=/';
+         
+        })*/
     </script>
 {% endblock %}

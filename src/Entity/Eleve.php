@@ -6,7 +6,7 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Avis;
 use App\Entity\Message;
-use App\Entity\Session;
+use App\Entity\Seance;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -86,9 +86,9 @@ class Eleve implements UserInterface
     private $pictureFilename;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="eleve")
+     * @ORM\OneToMany(targetEntity="App\Entity\Seance", mappedBy="eleve")
      */
-    private $sessions;
+    private $seances;
 
     /**
      * @var string le token qui servira lors de l'oubli de mot de passe
@@ -122,7 +122,7 @@ class Eleve implements UserInterface
         $this->messages = new ArrayCollection();
         $this->avis = new ArrayCollection();
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
-        $this->sessions = new ArrayCollection();
+        $this->seances = new ArrayCollection();
         $this->demandesCours = new ArrayCollection();
         $this->cours = new ArrayCollection();
     }
@@ -331,30 +331,30 @@ class Eleve implements UserInterface
     }  
     
     /**
-     * @return Collection|Session[]
+     * @return Collection|Seance[]
      */
-    public function getSessions(): Collection
+    public function getSeances(): Collection
     {
-        return $this->sessions;
+        return $this->seances;
     }
 
-    public function addSession(Session $session): self
+    public function addSeance(Seance $seance): self
     {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setEleve($this);
+        if (!$this->seances->contains($seance)) {
+            $this->seances[] = $seance;
+            $seance->setEleve($this);
         }
 
         return $this;
     }
 
-    public function removeSession(Session $session): self
+    public function removeSeance(Seance $seance): self
     {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
+        if ($this->seances->contains($seance)) {
+            $this->seances->removeElement($seance);
             // set the owning side to null (unless already changed)
-            if ($session->getEleve() === $this) {
-                $session->setEleve(null);
+            if ($seance->getEleve() === $this) {
+                $seance->setEleve(null);
             }
         }
 

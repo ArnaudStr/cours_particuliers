@@ -16,19 +16,16 @@
           <strong>Draggable Events</strong>
         </p>
         <div class='fc-event'>My Event 1</div>
-        <div class='fc-event'>My Event 2</div>
-        <div class='fc-event'>My Event 3</div>
-        <div class='fc-event'>My Event 4</div>
-        <div class='fc-event'>My Event 5</div>
-        <p>
-          <input type='checkbox' id='drop-remove' />
-          <label for='drop-remove'>remove after drop</label>
-        </p>
     </div>
 
     <div id="calendarContainer">
         {% include '@Calendar/calendar.html' %} 
     </div>
+
+    {#<a id="boutton"><button type="button">#}
+    <a id="boutton" href="{{ path('changements_dispos', {'id': app.user.id}) }}"><button type="button">
+        Valider mes disponibilites
+    </button></a>
 {% endblock %}
 
 
@@ -36,4 +33,39 @@
     {{ parent() }}
     <script src="/js/disposProf.js">
     </script>
+    <script>
+
+        //<i class="fas fa-times"></i>
+
+        var plageHoraire = [];
+        var tabJourHoraire = {};
+        var btn = document.getElementById("boutton");
+        btn.addEventListener('click', function(){
+            var tabA = Array.from(document.getElementsByClassName('fc-time-grid-event'));
+            var jour=null;
+
+            tabA.forEach(function(e) {
+                var test = e.firstChild.childNodes[0].attributes[2].value.split(' - ');
+
+                plageHoraire.push(test[0].replace(':00',''));
+                plageHoraire.push(test[1].replace(':00',''));
+
+                if (jour == e.fcSeg.start.toString().substr(0,3));
+                else {
+                    jour = e.fcSeg.start.toString().substr(0,3);
+                    tabJourHoraire[jour]= [];
+                }
+
+                tabJourHoraire[jour].push(plageHoraire);
+
+                plageHoraire = [];
+                
+                })
+
+                document.cookie = 'dispos='+JSON.stringify(tabJourHoraire)+'; path=/';
+         
+        })
+
+        </script>
 {% endblock %}
+

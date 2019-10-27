@@ -36,7 +36,7 @@ class Activite
 
     public function __construct()
     {
-        $this->sessions = new ArrayCollection();
+        $this->seances = new ArrayCollection();
         $this->coursS = new ArrayCollection();
     }
 
@@ -70,30 +70,30 @@ class Activite
     }
 
     /**
-     * @return Collection|Session[]
+     * @return Collection|Seance[]
      */
-    public function getSessions(): Collection
+    public function getSeances(): Collection
     {
-        return $this->sessions;
+        return $this->seances;
     }
 
-    public function addSession(Session $session): self
+    public function addSeance(Seance $seance): self
     {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions[] = $session;
-            $session->setActivite($this);
+        if (!$this->seances->contains($seance)) {
+            $this->seances[] = $seance;
+            $seance->setActivite($this);
         }
 
         return $this;
     }
 
-    public function removeSession(Session $session): self
+    public function removeSeance(Seance $seance): self
     {
-        if ($this->sessions->contains($session)) {
-            $this->sessions->removeElement($session);
+        if ($this->seances->contains($seance)) {
+            $this->seances->removeElement($seance);
             // set the owning side to null (unless already changed)
-            if ($session->getActivite() === $this) {
-                $session->setActivite(null);
+            if ($seance->getActivite() === $this) {
+                $seance->setActivite(null);
             }
         }
 

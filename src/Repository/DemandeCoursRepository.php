@@ -22,11 +22,11 @@ class DemandeCoursRepository extends ServiceEntityRepository
     /**
      * @return DemandeCours[] Returns an array of DemandeCours objects
      */
-    public function findBySession(Session $session)
+    public function findBySeance(Seance $seance)
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.session = :session')
-            ->setParameter('session', $session)
+            ->andWhere('d.seance = :seance')
+            ->setParameter('seance', $seance)
             ->getQuery()
             ->getResult()
         ;

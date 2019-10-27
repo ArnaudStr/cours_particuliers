@@ -2,16 +2,14 @@
 
 namespace App\Controller\Eleve;
 
-
 use App\Entity\Avis;
-
 use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\DemandeCours;
 use App\Entity\Eleve;
 use App\Form\AvisType;
 use App\Entity\Message;
-use App\Entity\Session;
+use App\Entity\Seance;
 use App\Form\MessageType;
 use App\Form\EditEleveType;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +22,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 
-
-
 /**
  * @Route("/eleve")
  */
@@ -34,14 +30,10 @@ class EleveController extends AbstractController
     /**
      * @Route("/loginEleve", name="login_eleve")
      */
-    public function loginEleve(AuthenticationUtils $authenticationUtils)
-    {
-        // if ($this->getUser()) {
-        //    $this->redirectToRoute('target_path');
-        // }
-
+    public function loginEleve(AuthenticationUtils $authenticationUtils) {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -52,29 +44,20 @@ class EleveController extends AbstractController
      * @Route("/logoutEleve", name="logout_eleve")
      */
     public function logoutEleve() {
-        
         return $this->redirectToRoute("search_course");
-        // return $this->redirectToRoute("login_prof");
-        // throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
     /**
      * @Route("/", name="home_eleve")
      */
-    public function indexEleve()
-    {
-        $nbMsgNonLus = 0;
+    public function indexEleve() {
 
-        foreach($this->getUser()->getMessages() as $message){
-            if ( $message->getAuteur() != $this->getUser()->getUsername() ){
-                if (!$message->getLu()){
-                    $nbMsgNonLus++;
-                }
-            }
-        }
+        $nbMessagesNonLus = $this->getDoctrine()
+        ->getRepository(Message::class)
+        ->findNbNonLusEleve($this->getUser());
 
         $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMsgNonLus);
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
         return $this->render('eleve/calendrierEleve.html.twig', [
             'title' => 'Planning'
@@ -84,18 +67,17 @@ class EleveController extends AbstractController
     /**
      * @Route("/showProfileEleve/{id}", name="show_profile_eleve")
      */
-    public function showProfileEleve(Eleve $eleve)
-    {
+    public function showProfileEleve(Eleve $eleve) {
+        // On récupère toutes les séances à venir (avec le cours correspondant)
         $prochainesSeances=[];
         foreach($eleve->getCours() as $cours){
             $proSeance = $this->getDoctrine()
-            ->getRepository(Session::class)
-            ->findNextSessionEleve($eleve, $cours);
+            ->getRepository(Seance::class)
+            ->findNextSeanceEleve($eleve, $cours);
 
             array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
         }
         
-        // dd($prochainesSeances);
         return $this->render('eleve/showProfileEleve.html.twig', [
             'prochainesSeances' => $prochainesSeances
         ]);
@@ -104,10 +86,7 @@ class EleveController extends AbstractController
     /**
      * @Route("/editEleve/{id}", name="edit_eleve")
      */
-    // public function editEleve(Eleve $eleve, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
-    public function editEleve(Eleve $eleve, Request $request)
-    {       
-
+    public function editEleve(Eleve $eleve, Request $request) {       
         // On récupere l'image avant le passage par le formulaire
         $pictureBeforeForm = $eleve->getPictureFilename();
 
@@ -116,14 +95,13 @@ class EleveController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Upload de la photo et inscription en BDD du nom de l'image
+            // Upload de la photo et inscription en BDD du nom de l'image, (si il y a eu une image dans le formulaire)
             if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
                 $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
                 $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
                 $eleve->setPictureFilename($filename);
             }
-            else
-            {
+            else {
                 $eleve->setPictureFilename($pictureBeforeForm);
             }
 
@@ -131,7 +109,7 @@ class EleveController extends AbstractController
             $entityManager->persist($eleve);
             $entityManager->flush();
 
-            return $this->redirectToRoute('show_profile_eleve');
+            return $this->redirectToRoute('show_profile_eleve', ['id'=>$eleve->getID()]);
         }
 
         return $this->render('eleve/editProfileEleve.html.twig', [
@@ -140,15 +118,12 @@ class EleveController extends AbstractController
         ]);
     }
 
-
-
     /**
      * @Route("/sendMessageEleve/{idProf}/{idEleve}", name="send_message_eleve")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function sendMessageEleve(Prof $prof, Eleve $eleve, Request $request)
-    {
+    public function sendMessageEleve(Prof $prof, Eleve $eleve, Request $request) {
 
         $form = $this->createForm(MessageType::class);
 
@@ -185,7 +160,6 @@ class EleveController extends AbstractController
             'title' => 'Planning'
         ]);
     }
-
     
     /**
      * @Route("/conversationEleve/{idProf}/{idEleve}", name="conversation_eleve")
@@ -227,7 +201,6 @@ class EleveController extends AbstractController
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function inscriptionCoursEleve(Prof $prof, Cours $cours) {
-
         return $this->render('course/inscriptionCours.html.twig', [
             'prof' => $prof,
             'cours' => $cours,
@@ -235,18 +208,18 @@ class EleveController extends AbstractController
     }
     
     /**
-     * @Route("/demandeInscriptionSession/{idSession}/{idEleve}/{idCours}", name="demande_inscription_session")
-     * @ParamConverter("session", options={"id" = "idSession"})
+     * @Route("/demandeInscriptionSeance/{idSeance}/{idEleve}/{idCours}", name="demande_inscription_seance")
+     * @ParamConverter("seance", options={"id" = "idSeance"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function demandeInscriptionSession(Session $session, Eleve $eleve, Cours $cours) {
+    public function demandeInscriptionSeance(Seance $seance, Eleve $eleve, Cours $cours) {
 
         // Inscription élève au cours
-        // $session->setEleve($eleve);
-        // $session->setCours($cours);
+        // $seance->setEleve($eleve);
+        // $seance->setCours($cours);
         $demandeCours = new DemandeCours();
-        $demandeCours->setSession($session);
+        $demandeCours->setSeance($seance);
         $demandeCours->setEleve($eleve);
         $demandeCours->setCours($cours);
 

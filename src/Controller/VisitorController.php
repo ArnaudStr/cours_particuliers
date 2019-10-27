@@ -32,9 +32,9 @@ class VisitorController extends AbstractController
     //  */
     // public function indexEleve(Eleve $eleve)
     // {
-    //     $nbMessagesNonLus = $this->getDoctrine()
-    //     ->getRepository(Message::class)
-    //     ->findNonLusEleve($eleve);
+        // $nbMessagesNonLus = $this->getDoctrine()
+        // ->getRepository(Message::class)
+        // ->findNonLusEleve($eleve);
 
     //     return $this->render('eleve/indexEleve.html.twig', [
     //         'nonLus' => $nbMessagesNonLus[1],

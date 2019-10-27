@@ -24,7 +24,7 @@
                 {% endfor %}
 
             </div>
-            <a href="{{ path('send_message_prof', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
+            <a href="{{ path('send_message_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
                 <button type="button">
                     Contacter le prof
                 </button>

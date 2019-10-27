@@ -6,9 +6,15 @@
 
 {% block flash %}
     {% for flash_message in app.session.flashbag.get('confirm') %}
-    <div class="container alert alert-info" role="alert">
-        {{ flash_message }}
-    </div>
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {% for flash_message in app.session.flashbag.get('confirmation') %}
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
     {% endfor %}
 {% endblock %}
 
