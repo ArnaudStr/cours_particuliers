@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Prof;
-use App\Entity\Eleve;
 use App\Entity\Admin;
+use App\Entity\Eleve;
 use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use App\Form\ActiviteType;
 use App\Form\CategorieType;
 
+use App\Form\RegistrationAdminType;
 use App\Security\AdminAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -43,7 +44,7 @@ class AdminController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator): Response
     {
         $user = new Admin();
-        $form = $this->createForm(RegistrationAdminype::class, $user);
+        $form = $this->createForm(RegistrationAdminType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,7 +72,7 @@ class AdminController extends AbstractController
             );
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('registration/registerAdmin.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }

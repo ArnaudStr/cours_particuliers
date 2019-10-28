@@ -43,6 +43,8 @@ class ProfController extends AbstractController
         $session = new SessionUser();
         $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
+        // dd($session->get('nbMsgNonLus'));
+
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'
         ]);
@@ -332,87 +334,54 @@ class ProfController extends AbstractController
     }
 
     /**
+     * @Route("/showMessagesProf/{id}", name="show_messages_prof")
+     */
+    public function showMessagesProf(Prof $prof) {
+
+        // Conversations entre le prof et chaque eleve
+        $allConversations = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findAllConversationsProf($prof);
+
+        // tableau [ [eleve, nombreMessagesNonLus],  [eleve, nombreMessagesNonLus], ...] 
+        $allConversationsNbMsgNonLus = [];
+
+        foreach($allConversations as $conversation){
+            $eleve =  $conversation->getEleve();
+
+            $nbMsgNonLus = $this->getDoctrine()
+                ->getRepository(Message::class)
+                ->findNbNonLusProfEleve($prof, $eleve);
+
+            // On ajoute l'élève et le nombre de messages non lus
+            array_push($allConversationsNbMsgNonLus, ['eleve' => $eleve, 'nbMsg' => $nbMsgNonLus]);      
+        }
+
+        return $this->render('prof/showMessageProf.html.twig', [
+            'allConversations' => $allConversationsNbMsgNonLus
+        ]);
+    }
+
+    
+    /**
      * @Route("/sendMessageProf/{idProf}/{idEleve}", name="send_message_prof")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function sendMessageProf(Prof $prof, Eleve $eleve)
-    // public function sendMessageProf(Prof $prof, Eleve $eleve, Request $request)
     {
+        $contenu = $_POST['text'];
+        $message = new Message();
+        $message->setProf($prof);
+        $message->setEleve($eleve);
+        $message->setAuteur($prof->getUsername());
+        $message->setContenu($contenu);
 
-           // do anything else you need here, like send an email
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($message);
+        $entityManager->flush();
 
-            $contenu = $_POST['text'];
-            $message = new Message();
-            $message->setProf($prof);
-            $message->setEleve($eleve);
-            $message->setAuteur($prof->getUsername());
-            $message->setContenu($contenu);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($message);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('conversation_prof', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
-        // }
-
-        // return $this->render('message/sendMessage.html.twig', [
-        //     'messageForm' => $form->createView(),
-        // ]);
-    }
-
-
-    /**
-     * @Route("/showMessagesProf/{id}", name="show_messages_prof")
-     */
-    public function showMessagesProf(Prof $prof) {
-
-        $nbMessagesNonLusParEleve = $this->getDoctrine()
-        ->getRepository(Message::class)
-        ->findNbNonLusProfEleves($this->getUser());
-
-        // dd($nbMessagesNonLusParEleve);
-
-        // $elevesMsgNonlus = [];
-        // $messageEleve = null;
-        // $msgNonLus=0;
-        // $premier = true;
-
-        // foreach($prof->getMessages() as $message){
-            
-        //     if ($message->getEleve() != $messageEleve){
-        //         if ($messageEleve == null)
-        //         {
-        //             $premierEleve = $message->getEleve();
-        //         }
-        //         else {
-        //             if ($premier){
-        //                 array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
-        //             }
-        //             array_push($elevesMsgNonlus, array('eleve' => $messageEleve, 'nbMsg' => $msgNonLus));
-        //             $msgNonLus=0;
-        //             $premier = false;
-        //         }
-        //         $messageEleve = $message->getEleve();
-
-        //     }
-        //     else {
-        //         if ($message->getAuteur() != $prof->getUsername()) {
-        //             if (!$message->getLu()){
-        //                 $msgNonLus++;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // if ($premier && $messageEleve) {
-        //     array_push($elevesMsgNonlus, array('eleve' => $premierEleve, 'nbMsg' => $msgNonLus));
-        // }
-
-        // dd($elevesMsgNonlus);
-        return $this->render('prof/showMessageProf.html.twig', [
-            'msgNonLus' => $nbMessagesNonLusParEleve
-        ]);
+        return $this->redirectToRoute('conversation_prof', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
     }
 
     /**
@@ -423,31 +392,35 @@ class ProfController extends AbstractController
     public function conversationProf(Prof $prof, Eleve $eleve) {
 
         $session = new SessionUser();
+
         $allMsg = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findConversation($eleve, $prof);
-        $msgLus = [];
-        $msgNonLus = [];
-        $msgEnvoyes = [];
+
+        $msgLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationLusProf($eleve, $prof);
+
+        $msgNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationNonLusProf($eleve, $prof);
+
+        $msgEnvoyes = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationEnvoyesProf($eleve, $prof);
+
         $entityManager = $this->getDoctrine()->getManager();
 
-        foreach($allMsg as $message){
-            if ( $message->getAuteur() != $prof->getUsername() ){
-                if ($message->getLu()){
-                    array_push($msgLus, $message);
-                }
-                else {
-                    array_push($msgNonLus, $message);
-                    $message->setLu(true);
-                    $entityManager->persist($message);
-                    dd($session->get('nbMsgNonlus'));
-                    $session->set('nbMsgNonLus', ($session->get('nbMsgNonLus'))-1);
-                }
-            }
-            else {
-                array_push($msgEnvoyes, $message);
-            }
+        foreach($msgNonLus as $message){
+            $message->setLu(true);
+            $entityManager->persist($message);
         }
+
+        $nbMessagesNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findNbNonLusProf($prof);
+
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
         $entityManager->flush();
 
@@ -457,6 +430,7 @@ class ProfController extends AbstractController
             'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
+            'msgEnvoyes' => $msgEnvoyes
         ]);
     }
 
@@ -465,11 +439,11 @@ class ProfController extends AbstractController
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function ajax(Prof $prof, Eleve $eleve) {
+    public function ajaxProf(Prof $prof, Eleve $eleve) {
     
         $msgNonLus = $this->getDoctrine()
         ->getRepository(Message::class)
-        ->findNonLusConversationProf($eleve, $prof);
+        ->findConversationNonLusProf($eleve, $prof);
 
         $nouveauMessage = false;
 

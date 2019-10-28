@@ -118,83 +118,131 @@ class EleveController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/showMessagesEleve/{id}", name="show_messages_eleve")
+     */
+    public function showMessagesEleve(Eleve $eleve) {
+
+        // Conversations entre le prof et chaque eleve
+        $allConversations = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findAllConversationsEleve($eleve);
+
+        // tableau [ [prof, nombreMessagesNonLus],  [prof, nombreMessagesNonLus], ...] 
+        $allConversationsNbMsgNonLus = [];
+
+        foreach($allConversations as $conversation){
+            $prof =  $conversation->getProf();
+
+            $nbMsgNonLus = $this->getDoctrine()
+                ->getRepository(Message::class)
+                ->findNbNonLusEleveProf($prof, $eleve);
+
+            // On ajoute l'élève et le nombre de messages non lus
+            array_push($allConversationsNbMsgNonLus, ['prof' => $prof, 'nbMsg' => $nbMsgNonLus]);      
+        }
+
+        return $this->render('eleve/showMessageEleve.html.twig', [
+            'allConversations' => $allConversationsNbMsgNonLus
+        ]);
+    }
+
     /**
      * @Route("/sendMessageEleve/{idProf}/{idEleve}", name="send_message_eleve")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function sendMessageEleve(Prof $prof, Eleve $eleve, Request $request) {
+    public function sendMessageEleve(Prof $prof, Eleve $eleve)
+    {
+        $contenu = $_POST['text'];
+        $message = new Message();
+        $message->setProf($prof);
+        $message->setEleve($eleve);
+        $message->setAuteur($eleve->getUsername());
+        $message->setContenu($contenu);
 
-        $form = $this->createForm(MessageType::class);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($message);
+        $entityManager->flush();
 
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $message = new Message();
-            $message->setProf($prof);
-            $message->setEleve($eleve);
-            $message->setAuteur($eleve->getUsername());
-            $message->setContenu($form->get("contenu")->getData());
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($message);
-            $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('home_eleve');
-        }
-
-        return $this->render('message/sendMessage.html.twig', [
-            'messageForm' => $form->createView(),
-        ]);
+        return $this->redirectToRoute('conversation_eleve', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
     }
 
     /**
-     * @Route("/showMessagesEleve", name="show_messages_eleve")
-     */
-    public function showMessagesEleve() {
-
-        return $this->render('eleve/showMessageEleve.html.twig', [
-            'title' => 'Planning'
-        ]);
-    }
-    
-    /**
-     * @Route("/conversationEleve/{idProf}/{idEleve}", name="conversation_eleve")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/conversationEleve/{idEleve}/{idProf}/", name="conversation_eleve")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @ParamConverter("prof", options={"id" = "idProf"})
      */
-    public function conversationEleve(Prof $prof, Eleve $eleve) {
+    public function conversationEleve(Eleve $eleve, Prof $prof) {
 
-        $msgLus = [];
-        $msgNonLus = [];
+        $session = new SessionUser();
+
+        $allMsg = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversation($eleve, $prof);
+
+        $msgLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationLusEleve($eleve, $prof);
+
+        $msgNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationNonLusEleve($eleve, $prof);
+
+        $msgEnvoyes = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationEnvoyesEleve($eleve, $prof);
+
         $entityManager = $this->getDoctrine()->getManager();
 
-        foreach($eleve->getMessages() as $message){
-            if ( $message->getAuteur() != $eleve->getUsername() ){
-                if ($message->getLu()){
-                    array_push($msgLus, $message);
-                }
-                else {
-                    array_push($msgNonLus, $message);
-                    $message->setLu(true);
-                    $entityManager->persist($message);
-                }
-            }
+        foreach($msgNonLus as $message){
+            $message->setLu(true);
+            $entityManager->persist($message);
         }
+
+        $nbMessagesNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findNbNonLusEleve($eleve);
+
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
         $entityManager->flush();
 
         return $this->render('eleve/conversationEleve.html.twig', [
             'prof' => $prof,
             'eleve' => $eleve,
+            'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
+            'msgEnvoyes' => $msgEnvoyes
         ]);
     }
 
+    /**     
+     * @Route("/conversationEleve/{idEleve}/{idProf}/ajax", name="conversation_eleve_ajax")
+     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     */
+    public function ajaxEleve(Prof $prof, Eleve $eleve) {
+    
+        $msgNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findConversationNonLusEleve($eleve, $prof);
+
+        $nouveauMessage = false;
+
+        if ($msgNonLus){
+            $nouveauMessage = true;
+        }   
+
+        return $this->render('prof/test.html.twig', [
+            'prof' => $prof,
+            'eleve' => $eleve,
+            'nouveauMessage' => $nouveauMessage,
+        ]);
+    }
+    
     /**
      * @Route("/inscriptionCoursEleve/{idProf}/{idCours}", name="inscription_cours_eleve")
      * @ParamConverter("prof", options={"id" = "idProf"})

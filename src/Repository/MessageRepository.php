@@ -79,30 +79,10 @@ class MessageRepository extends ServiceEntityRepository
         ->setParameter('eleveUsername', $eleve->getUsername());
     
         // returns an array of Product objects
-        return $query->getOneorNullresult();
+        return $query->getSingleScalarResult();
     }
 
-
-    // Nombre de messages non lu d'un prof pour chaque eleve
-    public function findNbNonLusProfEleves(Prof $prof)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $query = $entityManager->createQuery(
-            'SELECT m as msg, count(m) as nbMsg
-            FROM App\Entity\Message m
-            WHERE m.prof = :prof
-            AND m.auteur != :profUsername
-            AND m.lu = 0
-            GROUP BY m.eleve'
-        )->setParameter('prof', $prof)
-        ->setParameter('profUsername', $prof->getUsername());
     
-        // returns an array of Product objects
-        return $query->execute();
-    }
-
-
     public function findNbNonLusProf(Prof $prof)
     {
         $entityManager = $this->getEntityManager();
@@ -120,6 +100,77 @@ class MessageRepository extends ServiceEntityRepository
         return $query->getSingleScalarResult();
     }
 
+    // Toutes les conversations d'un prof
+    public function findAllConversationsProf(Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            GROUP BY m.eleve'
+        )->setParameter('prof', $prof);
+    
+        return $query->execute();
+    }
+
+    // Toutes les conversations d'un eleve
+    public function findAllConversationsEleve(Eleve $eleve): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            GROUP BY m.prof'
+        )->setParameter('eleve', $eleve);
+    
+        return $query->execute();
+    }
+
+    // Nombre de messages non lu et messages d'un prof pour chaque eleve
+    public function findNbNonLusProfEleve(Prof $prof, Eleve $eleve)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT count(m)
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            AND m.eleve = :eleve
+            AND m.auteur != :profUsername
+            AND m.lu = 0'
+        )->setParameter('prof', $prof)
+        ->setParameter('eleve', $eleve)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        // returns an array of Product objects
+        return $query->getSingleScalarResult();
+    }
+
+    // Nombre de messages non lu et messages d'un eleve pour chaque prof
+    public function findNbNonLusEleveProf(Prof $prof, Eleve $eleve)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT count(m)
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            AND m.eleve = :eleve
+            AND m.auteur != :eleveUsername
+            AND m.lu = 0'
+        )->setParameter('prof', $prof)
+        ->setParameter('eleve', $eleve)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        // returns an array of Product objects
+        return $query->getSingleScalarResult();
+    }
+
+
     public function findConversation(Eleve $eleve, Prof $prof): array
     {
         $entityManager = $this->getEntityManager();
@@ -132,11 +183,51 @@ class MessageRepository extends ServiceEntityRepository
         )->setParameter('eleve', $eleve)
         ->setParameter('prof', $prof);
     
-        // returns an array of Product objects
+        // tous les messages entre un prof et élève
         return $query->execute();
     }
 
-    public function findNonLusConversationProf(Eleve $eleve, Prof $prof): array
+    // renvoie les messages lus envoyés par l'élève au prof
+    public function findConversationLusProf(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :eleveUsername
+            AND m.lu = 1'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        return $query->execute();
+    }
+
+    // renvoie les messages lus envoyés par le prof à l'éleve
+    public function findConversationLusEleve(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :profUsername
+            AND m.lu = 1'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        return $query->execute();
+    }
+
+
+    // renvoie les messages non lus envoyés par l'élève au prof
+    public function findConversationNonLusProf(Eleve $eleve, Prof $prof): array
     {
         $entityManager = $this->getEntityManager();
 
@@ -151,11 +242,11 @@ class MessageRepository extends ServiceEntityRepository
         ->setParameter('prof', $prof)
         ->setParameter('eleveUsername', $eleve->getUsername());
     
-        // returns an array of Product objects
         return $query->execute();
     }
 
-    public function findNonLusConversationEleve(Eleve $eleve, Prof $prof): array
+    // renvoie les messages non lus envoyés par l'élève au prof
+    public function findConversationNonLusEleve(Eleve $eleve, Prof $prof): array
     {
         $entityManager = $this->getEntityManager();
 
@@ -164,12 +255,51 @@ class MessageRepository extends ServiceEntityRepository
             FROM App\Entity\Message m
             WHERE m.eleve = :eleve
             AND m.prof = :prof
-            AND m.auteur = :profUsername'
+            AND m.auteur = :profUsername
+            AND m.lu = 0'
         )->setParameter('eleve', $eleve)
         ->setParameter('prof', $prof)
         ->setParameter('profUsername', $prof->getUsername());
     
-        // returns an array of Product objects
         return $query->execute();
     }
+
+    // renvoie les messages envoyés du prof à l'élève
+    public function findConversationEnvoyesProf(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :profUsername
+            AND m.lu = 0'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('profUsername', $prof->getUsername());
+    
+        return $query->execute();
+    }
+
+    // renvoie les messages envoyés de l'élève au prof
+    public function findConversationEnvoyesEleve(Eleve $eleve, Prof $prof): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.eleve = :eleve
+            AND m.prof = :prof
+            AND m.auteur = :eleveUsername
+            AND m.lu = 0'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        return $query->execute();
+    }
+
 }

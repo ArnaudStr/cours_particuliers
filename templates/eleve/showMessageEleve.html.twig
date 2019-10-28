@@ -2,34 +2,31 @@
 
 {% block body %}
 
-<h1>Messages reçus :</h1>
+<h2 class="titre" data-test="messagerie">Messagerie</h2>
 
-{% set listProfs = [] %}
-{% set idProf = null %}
-{% set msgNonLus = 0 %}
-
-{% for message in app.user.messages %}
-    {% if idProf != message.prof.id %}
-        {% set idProf = message.prof.id %}
-        {% set listProfs = listProfs|merge([idProf]) %}
-
-        <p>Discution avec {{ message.prof.username }}</p>
-        <p><a href="{{ path('conversation_eleve', { 'idProf':message.prof.id, 'idEleve':app.user.id }) }}"><button type="button" class="btn btn-warning btn-lg">Ouvrir la conversation</button></a></p>
-    {% endif %}
-
-    {% if message.auteur !=  app.user.username %} 
-        {% if not message.lu %}
-        {% set msgNonLus = msgNonLus + 1 %}
-    {% endif %}
-
-{% endif %}
-
-{% endfor %}
-
-{{ msgNonLus }}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            {# <th scope="col">Elève</th> #}
+            {# <th scope="col">Ouvrir la conversation</th> #}
+        </tr>
+    </thead>
+    <tbody>
+        {% for conversation in allConversations %}
+            {# {% set listEleves = listEleves|merge([idEleve]) %} #}
+            <tr>
+                <td><a href="{{ path('conversation_eleve', { 'idProf':conversation.prof.id, 'idEleve':app.user.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.prof }} </strong> ({{ conversation.nbMsg }})
+                </a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
 
 {% block javascripts %}
-    
+    <script>
+        var active = document.getElementById('navMsg')
+        active.classList.add('activeNav')
+    </script>
 {% endblock %}

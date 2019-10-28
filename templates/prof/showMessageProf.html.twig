@@ -4,9 +4,6 @@
 
 <h2 class="titre" data-test="messagerie">Messagerie</h2>
 
-{# {% set listEleves = [] %} #}
-{# {% set idEleve = null %} #}
-
 <table class="table table-hover">
     <thead>
         <tr>
@@ -15,10 +12,10 @@
         </tr>
     </thead>
     <tbody>
-        {% for message in msgNonLus %}
+        {% for conversation in allConversations %}
             {# {% set listEleves = listEleves|merge([idEleve]) %} #}
             <tr>
-                <td><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':message.msg.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ message.msg.eleve }} </strong> ({{ message.nbMsg }})
+                <td><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }})
                 </a></td>
             </tr>
         {% endfor %}
