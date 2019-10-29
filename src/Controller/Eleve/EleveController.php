@@ -263,13 +263,16 @@ class EleveController extends AbstractController
      */
     public function demandeInscriptionSeance(Seance $seance, Eleve $eleve, Cours $cours) {
 
+        dd($_COOKIE);
         // Inscription élève au cours
-        // $seance->setEleve($eleve);
-        // $seance->setCours($cours);
         $demandeCours = new DemandeCours();
+
         $demandeCours->setSeance($seance);
         $demandeCours->setEleve($eleve);
         $demandeCours->setCours($cours);
+
+
+        // $demandeCours->setModeCours($cours);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($demandeCours);
@@ -419,16 +422,14 @@ class EleveController extends AbstractController
      */
     public function voirProfilProf(Prof $prof)
     {
+        $nbEtoiles = null;
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
             $nbEtoiles = round($noteMoyenne);
         }
-        else $noteMoyenne = 'Pas encore noté';
-
  
         return $this->render('prof/pagePubliqueProf.html.twig', [
             'prof' => $prof,
-            'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
         ]);
  
@@ -448,8 +449,16 @@ class EleveController extends AbstractController
      */
     public function displayCoursEleve(Cours $cours)
     {
+        $nbEtoiles = null;
+        if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
+            $nbEtoiles = round($noteMoyenne);
+        }
+        else $noteMoyenne = 'Pas encore noté';
+
         return $this->render('course/displayCourse.html.twig', [
-            'cours' => $cours
+            'cours' => $cours,
+            'noteMoyenne' => $noteMoyenne,
+            'nbEtoiles' => $nbEtoiles,
         ]);
     }
 

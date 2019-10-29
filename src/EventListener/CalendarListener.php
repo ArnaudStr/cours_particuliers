@@ -126,13 +126,19 @@ class CalendarListener
         foreach ($seances as $seance) {
             $seanceEvent=null;
 
-            // Seances disponibles à l'inscription
+            $dateFin = clone $seance->getDateDebut();
+            $dateFin->add(new \DateInterval('PT1H'));
+
+            // Seances disponibles à l'inscription (par encore réservées)
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$seance->getEleve()) {
+
+                // $dateFin = clone $seance->getDateDebut();
+                // $dateFin->add(new \DateInterval('PT1H'));
 
                 $seanceEvent = new Event(
                     "S'inscire",
                     $seance->getDateDebut(),
-                    $dateFin // If the end date is null or not defined, a all day event is created.
+                    $dateFin 
                 );
 
                 $seanceEvent->setOptions([
@@ -150,10 +156,14 @@ class CalendarListener
 
             // Seances d'un eleve
             else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters)) {
+
+                // $dateFin = clone $seance->getDateDebut();
+                // $dateFin->add(new \DateInterval('PT1H'));
+
                 $seanceEvent = new Event(
                     $seance->getCours()->getActivite()->getNom().' avec '.$seance->getProf()->getNom(),
                     $seance->getDateDebut(),
-                    $seance->getDateFin() // If the end date is null or not defined, a all day event is created.
+                    $dateFin // If the end date is null or not defined, a all day event is created.
                 );
 
                 $seanceEvent->setOptions([
@@ -171,12 +181,15 @@ class CalendarListener
             // Seances d'un prof
             else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters)) {
 
+                // $dateFin = clone $seance->getDateDebut();
+                // $dateFin->add(new \DateInterval('PT1H'));
+
                 // COURS VALIDE
                 if ( $seance->getEleve() ) {
                     $seanceEvent = new Event(
                         $seance->getCours()->getActivite()->getNom().' avec '.$seance->getEleve()->getNom(),
                         $seance->getDateDebut(),
-                        $seance->getDateFin() // If the end date is null or not defined, a all day event is created.
+                        $dateFin // If the end date is null or not defined, a all day event is created.
                     );
 
                     $seanceEvent->setOptions([
@@ -198,7 +211,7 @@ class CalendarListener
                     $seanceEvent = new Event(
                         'Créneau libre avec '.count($demandesCours).' demandes de cours',
                         $seance->getDateDebut(),
-                        $seance->getDateFin() // If the end date is null or not defined, a all day event is created.
+                        $dateFin // If the end date is null or not defined, a all day event is created.
                     );
 
                     $seanceEvent->setOptions([
@@ -210,8 +223,8 @@ class CalendarListener
 
                 // Séance disponible avec aucune demande d'élève
                 else {
-                    $dateFin = clone $seance->getDateDebut();
-                    $dateFin->add(new \DateInterval('PT1H'));;
+                    // $dateFin = clone $seance->getDateDebut();
+                    // $dateFin->add(new \DateInterval('PT1H'));
                     
                     $seanceEvent = new Event(
                         'Creneau libre',
@@ -247,8 +260,5 @@ class CalendarListener
                 $calendar->addEvent($seanceEvent);
             }
         }
-
-        $events = $calendar->getEvents();
-        $_SESSION['allEvents'] = $events;
     }
 }

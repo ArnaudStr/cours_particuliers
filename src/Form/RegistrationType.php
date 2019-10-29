@@ -54,16 +54,6 @@ class RegistrationType extends AbstractType
                 'label' => false
 
             ])
-            
-            // ->add('adresse',TextType::class, [
-            //     'attr' => [
-            //         'placeholder' => 'Adresse',
-            //     ],
-            //     "mapped" => false,
-            //     'label' => false
-            // ])
-
-
 
             ->add('isEleve', ChoiceType::class, [
                 'attr' => [

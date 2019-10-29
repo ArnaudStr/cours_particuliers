@@ -19,19 +19,19 @@
         {% for categorie in categories %}
             {% for activite in categorie.activites %}
                 {% for cours in activite.coursS %}
-                {#<a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
-                    <div class="courseSearch">
-                        <img class="photoCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
-                        <div class="descriptionMiniCours">
-                            <p>{{ cours.prof.nom }}</p>
-                            <p>{{ cours.tarifHoraire }}</p>
-                            <p>{{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
-                            <p>{{ cours.description }}</p>
+                    <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
+                        <div class="courseSearch">
+                            <img class="photoCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
+                            <div class="descriptionMiniCours">
+                                <p>{{ cours.prof.nom }}</p>
+                                <p>{{ cours.tarifHoraire }}</p>
+                                <p>{{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
+                                <p>{{ cours.description }}</p>
+                            </div>
                         </div>
-                    </div>
-                </a> #}
+                    </a>
 
-                <div class="column">
+                {# <div class="column">
                     <div class="card">
                         <img src="img1.jpg" alt="Jane" style="width:100%">
                         <div class="container">
@@ -42,7 +42,7 @@
                             <p><button class="button" href="{{ path('display_course_eleve', {'id':cours.id} ) }}">Contact</button></p>
                         </div>
                     </div>
-                </div>
+                </div> #}
 
                 {% endfor %}
             {% endfor %}

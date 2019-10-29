@@ -39,6 +39,11 @@ class DemandeCours
      */
     private $repondue;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $modeCours;
+
     public function __construct()
     {
         $this->repondue = false;
@@ -93,6 +98,18 @@ class DemandeCours
     public function setRepondue(bool $repondue): self
     {
         $this->repondue = $repondue;
+
+        return $this;
+    }
+
+    public function getModeCours(): ?string
+    {
+        return $this->modeCours;
+    }
+
+    public function setModeCours(string $modeCours): self
+    {
+        $this->modeCours = $modeCours;
 
         return $this;
     }

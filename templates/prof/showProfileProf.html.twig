@@ -19,18 +19,24 @@
                     <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes disponibilités</button></a></p>
                 </div>
                 <div class="avis">
-                    <h3>Note : {{ noteMoyenne }}</h3>
-                    {% if nbEtoiles >= 1 %}
-                        {% for i in 1..nbEtoiles %}
-                            <i class="fas fa-star"></i>
-                        {% endfor %}
+                    {% if app.user.noteMoyenne %}
+                        <h3>Note : {{ app.user.noteMoyenne }}</h3>
                     {% endif %}
-        
-                    {% if nbEtoiles != 5 %}         
-                        {% for i in nbEtoiles .. 4 %}
-                            <i class="far fa-star"></i>
-                        {% endfor %}
+                        
+                    {% if nbEtoiles %}
+                        {% if nbEtoiles >= 1 %}
+                            {% for i in 1..nbEtoiles %}
+                                <i class="fas fa-star"></i>
+                            {% endfor %}
+                        {% endif %}
+            
+                        {% if nbEtoiles != 5 %}         
+                            {% for i in nbEtoiles .. 4 %}
+                                <i class="far fa-star"></i>
+                            {% endfor %}
+                        {% endif %}
                     {% endif %}
+
         
                     <a href="#">VOIR MES AVIS</a>
                     {#{% for avis in app.user.avis %}

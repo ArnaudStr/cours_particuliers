@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
-
 class RegisterController extends AbstractController
 {
      /**
@@ -22,48 +21,46 @@ class RegisterController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer,
     TokenGeneratorInterface $tokenGenerator): Response
     {       
-
         $form = $this->createForm(RegistrationType::class);
         $form->handleRequest($request);
         $token = $tokenGenerator->generateToken();
-
     
+        // Si le formulaire d'inscription est valide
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Si la personne s'enregistre en tant qu'élève
             if ( $form->get('isEleve')->getData() ) {
-                $allEleves = $this->getDoctrine()
-                ->getRepository(Eleve::class)
-                ->findAll();
+
                 $email = $form->get('email')->getData();
 
-                // TEST SI L'EMAIL EXISTE DEJA
-                foreach($allEleves as $eleve){ 
-                    if($eleve->getEmail() == $email) {
+                $eleve = $this->getDoctrine()
+                    ->getRepository(Eleve::class)
+                    ->findOneByEmail($email);
 
-                        if ($eleve->getAConfirme()) {
-                            $this->addFlash('info','Vous êtes déjà register');
-                            
-                        }
-                        else {
+                // Teste si l'élève existe déjà 
+                if ($eleve) {
 
-                            $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-
-                            $message = (new \Swift_Message('Forgot Password'))
-                            ->setFrom('arnaud6757@gmail.com')
-                            ->setTo($eleve->getEmail())
-                            ->setBody(
-                                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
-                                'text/html'
-                            );
-                
-                            $mailer->send($message);
-
-                            $this->addFlash('info','Vous devez confirmer votre compte, un nouveau mail de confirmation vous a été envoyé');
-
-                        }
-
-                        return $this->redirectToRoute('login_eleve');
+                    if ($eleve->getAConfirme()) {
+                        $this->addFlash('alreadyExists','Vous êtes déjà enregistré, vous pouvez vous connecter');
                     }
+                    else {
+
+                        $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+                        $message = (new \Swift_Message('Forgot Password'))
+                        ->setFrom('arnaud6757@gmail.com')
+                        ->setTo($eleve->getEmail())
+                        ->setBody(
+                            "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            'text/html'
+                        );
+            
+                        $mailer->send($message);
+
+                        $this->addFlash('confirm','Vous devez confirmer votre compte, un nouvel email de confirmation vous a été envoyé');
+                    }
+
+                    return $this->redirectToRoute('login_eleve');
                 }
 
                 $user = new Eleve();
@@ -75,43 +72,41 @@ class RegisterController extends AbstractController
                 $route = $this->redirectToRoute('login_eleve');
             }
 
+            // Sinon il s'agit d'une inscription d'un prof
             else {
 
-                $allProfs = $this->getDoctrine()
-                ->getRepository(Prof::class)
-                ->findAll();
                 $email = $form->get('email')->getData();
 
-                // TEST SI L'EMAIL EXISTE DEJA
-                foreach($allProfs as $prof){ 
-                    if($prof->getEmail() == $email) {
+                $prof = $this->getDoctrine()
+                    ->getRepository(Prof::class)
+                    ->findOneByEmail($email);
 
-                        if ($prof->getAConfirme()) {
-                            $this->addFlash('info','Vous êtes déjà register');
-                            
-                        }
-                        else {
+                // Teste si le prof existe déjà
+                if ($prof) {
 
-                            $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-
-                            $message = (new \Swift_Message('Lien pour valider votre inscription'))
-                            ->setFrom('arnaud6757@gmail.com')
-                            ->setTo($prof->getEmail())
-                            ->setBody(
-                                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
-                                'text/html'
-                            );
-                
-                            $mailer->send($message);
-
-                            $this->addFlash('info','Vous devez confirmer votre compte, un nouveau mail de confirmation vous a été envoyé');
-
-                        }
-
-                        return $this->redirectToRoute('login_prof');
+                    if ($prof->getAConfirme()) {
+                        $this->addFlash('alreadyExists','Vous êtes déjà enregistré, vous pouvez vous connecter');
                     }
-                }
+                    else {
 
+                        $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+                        $message = (new \Swift_Message('Lien pour valider votre inscription'))
+                        ->setFrom('arnaud6757@gmail.com')
+                        ->setTo($prof->getEmail())
+                        ->setBody(
+                            "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            'text/html'
+                        );
+            
+                        $mailer->send($message);
+
+                        $this->addFlash('confirm','Vous devez confirmer votre compte, un nouvel mail de confirmation vous a été envoyé');
+
+                    }
+
+                    return $this->redirectToRoute('login_prof');
+                }
 
                 $user = new Prof();
 
@@ -122,6 +117,7 @@ class RegisterController extends AbstractController
                 $route = $this->redirectToRoute('login_prof');
             }
     
+            // On défini l'image par défaut
             $user->setPictureFilename('default_avatar.png');
 
             // encode the plain password
@@ -148,7 +144,6 @@ class RegisterController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-
             $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             $message = (new \Swift_Message('Lien pour valider votre inscription'))
@@ -165,8 +160,6 @@ class RegisterController extends AbstractController
 
             return $route;
         }
-
-        // $this->get('session')->getFlashBag()->add('error', 'Une erreur est survenue.');
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),

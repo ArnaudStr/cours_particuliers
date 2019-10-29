@@ -81,37 +81,25 @@ class ProfController extends AbstractController
     public function showProfileProf(Prof $prof)
     {
         $nbEtoiles = null;
-        if ($notes = $prof->getNotes()){
-            $noteMoyenne = round(array_sum($notes)/count($notes),1);
+        if ($noteMoyenne = $prof->getNoteMoyenne()){
             $nbEtoiles = round($noteMoyenne);
         }
-        else $noteMoyenne = 'Pas encore noté';
 
-        // Prochaine séances pour chaque élève du cours du prof
-        // $elevesProchaineSeanceCours = [];
         $prochaineSeanceCours = [];
         foreach($prof->getCoursS() as $cours){
             foreach ($cours->getEleves() as $eleve) {
-                // array_push($prochaineSeanceCours, $cours);
-                // array_push($prochaineSeanceCours, $eleve);
 
                 $proSeance = $this->getDoctrine()
                     ->getRepository(Seance::class)
                     ->findNextSeanceEleve($eleve, $cours);               
 
-                // array_push($prochaineSeanceCours, $proSeance);
-                // array_push($elevesProchaineSeanceCours, $prochaineSeanceCours);
                 array_push($prochaineSeanceCours, $proSeance);
-                // $prochaineSeanceCours = [];
             }
         }
 
-        // dd($elevesProchaineSeanceCours);
         return $this->render('prof/showProfileProf.html.twig', [
-            'noteMoyenne' => $noteMoyenne,
+            'prochainesSeances' => $prochaineSeanceCours,
             'nbEtoiles' => $nbEtoiles,
-            // 'creneaux' => $creneauxFr,
-            'prochainesSeances' => $prochaineSeanceCours
         ]);
     }
 

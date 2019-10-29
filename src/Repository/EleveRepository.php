@@ -48,4 +48,14 @@ class EleveRepository extends ServiceEntityRepository
     }
     */
 
+    public function findOneByEmail($email): ?Eleve
+    {
+        return $this->createQueryBuilder('e')
+        ->andWhere('e.email = :email')
+        ->setParameter('email', $email)
+        ->getQuery()
+        ->getOneOrNullResult()
+        ;
+    }
+    
 }
