@@ -24,11 +24,13 @@
                 {% endfor %}
 
             </div>
-            <a href="{{ path('send_message_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
-                <button type="button">
-                    Contacter le prof
-                </button>
-            </a>
+            {% if app.user %}
+                <a href="{{ path('conversation_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
+                    <button type="button">
+                        Contacter le prof
+                    </button>
+                </a>
+            {% endif %}
         </div>
 
         <div class="displayCourseRight">
@@ -45,12 +47,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="/js/calendarInscriptionCours.js"></script>
+    <script>
 
-    
-<script src="/js/calendarInscriptionCours.js"></script>
-<script>
-    var tabA = document.getElementsByClassName('fc-time-grid-event');
-
-    var tabC = $(".fc-time-grid-event").console;
-</script>
+    // TO DO LA MODAL OU TU CHOISIS LE MODE PARCE QUE C'EST INCOMPREHENSIBLE
+        var tabA = document.getElementsByClassName('fc-time-grid-event');
+        console.log(tabA);
+        console.log(tabA.length);
+    </script>
 {% endblock %}

@@ -10,8 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-
-
 class EditEleveType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -27,7 +25,14 @@ class EditEleveType extends AbstractType
             ])
 
             ->add('pictureFilename', FileType::class, [
-                'label' => 'Ajouter une image',
+                'attr' =>[
+                    'multiple' => 'multiple',
+                    'id' => 'preview',
+                    'onmousedown' => 'return false',
+                    'placeholder' => 'Selectionnez une image',
+                    'onkeydown' => 'return false'
+                ],
+                'label' => 'Modifier image',
                 'required' => false,
                 'data_class' => null,
             ])

@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\Prof;
 use App\Entity\Admin;
 use App\Entity\Eleve;
+use App\Entity\Seance;
 use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use App\Form\ActiviteType;
-use App\Form\CategorieType;
 
+use App\Form\CategorieType;
 use App\Form\RegistrationAdminType;
 use App\Security\AdminAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,10 +83,6 @@ class AdminController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //    $this->redirectToRoute('target_path');
-        // }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -100,10 +97,7 @@ class AdminController extends AbstractController
     public function logout()
     {
         return $this->redirectToRoute("home");
-
     }
-
-
 
     /**
      * @Route("/addCategorie", name="add_categorie")
@@ -158,21 +152,6 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-    // /**
-    //  * @Route("/showListActivites", name="show_list_activites")
-    //  */
-    // public function showListActivities() {
-    //     // On enregistre les formations
-    //     $all_activities = $this->getDoctrine()->getRepository(Activite::class)->findAll();
-    //     // Appel à la vue d'affichage des formations
-    //     return $this->render('admin/showListActivities.html.twig', [
-    //         'title' => 'Liste des activités',
-    //         'activites' => $all_activities
-    //     ]);
-    // }
-
-
     /**
      * @Route("/addActivite", name="add_activite")
      * @Route("/editActivite/{id}", name="edit_activite")
@@ -219,8 +198,8 @@ class AdminController extends AbstractController
     public function deleteMessages(ObjectManager $manager) {
 
         $messages = $this->getDoctrine()
-        ->getRepository(Message::class)
-        ->findAllToDelete();  
+            ->getRepository(Message::class)
+            ->findAllToDelete();  
 
         foreach ($messages as $message) {
             $manager->remove($message);
@@ -229,7 +208,6 @@ class AdminController extends AbstractController
         $manager->flush();
 
         return $this->redirectToRoute('home_admin');
-
     }
 
     
@@ -267,4 +245,43 @@ class AdminController extends AbstractController
   
         return $this->redirectToRoute('show_list_members');
     }
+
+    /**
+     * @Route("/deleteSeancesPassees", name="delete_seances_passees")
+     */
+    public function deleteSeancesPassees(ObjectManager $manager) {
+        $seances = $this->getDoctrine()
+            ->getRepository(Seance::class)
+            ->findSeancesLibresPassees();
+            
+        foreach($seances as $seance){
+            $manager->remove($seance);
+        }
+
+        $manager->flush();
+
+        return $this->redirectToRoute('show_list_members');
+    }
+
+    /**
+     * @Route("/deleteMessagesPassees", name="delete_messages_passes")
+     */
+    public function deleteMessagesPasses(ObjectManager $manager) {
+
+        // Le nombre de jours à partir duquel on supprime les anciens messages
+        $nbJours = 15;
+
+        $messages = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->deleteMessagesNbJours($nbJours);
+            
+        foreach($messages as $message){
+            $manager->remove($message);
+        }
+
+        $manager->flush();
+
+        return $this->redirectToRoute('show_list_members');
+    }
 }
+

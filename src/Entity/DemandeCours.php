@@ -35,19 +35,9 @@ class DemandeCours
     private $eleve;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $repondue;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $modeCours;
-
-    public function __construct()
-    {
-        $this->repondue = false;
-    }
 
     public function getId(): ?int
     {
@@ -86,18 +76,6 @@ class DemandeCours
     public function setEleve(?Eleve $eleve): self
     {
         $this->eleve = $eleve;
-
-        return $this;
-    }
-
-    public function getRepondue(): ?bool
-    {
-        return $this->repondue;
-    }
-
-    public function setRepondue(bool $repondue): self
-    {
-        $this->repondue = $repondue;
 
         return $this;
     }

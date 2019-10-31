@@ -101,23 +101,23 @@ class CalendarListener
             $dispos = $prof->getDisponibilites();
 
             $seances = [];
-            $seance = [];
+            $seanceTmp = [];
 
             foreach($dispos as $jour=>$creneaux) {
                 foreach($creneaux as $creneau) {
                     $dateDebut = new DateTime($jour.' this week');
                     $dateDebut->setTime($creneau[0], 0);
 
-                    array_push($seance, $dateDebut);
+                    array_push($seanceTmp, $dateDebut);
 
                     $dateFin = new DateTime($jour.' this week');
                     $dateFin->setTime($creneau[1], 0);
 
-                    array_push($seance, $dateFin);
+                    array_push($seanceTmp, $dateFin);
 
-                    array_push($seances, $seance);
+                    array_push($seances, $seanceTmp);
 
-                    $seance=[];
+                    $seanceTmp=[];
                 }
             }
         }
@@ -126,14 +126,13 @@ class CalendarListener
         foreach ($seances as $seance) {
             $seanceEvent=null;
 
-            $dateFin = clone $seance->getDateDebut();
-            $dateFin->add(new \DateInterval('PT1H'));
+            if (!array_key_exists('profDispos', $filters)) {
+                $dateFin = clone $seance->getDateDebut();
+                $dateFin->add(new \DateInterval('PT1H'));
+            }
 
             // Seances disponibles à l'inscription (par encore réservées)
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$seance->getEleve()) {
-
-                // $dateFin = clone $seance->getDateDebut();
-                // $dateFin->add(new \DateInterval('PT1H'));
 
                 $seanceEvent = new Event(
                     "S'inscire",
@@ -157,9 +156,6 @@ class CalendarListener
             // Seances d'un eleve
             else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters)) {
 
-                // $dateFin = clone $seance->getDateDebut();
-                // $dateFin->add(new \DateInterval('PT1H'));
-
                 $seanceEvent = new Event(
                     $seance->getCours()->getActivite()->getNom().' avec '.$seance->getProf()->getNom(),
                     $seance->getDateDebut(),
@@ -180,11 +176,7 @@ class CalendarListener
 
             // Seances d'un prof
             else if (array_key_exists('prof', $filters) && !array_key_exists('cours', $filters)) {
-
-                // $dateFin = clone $seance->getDateDebut();
-                // $dateFin->add(new \DateInterval('PT1H'));
-
-                // COURS VALIDE
+                // COURS VALIDé
                 if ( $seance->getEleve() ) {
                     $seanceEvent = new Event(
                         $seance->getCours()->getActivite()->getNom().' avec '.$seance->getEleve()->getNom(),
@@ -195,7 +187,11 @@ class CalendarListener
                     $seanceEvent->setOptions([
                         'backgroundColor' => '#1A252F',
                         'borderColor' => '#',
-                        'textColor' => 'white'
+                        'textColor' => 'white',
+                        // 'url' => $this->router->generate('emettre_avis', [
+                        //     'idProf' => $seance->getProf()->getId(),
+                        //     'idEleve' => $filters['eleve']
+                        // ])
                     ]);
                 }
 
@@ -203,13 +199,12 @@ class CalendarListener
                 else if ( $demandesCours = $this->demandeCoursRepository
                             ->createQueryBuilder('d')
                             ->andWhere('d.seance = :seance')
-                            ->andWhere('d.repondue = 0')
                             ->setParameter('seance', $seance)
                             ->getQuery()
                             ->getResult() ) {
                 
                     $seanceEvent = new Event(
-                        'Créneau libre avec '.count($demandesCours).' demandes de cours',
+                        count($demandesCours).' demandes de cours',
                         $seance->getDateDebut(),
                         $dateFin // If the end date is null or not defined, a all day event is created.
                     );
@@ -217,15 +212,15 @@ class CalendarListener
                     $seanceEvent->setOptions([
                         'backgroundColor' => 'blue',
                         'borderColor' => 'blue',
-                        'textColor' => 'white'
+                        'textColor' => 'white',
+                        'url' => $this->router->generate('demandes_seance_prof', [
+                            'id' => $seance->getId()
+                        ])
                     ]);
                 }
 
                 // Séance disponible avec aucune demande d'élève
                 else {
-                    // $dateFin = clone $seance->getDateDebut();
-                    // $dateFin->add(new \DateInterval('PT1H'));
-                    
                     $seanceEvent = new Event(
                         'Creneau libre',
                         $seance->getDateDebut(),

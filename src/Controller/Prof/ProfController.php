@@ -31,19 +31,22 @@ use Rogervila\ArrayDiffMultidimensional;
  */
 class ProfController extends AbstractController
 {    
+    // Récupère le nombre de messages non lus
+    public function setNbMsgNonLus() {
+        $nbMessagesNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findNbNonLusProf($this->getUser());
+
+        $session = new SessionUser();
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+    }
+
     /**
      * @Route("/", name="home_prof")
      */
     public function indexProf()
     {
-        $nbMessagesNonLus = $this->getDoctrine()
-        ->getRepository(Message::class)
-        ->findNbNonLusProf($this->getUser());
-
-        $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
-
-        // dd($session->get('nbMsgNonLus'));
+        $this->setNbMsgNonLus();
 
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'
@@ -80,6 +83,8 @@ class ProfController extends AbstractController
      */
     public function showProfileProf(Prof $prof)
     {
+        $this->setNbMsgNonLus();
+
         $nbEtoiles = null;
         if ($noteMoyenne = $prof->getNoteMoyenne()){
             $nbEtoiles = round($noteMoyenne);
@@ -87,15 +92,18 @@ class ProfController extends AbstractController
 
         $prochaineSeanceCours = [];
         foreach($prof->getCoursS() as $cours){
+            // dump($cours);
             foreach ($cours->getEleves() as $eleve) {
-
+                // dump($eleve);
                 $proSeance = $this->getDoctrine()
                     ->getRepository(Seance::class)
                     ->findNextSeanceEleve($eleve, $cours);               
-
+                // dump($proSeance);
                 array_push($prochaineSeanceCours, $proSeance);
             }
         }
+
+        // dd($prochaineSeanceCours);
 
         return $this->render('prof/showProfileProf.html.twig', [
             'prochainesSeances' => $prochaineSeanceCours,
@@ -120,6 +128,8 @@ class ProfController extends AbstractController
      */
     public function editProfileProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
+        $this->setNbMsgNonLus();
+
         $pictureBeforeForm = $prof->getPictureFilename();
         
         $form = $this->createForm(EditProfType::class, $prof);
@@ -159,7 +169,7 @@ class ProfController extends AbstractController
      */
     public function editDisponibilitesProf(Prof $prof, Request $request, ObjectManager $manager)
     {       
-
+        $this->setNbMsgNonLus();
 
         return $this->render('prof/disposProf.html.twig', [
             'title' => 'Disponibilites prof'
@@ -206,8 +216,6 @@ class ProfController extends AbstractController
                 }
             }
         }
-
-        // dd($seances);
     }
 
     /**
@@ -218,6 +226,8 @@ class ProfController extends AbstractController
      */
     public function addEditCoursProf(Prof $prof, Cours $cours = null, ObjectManager $manager, Request $request) {
        
+        $this->setNbMsgNonLus();
+
         $modif = true;
 
         // si $creaneauCours est null (add)
@@ -256,6 +266,8 @@ class ProfController extends AbstractController
      */
     public function changementsDispos(Prof $prof,  ObjectManager $manager) {
 
+        $this->setNbMsgNonLus();
+
         $dispoAvantModif = $prof->getDisponibilites();
         $nouvellesDispos = json_decode($_COOKIE['dispos'], true);
         
@@ -263,21 +275,12 @@ class ProfController extends AbstractController
         
         $manager->persist($prof);
         
-        // $manager->flush();
-
-
-        // dump($dispoAvantModif);
-        // dump($nouvellesDispos);
-
         // Nouvelles dispos
-        // dump($toAdd = ArrayDiffMultidimensional::compare($nouvellesDispos, $dispoAvantModif));
         $toAdd = ArrayDiffMultidimensional::compare($nouvellesDispos, $dispoAvantModif);
 
-        // dd($toAdd);
         $this->ajoutSeances(4, $toAdd, $manager, $prof);
         
         // Anciennes dispos
-        // dd($toDelete = ArrayDiffMultidimensional::compare($dispoAvantModif,$nouvellesDispos));
         $toDelete = ArrayDiffMultidimensional::compare($dispoAvantModif,$nouvellesDispos);
 
         dump($toDelete);
@@ -285,21 +288,8 @@ class ProfController extends AbstractController
 
         $manager->flush();
 
-        // unset($_COOKIE["test"]);
-        // setcookie("test", '', time() - 3600);
-
-
         return $this->redirectToRoute('show_profile_prof', [
             'id' => $prof->getId()
-        ]);
-    }
-
-    /**
-     * @Route("/ajouterSeances/{id}", name="ajouter_seances")
-     */
-    public function ajouterSeances() {
-        return $this->render('prof/calendrierProf.html.twig', [
-            'title' => 'Planning'
         ]);
     }
 
@@ -313,18 +303,10 @@ class ProfController extends AbstractController
     }
 
     /**
-     * @Route("/show_course/{id}", name="showCourse")
-     */
-    public function inscriptionSeance() {
-        return $this->render('course/showCourse.html.twig', [
-            'title' => 'Planning'
-        ]);
-    }
-
-    /**
      * @Route("/showMessagesProf/{id}", name="show_messages_prof")
      */
     public function showMessagesProf(Prof $prof) {
+        $this->setNbMsgNonLus();
 
         // Conversations entre le prof et chaque eleve
         $allConversations = $this->getDoctrine()
@@ -349,7 +331,6 @@ class ProfController extends AbstractController
             'allConversations' => $allConversationsNbMsgNonLus
         ]);
     }
-
     
     /**
      * @Route("/sendMessageProf/{idProf}/{idEleve}", name="send_message_prof")
@@ -358,6 +339,8 @@ class ProfController extends AbstractController
      */
     public function sendMessageProf(Prof $prof, Eleve $eleve)
     {
+        $this->setNbMsgNonLus();
+
         $contenu = $_POST['text'];
         $message = new Message();
         $message->setProf($prof);
@@ -378,6 +361,7 @@ class ProfController extends AbstractController
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function conversationProf(Prof $prof, Eleve $eleve) {
+        $this->setNbMsgNonLus();
 
         $session = new SessionUser();
 
@@ -430,8 +414,8 @@ class ProfController extends AbstractController
     public function ajaxProf(Prof $prof, Eleve $eleve) {
     
         $msgNonLus = $this->getDoctrine()
-        ->getRepository(Message::class)
-        ->findConversationNonLusProf($eleve, $prof);
+            ->getRepository(Message::class)
+            ->findConversationNonLusProf($eleve, $prof);
 
         $nouveauMessage = false;
 
@@ -446,23 +430,22 @@ class ProfController extends AbstractController
         ]);
     }
 
-
     /**
-     * @Route("/calendarProf", name="calendar_prof")
+     * @Route("/demandesSeanceProf/{id}", name="demandes_seance_prof")
      */
-    public function calendarProf() {
-        return $this->render('prof/calendrierProf.html.twig', [
-            'title' => 'Planning'
-        ]);
-    }
+    public function demandesSeanceProf(Seance $seance) {
+      
+        $this->setNbMsgNonLus();
 
-    /**
-     * @Route("/demandeSeanceProf", name="demande_seances_prof")
-     */
-    public function demandeSeanceProf() {
-        return $this->render('prof/validationSeances.html.twig', [
-            'title' => 'Planning'
-        ]);
+        $demandesCours = $this->getDoctrine()
+            ->getRepository(DemandeCours::class)
+            ->findBySeance($seance);  
+
+            return $this->render('prof/demandesSeance.html.twig', [
+                'title' => 'Demande d\'inscription à une séance',
+                'seance' => $seance,
+                'demandesCours' => $demandesCours,
+            ]);
     }
 
     /**
@@ -470,24 +453,25 @@ class ProfController extends AbstractController
      */
     public function validationSeanceProf(DemandeCours $demandeCours, int $valider) {
 
+        $this->setNbMsgNonLus();
+
         $seance = $demandeCours->getSeance();
         if ($valider == 1) {
             $seance->setEleve($demandeCours->getEleve());
             $seance->setCours($demandeCours->getCours());
+
+            // On ajoute l'élève au cours si il n'y est pas encore (pour pouvoir afficher la liste des élèves pour un cours)
             if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
                 $seance->getCours()->addEleve($demandeCours->getEleve());
             };
         }
 
-        $demandeCours->setRepondue(true);
-
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($demandeCours);
+        $entityManager->remove($demandeCours);
         $entityManager->persist($seance);
         $entityManager->flush();
 
-        return $this->redirectToRoute('home_prof');
-
+        return $this->redirectToRoute('demandes_seance_prof', ['id' => $seance->getId()]);
     }
 
     
@@ -585,7 +569,5 @@ class ProfController extends AbstractController
  
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
- 
     }
-    
 }

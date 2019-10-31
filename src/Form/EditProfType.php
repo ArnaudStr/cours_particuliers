@@ -9,11 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
-
-
-
 
 class EditProfType extends AbstractType
 {
@@ -37,8 +32,7 @@ class EditProfType extends AbstractType
                     'multiple' => 'multiple',
                     'id' => 'preview',
                     'onmousedown' => 'return false',
-                    'placeholder' => 'test',
-                    'title' => 'testTitre',
+                    'placeholder' => 'Selectionnez une image',
                     'onkeydown' => 'return false'
                 ],
                 'label' => 'Modifier image',

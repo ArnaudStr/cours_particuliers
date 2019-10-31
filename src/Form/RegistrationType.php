@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class RegistrationType extends AbstractType
 {
@@ -24,20 +25,40 @@ class RegistrationType extends AbstractType
                 'label' => false,
             ])
   
-            ->add('plainPassword', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => 'Mot de passe',
-                ],
+            // ->add('plainPassword', PasswordType::class, [
+            //     'attr' => [
+            //         'placeholder' => 'Mot de passe',
+            //     ],
+            //     'mapped' => false,
+            //     'constraints' => [
+            //         new Length([
+            //             'min' => 6,
+            //             'minMessage' => 'Votre mot de passe doit contenir au moins 6 caractères !',
+            //             'max' => 4096,
+            //         ]),
+            //     ],
+            //     'label' => false
+            // ])
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les mots de passe doivent être identiques',
+                'required' => true,
                 'mapped' => false,
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Répéter le mot de passe'],
+                'attr' => [
+                    'class' => 'uk-input'
+                ],
                 'constraints' => [
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins 6 caractères !',
-                        'max' => 4096,
-                    ]),
+                        'minMessage' => 'Le mot de passe doit contenir au moins 6 caractères',
+                        'max' => 32,
+                        'maxMessage' => 'Le mot de passe doit contenir au plus 32 caractères'
+                    ])
                 ],
-                'label' => false
             ])
+
             ->add('nom',TextType::class, [
                 'attr' => [
                     'placeholder' => 'Nom',

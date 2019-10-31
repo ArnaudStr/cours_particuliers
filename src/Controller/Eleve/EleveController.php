@@ -10,7 +10,6 @@ use App\Entity\Eleve;
 use App\Form\AvisType;
 use App\Entity\Message;
 use App\Entity\Seance;
-use App\Form\MessageType;
 use App\Form\EditEleveType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,6 +26,16 @@ use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
  */
 class EleveController extends AbstractController
 {
+    // Récupère le nombre de messages non lus
+    public function setNbMsgNonLus() {
+        $nbMessagesNonLus = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findNbNonLusEleve($this->getUser());
+
+        $session = new SessionUser();
+        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+    }
+
     /**
      * @Route("/loginEleve", name="login_eleve")
      */
@@ -51,13 +60,7 @@ class EleveController extends AbstractController
      * @Route("/", name="home_eleve")
      */
     public function indexEleve() {
-
-        $nbMessagesNonLus = $this->getDoctrine()
-        ->getRepository(Message::class)
-        ->findNbNonLusEleve($this->getUser());
-
-        $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+        $this->setNbMsgNonLus();
 
         return $this->render('eleve/calendrierEleve.html.twig', [
             'title' => 'Planning'
@@ -68,14 +71,17 @@ class EleveController extends AbstractController
      * @Route("/showProfileEleve/{id}", name="show_profile_eleve")
      */
     public function showProfileEleve(Eleve $eleve) {
+        $this->setNbMsgNonLus();
+
         // On récupère toutes les séances à venir (avec le cours correspondant)
         $prochainesSeances=[];
         foreach($eleve->getCours() as $cours){
             $proSeance = $this->getDoctrine()
-            ->getRepository(Seance::class)
-            ->findNextSeanceEleve($eleve, $cours);
+                ->getRepository(Seance::class)
+                ->findNextSeanceEleve($eleve, $cours);
 
-            array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
+            // array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
+            array_push($prochainesSeances, $proSeance);
         }
         
         return $this->render('eleve/showProfileEleve.html.twig', [
@@ -86,7 +92,9 @@ class EleveController extends AbstractController
     /**
      * @Route("/editEleve/{id}", name="edit_eleve")
      */
-    public function editEleve(Eleve $eleve, Request $request) {       
+    public function editEleve(Eleve $eleve, Request $request) {
+        $this->setNbMsgNonLus();
+
         // On récupere l'image avant le passage par le formulaire
         $pictureBeforeForm = $eleve->getPictureFilename();
 
@@ -123,6 +131,7 @@ class EleveController extends AbstractController
      * @Route("/showMessagesEleve/{id}", name="show_messages_eleve")
      */
     public function showMessagesEleve(Eleve $eleve) {
+        $this->setNbMsgNonLus();
 
         // Conversations entre le prof et chaque eleve
         $allConversations = $this->getDoctrine()
@@ -155,6 +164,8 @@ class EleveController extends AbstractController
      */
     public function sendMessageEleve(Prof $prof, Eleve $eleve)
     {
+        $this->setNbMsgNonLus();
+        
         $contenu = $_POST['text'];
         $message = new Message();
         $message->setProf($prof);
@@ -175,6 +186,7 @@ class EleveController extends AbstractController
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
     public function conversationEleve(Eleve $eleve, Prof $prof) {
+        $this->setNbMsgNonLus();
 
         $session = new SessionUser();
 
@@ -249,6 +261,8 @@ class EleveController extends AbstractController
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function inscriptionCoursEleve(Prof $prof, Cours $cours) {
+        $this->setNbMsgNonLus();
+        
         return $this->render('course/inscriptionCours.html.twig', [
             'prof' => $prof,
             'cours' => $cours,
@@ -262,17 +276,15 @@ class EleveController extends AbstractController
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function demandeInscriptionSeance(Seance $seance, Eleve $eleve, Cours $cours) {
+        $this->setNbMsgNonLus();
 
-        dd($_COOKIE);
         // Inscription élève au cours
         $demandeCours = new DemandeCours();
 
         $demandeCours->setSeance($seance);
         $demandeCours->setEleve($eleve);
         $demandeCours->setCours($cours);
-
-
-        // $demandeCours->setModeCours($cours);
+        $demandeCours->setModeCours('test');
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($demandeCours);
@@ -288,6 +300,7 @@ class EleveController extends AbstractController
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
     public function emettreAvis(Eleve $eleve, Prof $prof, Request $request) {
+        $this->setNbMsgNonLus();
 
         $avis = new Avis();
 
@@ -422,6 +435,8 @@ class EleveController extends AbstractController
      */
     public function voirProfilProf(Prof $prof)
     {
+        $this->setNbMsgNonLus();
+
         $nbEtoiles = null;
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
@@ -440,6 +455,8 @@ class EleveController extends AbstractController
      */
     public function searchCourseEleve()
     {
+        $this->setNbMsgNonLus();
+
         return $this->render('course/searchCourse.html.twig', [
         ]);
     }
@@ -449,6 +466,8 @@ class EleveController extends AbstractController
      */
     public function displayCoursEleve(Cours $cours)
     {
+        $this->setNbMsgNonLus();
+
         $nbEtoiles = null;
         if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
             $nbEtoiles = round($noteMoyenne);

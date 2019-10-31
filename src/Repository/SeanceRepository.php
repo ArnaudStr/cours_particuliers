@@ -76,6 +76,22 @@ class SeanceRepository extends ServiceEntityRepository
         ;
     }
 
+ 
+    // /**
+    //  * @return Seance[] Seances libres antérieures à la date actuelle (seances à effacer)
+    //  */
+    public function findSeancesLibresPassees() {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT s
+            FROM App\Entity\Seance s
+            WHERE s.eleve IS NULL
+            AND s.dateDebut < CURRENT_TIMESTAMP()'
+        );
+    
+        return $query->execute();
+    }
     /*
     public function findOneBySomeField($value): ?Seance
     {

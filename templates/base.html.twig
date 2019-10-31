@@ -44,6 +44,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('show_list_members') }}">Liste des membres</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('delete_seances_passees') }}">Supprimer séances libres passées</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('delete_messages_passes') }}">Supprimer messages passés</a>
+                        </li>
                     </div>
                     <div class="navRight">
                         <li class="nav-item">
@@ -94,7 +100,7 @@
                                             <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_messages_eleve', {'id':app.user.id}) }}"><i class="far fa-comment-alt"></i>Messagerie</a>
+                                            <a class="nav-link" href="{{ path('show_messages_eleve', {'id':app.user.id}) }}"><i class="far fa-comment-alt"></i>Messagerie ({{ app.session.get('nbMsgNonLus') }})</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="navLeaflet" href="{{path('leaflet')}}">Leaflet</a>
@@ -118,17 +124,12 @@
                                 <div class="navLeft">
                                     <li class="nav-item">
                                         <a class="nav-link" id="navCalendar" href="{{ path('home_prof') }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
-                                       {# <a class="nav-link" href="{{ path('home_prof') }}">Planning <span class="sr-only">(current)</span></a> #}
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="navMsg" href="{{ path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie ({{ app.session.get('nbMsgNonLus') }})</a>
-                                       {# <a class="nav-link" id="navMsg" href="{{path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie</a>#}
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="navValideCours" href="{{path('demande_seances_prof')}}">Deamandes de cours</a>
                                     </li>
                                 </div>
                                 <div class="navRight">

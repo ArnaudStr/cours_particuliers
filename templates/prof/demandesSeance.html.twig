@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("m/d/Y") }} à {{ seance.dateDebut|date("H:i") }}</h1>
+{% for demandeCours in demandesCours %}
+    <p>Demande de {{ demandeCours.eleve }} pour un cours de {{ demandeCours.cours }}
+    
+    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn btn-warning btn-lg">Valider la seance</button></a></p>
+
+    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn btn-warning btn-lg">Refuser la seance</button></a></p>
+{% endfor %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+{% endblock %}

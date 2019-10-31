@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-
+     <a href="{{ path('voir_profil_prof', {'id':cours.prof.id}) }}"><button type="button">
+          Modifier votre mot de passe
+     </button>
      {{form_start(editForm, {
           'attr' :{
                'enctype' : 'multipart/form-data',
@@ -15,17 +17,11 @@
           {{form_row(editForm.prenom) }}
           {{form_row(editForm.adresse) }}   
           {{form_row(editForm.description) }}
+          <div id="imageActuelle">
+               <p>Image de profil actuelle :</p><img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
+          </div>   
           <div id="prev"> </div>
           {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
-          {#<ul id="creneaux" data-prototype="{{ form_row(editForm.creneaux.vars.prototype)|e('html_attr') }}">
-          
-               {% for creneau in editForm.creneaux %}
-                    <li>
-                         {{ form_row(creneau) }}
-                    </li>
-               {% endfor %}
-
-          </ul> #}
           {{form_row(editForm.submit) }}
           {{ form_rest(editForm) }}
         
@@ -36,8 +32,6 @@
 {% block javascripts %}
 
 {{ parent()}}
-<script src="/js/creneauHandler.js"></script>
-
 <script>
     function miniature(fileInput, prev) {
         function creationImage(file, prev, i) {
@@ -74,7 +68,7 @@
         }
            
         var noms = nomFiles.join(" / ");
-        prev.innerHTML = '<p>Il y a '+ filesLen +' fichier(s)<br/>'+noms+'</p>';     
+        prev.innerHTML = '<p>Nouvelle image ('+noms+') :</p>';     
    }  
    document.getElementById('preview').addEventListener('change', function(){
         var fileInput = document.getElementById('preview');

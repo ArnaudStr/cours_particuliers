@@ -66,6 +66,16 @@ class MessageRepository extends ServiceEntityRepository
 
     }
 
+    public function deleteMessagesNbJours($nbJours){
+        $date = new DateTime('now -'.$nbJours.' days');
+
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.dateEnvoi < :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findNbNonLusEleve(Eleve $eleve) {
         $entityManager = $this->getEntityManager();
 
@@ -301,5 +311,6 @@ class MessageRepository extends ServiceEntityRepository
     
         return $query->execute();
     }
+
 
 }

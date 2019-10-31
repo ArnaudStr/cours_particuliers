@@ -20,7 +20,8 @@
 
 <form method="post" class="col-lg-5 registerForm">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {#<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+        <div class="alert alert-danger">Mot de passe / email invalide</div> 
     {% endif %}
   
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>

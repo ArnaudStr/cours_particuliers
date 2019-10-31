@@ -109,21 +109,23 @@
                 </tbody> 
             </table>
 
-            <div class="coursProf">
-                <h2>Nombre de cours enseignés : {{ app.user.coursS|length }}</h2>
-                {% for cours in app.user.coursS %}
-                <button class="accordion">{{ cours.activite }}</button>
-                    <div class="panel">
-                        {% for prochaineSeance in prochainesSeances %}
-                            {% if cours == prochaineSeance[0] and prochaineSeance[2] != null %}                          
-                                <p>Prochaine séance avec {{ prochaineSeance[1] }} le {{ prochaineSeance[2].dateDebut|date('m/d/Y') }}
-                                    de {{ prochaineSeance[2].dateDebut|date('H:i') }} à {{ prochaineSeance[2].dateFin|date('H:i') }}
-                                </p>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
+            {% if app.user.coursS %}
+                <div class="coursProf">
+                    <h2>Nombre de cours enseignés : {{ app.user.coursS|length }}</h2>
+                    {% for cours in app.user.coursS %}
+                    <button class="accordion">{{ cours.activite }}</button>
+                        <div class="panel">
+                            {% for prochaineSeance in prochainesSeances %}
+                                {% if cours == prochaineSeance.cours %}                          
+                                    <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
+                                        à {{ prochaineSeance.dateDebut|date('H:i') }}
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 

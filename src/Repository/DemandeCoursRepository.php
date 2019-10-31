@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Seance;
 use App\Entity\DemandeCours;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method DemandeCours|null find($id, $lockMode = null, $lockVersion = null)
