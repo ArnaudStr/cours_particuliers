@@ -81,7 +81,7 @@
                 </thead>
                 <tbody>
                     {#<tr>{{ app.user.disponibilites }}</tr> #}
-                {% for jour, creneaux in app.user.disponibilites %}
+                {% for jour, creneaux in joursCreneaux %}
                     {% for creneau in creneaux %}
                     <tr>
                         {% if jour == 'Mon' %}
@@ -109,23 +109,22 @@
                 </tbody> 
             </table>
 
-            {% if app.user.coursS %}
+             {% if allCoursEtProchaineSeance %}
                 <div class="coursProf">
-                    <h2>Nombre de cours enseignés : {{ app.user.coursS|length }}</h2>
-                    {% for cours in app.user.coursS %}
-                    <button class="accordion">{{ cours.activite }}</button>
+                    <h2>Nombre de cours enseignés : {{ allCoursEtProchaineSeance|length }}</h2>
+                    {% for coursEleves in allCoursEtProchaineSeance %}
+                    <button class="accordion">{{ coursEleves.cours.activite }}</button>
                         <div class="panel">
-                            {% for prochaineSeance in prochainesSeances %}
-                                {% if cours == prochaineSeance.cours %}                          
-                                    <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
-                                        à {{ prochaineSeance.dateDebut|date('H:i') }}
-                                    </p>
-                                {% endif %}
+                            {% for prochaineSeance in coursEleves.seances %}
+                                <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
+                                    à {{ prochaineSeance.dateDebut|date('H:i') }}
+                                </p>
                             {% endfor %}
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
+
         </div>
     </div>
 

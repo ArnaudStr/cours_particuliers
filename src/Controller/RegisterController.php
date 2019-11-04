@@ -186,7 +186,7 @@ class RegisterController extends AbstractController
             return $this->redirectToRoute('register');
         }
         else {
-            $this->addFlash('confirmation', 'Votre compté a été activé, veuillez vous connecter');
+            $this->addFlash('confirm', 'Votre compté a été activé, veuillez vous connecter');
         }
 
         $user->setToken(null);

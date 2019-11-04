@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block body %}
+     <a href="{{ path('edit_password_eleve', {'id':app.user.id}) }}"><button type="button">
+          Modifier votre mot de passe
+     </button></a>
 
     {{form_start(editForm, {
         'attr' :{

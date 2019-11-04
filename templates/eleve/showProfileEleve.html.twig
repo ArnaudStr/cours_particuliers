@@ -15,17 +15,22 @@
                     <p><a href="{{ path('edit_eleve', {'id':app.user.id}) }}"><button type="button">Modifier mes informtions</button></a></p>
             </div>
         </div>
-        <div class="prochainesSeances">
-            <h2>Prochaines séances</h2>
-            <ul class="list-group">
-                {% for prochaineSeance in prochainesSeances %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>{{ prochaineSeance.cours }}</strong> prochaine séance :  le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
-                        à {{ prochaineSeance.dateDebut|date('H:i') }} avec {{ prochaineSeance.prof }}    
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% if prochainesSeances %}
+            <div class="prochainesSeances">
+                <h2>Nombre de cours suivis : {{ prochainesSeances|length }}</h2>
+                <ul class="list-group">
+                    {% for prochaineSeance in prochainesSeances %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>{{ prochaineSeance.cours }}</strong>
+                            {% if  prochaineSeance.seance %}
+                                prochaine séance : le {{ prochaineSeance.seance.dateDebut|date('m/d/Y') }}
+                                à {{ prochaineSeance.seance.dateDebut|date('H:i') }} avec {{ prochaineSeance.cours.prof }}    
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     </div>
     {# <div class="down">
         <div class="coursEleve">

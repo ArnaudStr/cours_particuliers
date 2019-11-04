@@ -86,7 +86,7 @@ class Eleve implements UserInterface
     private $pictureFilename;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Seance", mappedBy="eleve")
+     * @ORM\OneToMany(targetEntity="App\Entity\Seance", mappedBy="eleve", orphanRemoval=true)
      */
     private $seances;
 

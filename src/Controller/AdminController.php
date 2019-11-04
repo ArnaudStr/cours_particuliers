@@ -240,6 +240,12 @@ class AdminController extends AbstractController
      * @Route("/deleteEleve/{id}", name="delete_eleve")
      */
     public function deleteEleve(Eleve $eleve, ObjectManager $manager) {
+        foreach($eleve->getSeances() as $seance){
+            $seance->setEleve(null);
+            $seance->setCours(null);
+            $manager->persist($seance);
+        }
+
         $manager->remove($eleve);
         $manager->flush();
   

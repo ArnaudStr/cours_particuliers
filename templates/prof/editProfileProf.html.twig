@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-     <a href="{{ path('voir_profil_prof', {'id':cours.prof.id}) }}"><button type="button">
+     <a href="{{ path('edit_password_prof', {'id':app.user.id}) }}"><button type="button">
           Modifier votre mot de passe
-     </button>
+     </button></a>
      {{form_start(editForm, {
           'attr' :{
                'enctype' : 'multipart/form-data',

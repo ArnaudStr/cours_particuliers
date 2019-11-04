@@ -5,21 +5,22 @@ namespace App\Controller\Eleve;
 use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Cours;
-use App\Entity\DemandeCours;
 use App\Entity\Eleve;
+use App\Entity\Seance;
 use App\Form\AvisType;
 use App\Entity\Message;
-use App\Entity\Seance;
 use App\Form\EditEleveType;
+use App\Entity\DemandeCours;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
-use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 
 /**
  * @Route("/eleve")
@@ -73,19 +74,33 @@ class EleveController extends AbstractController
     public function showProfileEleve(Eleve $eleve) {
         $this->setNbMsgNonLus();
 
-        // On récupère toutes les séances à venir (avec le cours correspondant)
-        $prochainesSeances=[];
+        // liste des cours avec la prochaine séance
+        $allCoursEtProchaineSeance = [];
+
+        // couple [cours, prochainesSeance ]
+        $coursEtProchaineSeance = [];
+
         foreach($eleve->getCours() as $cours){
+            $coursEtProchaineSeance['cours'] = $cours;
+
             $proSeance = $this->getDoctrine()
                 ->getRepository(Seance::class)
-                ->findNextSeanceEleve($eleve, $cours);
+                ->findNextSeanceEleve($eleve, $cours); 
 
-            // array_push($prochainesSeances, array('cours'=>$cours, 'proSeance'=>$proSeance));
-            array_push($prochainesSeances, $proSeance);
+            if ($proSeance) {
+                $coursEtProchaineSeance['seance'] = $proSeance;
+            }
+            else {
+                $coursEtProchaineSeance['seance'] = null;
+            }
+
+            array_push($allCoursEtProchaineSeance, $coursEtProchaineSeance);
+
+            $coursEtProchaineSeance = [];
         }
-        
+
         return $this->render('eleve/showProfileEleve.html.twig', [
-            'prochainesSeances' => $prochainesSeances
+            'prochainesSeances' => $allCoursEtProchaineSeance
         ]);
     }   
 
@@ -126,6 +141,46 @@ class EleveController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/editPasswordEleve/{id}", name="edit_password_eleve")
+     */
+    public function editPasswordEleve(Eleve $eleve, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder){
+
+        // $manager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(ChangePasswordType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+     
+            // Si l'ancien mot de passe est bon
+            if ($passwordEncoder->isPasswordValid($eleve, $form->get('oldPassword')->getData())) {
+                    
+                $newpwd = $form->get('newPassword')['first']->getData();
+        
+                $newEncodedPassword = $passwordEncoder->encodePassword($eleve, $newpwd);
+                $eleve->setPassword($newEncodedPassword);
+        
+                //$em->persist($user);
+                $manager->flush();
+
+                $this->addFlash('notice', 'Votre mot de passe à bien été changé !');
+                die('changé');
+
+                return $this->redirectToRoute('show_profile_eleve', [
+                    'id' => $eleve->getId()
+                ]);
+
+            }
+
+            else return $this->redirectToRoute('show_profile_eleve', [
+                'id' => $eleve->getId()
+            ]);
+        }
+
+        return $this->render('security/changePassword.html.twig', array(
+                    'form' => $form->createView(),
+        ));
+    }
 
     /**
      * @Route("/showMessagesEleve/{id}", name="show_messages_eleve")

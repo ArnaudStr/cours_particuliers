@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Cours;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Eleve;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Cours|null find($id, $lockMode = null, $lockVersion = null)
