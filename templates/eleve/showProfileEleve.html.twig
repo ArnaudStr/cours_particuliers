@@ -3,6 +3,14 @@
 {% block title %}Votre profil !{% endblock %}
 
 {% block body %}
+    {% block flash %}
+        {% for flash_message in app.session.flashbag.get('changePasswordOk') %}
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endblock %}
+
     <div class="up">
         <div class="infosEtPhoto">
             <div class="photo">

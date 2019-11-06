@@ -3,6 +3,13 @@
 {% block title %}Votre profil !{% endblock %}
 
 {% block body %}
+    {% block flash %}
+        {% for flash_message in app.session.flashbag.get('changePasswordOk') %}
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
+        {% endfor %}
+    {% endblock %}
 
     <!-- <h1>Votre profil</h1> -->
     <div class="up">
@@ -81,7 +88,7 @@
                 </thead>
                 <tbody>
                     {#<tr>{{ app.user.disponibilites }}</tr> #}
-                {% for jour, creneaux in joursCreneaux %}
+                {% for jour, creneaux in creneauxSemaine %}
                     {% for creneau in creneaux %}
                     <tr>
                         {% if jour == 'Mon' %}
