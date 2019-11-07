@@ -14,7 +14,7 @@ class VisitorController extends AbstractController
     // public function index()
     // {
     //     return $this->render('visitor/index.html.twig', [
-    //         'controller_name' => 'HomeController',
+    //         'controller_name' => 'HomeController'
     //     ]);
     // }
 
@@ -23,7 +23,10 @@ class VisitorController extends AbstractController
      */
     public function searchCourse()
     {
+        
         return $this->render('course/searchCourse.html.twig', [
+            'title' => 'Cours à Strasbourg',
+            'transparent' => true
         ]);
     }
 

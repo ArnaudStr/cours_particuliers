@@ -3,45 +3,39 @@
 {% block title %}Bienvenue !{% endblock %}
 
 {% block body %}
-    <h2> Recherche de cours </h2>
-    <form action='{{ path('search_cours_invite') }}' class='form-inline my-2 my-lg-2' method="GET">
-        <input type="search" name='a' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
-
-        <input type="search" name='p' class='form-control mr-sm-2' placeholder='search' aria-label='Search'>
-        <button type='submit' class='btn btn-outline-light my-2 my-sm-0'>Recherche </button>
-    </form>
-
-    <form>
-        <label>Address</label>
-        <input id="user_input_autocomplete_address" placeholder="Votre adresse...">
-        <label>street_number</label>
-        <input id="street_number" name="street_number" disabled>
-        <label>route</label>
-        <input id="route" name="route" disabled>
-        <label>locality</label>
-        <input id="locality" name="locality" disabled>
-        <label>country</label>
-        <input id="country" name="country" disabled>
-      </form>
+{# <!-- BANNER SECTION -->
+<section class="clearfix homeBanner" style="background-image: url(assets/img/banner/banner1.jpg);">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="banerInfo">
+					<h1>Explore. Discover. Share</h1>
+					<p>Listty helps to find out great things arround you</p>
+					<form class="form-inline" action="listings-half-screen-map-list.html">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">Find</div>
+								<input type="text" class="form-control" id="findItem" placeholder="What are you looking for?">
+								<div class="input-group-addon addon-right"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon">Near</div>
+								<input type="text" class="form-control" id="nearLocation" placeholder="Location">
+								<div class="input-group-addon addon-right"><i class="icon-listy icon-target" aria-hidden="true"></i></div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Search <i class="fa fa-search" aria-hidden="true"></i></button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section> #}
 
 {% endblock %}
 
 {% block javascripts %}
-<!-- Include Google Maps JS API -->
-<script type="text/javascript"  src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA0hMB4S4yS8m3u6jCErwgWy01cLGoTQp4"></script>
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script> -->
 
-    <!-- Custom JS code to bind to Autocomplete API -->
-    <script type="text/javascript" src="/js/autocomplete.js"></script>
-
-    <script>
-    function initializeAutocomplete(id) {  
-        var element = document.getElementById(id);  
-        
-        if (element) {    
-          var autocomplete = new google.maps.places.Autocomplete(element, { types: ['geocode'] });
-          google.maps.event.addListener(autocomplete, 'place_changed', onPlaceChanged);
-        }
-    }
-    </script>
 {% endblock %}

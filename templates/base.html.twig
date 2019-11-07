@@ -2,177 +2,110 @@
 <html lang="{{ app.request.locale }}">
 
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+        <meta name="viewport" content="width=device-width, initial-scale=1">        
         <title>
-        {% block title %}
-            {% if title is defined %}{{ title }}{% else %} Bienvenue ! {% endif %}
-        {% endblock %}
+            {% block title %}
+                {% if title is defined %}{{ title }}{% else %} Bienvenue ! {% endif %}
+            {% endblock %}
         </title>
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-            crossorigin=""/>
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+            {#<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/flatly/bootstrap.min.css">
 
-            <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
+             <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}" type="text/css"> 
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-            <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.9.0/css/all.css">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">#}
+            <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.9.0/css/all.css">
+
+            <!-- PLUGINS CSS STYLE -->
+            <link href="/assets/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+            <link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+            <link href="/assets/plugins/listtyicons/style.css" rel="stylesheet">
+            <link href="/assets/plugins/bootstrapthumbnail/bootstrap-thumbnail.css" rel="stylesheet">
+            <link href="/assets/plugins/datepicker/datepicker.min.css" rel="stylesheet">
+            <link href="/assets/plugins/selectbox/select_option1.css" rel="stylesheet">
+            <link href="/assets/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet">
+            <link href="/assets/plugins/fancybox/jquery.fancybox.min.css" rel="stylesheet"/>
+            <link href="/assets/plugins/isotope/isotope.min.css" rel="stylesheet">
+            <link href="/assets/plugins/map/css/map.css" rel="stylesheet">
+            <link href="/assets/plugins/rateyo/jquery.rateyo.min.css" rel="stylesheet">
+            <link href="/assets/plugins/animate/animate.css" rel="stylesheet">
+            <link href="" rel="stylesheet" id="bootstrap-rtl">
+
+            <!-- GOOGLE FONT -->
+            <link href="https://fonts.googleapis.com/css?family=Muli:200,300,400,600,700,800,900" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Herr+Von+Muellerhoff" rel="stylesheet">
+
+            <link rel="stylesheet" href="/assets/css/default.css" id="option_color">
+
+            <!-- FAVICON -->
+            <link href="/assets/img/favicon.png" rel="shortcut icon">
+            <!-- CUSTOM CSS -->
+            <link href="/assets/css/app.css" rel="stylesheet">
+        {% block stylesheets %}
 
         {% endblock %}
     </head>
 
-    <body>
-        <div class="wrapper"> 
-            <header>
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <div class="collapse navbar-collapse" id="navbarColor02">
+    {% include "header.html.twig" %}
+    {% block body %}
 
-                <!-- ADMIN -->
-                {% if is_granted('ROLE_ADMIN') %}
-                <ul class="navbar-nav mr-auto __flexBetween">
-                    <div class="navLeft">
-                        <li class="nav-item activeNav">
-                            <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activites <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('show_list_members') }}">Liste des membres</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('delete_seances_passees') }}">Supprimer séances libres passées</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('delete_messages_passes') }}">Supprimer messages passés</a>
-                        </li>
-                    </div>
-                    <div class="navRight">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{path('logout_admin')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
-                        </li>
-                    </div>
-                </ul>
-                {% else %}
-                        <!-- LOGO ? -->
-                        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-                        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <! class="collapse navbar-collapse" id="navbarColor02"> -->
+    {% endblock %}
 
-                            
-                            <!-- VISITOR -->
-                            {% if not is_granted('ROLE_USER') %}
-                                <ul class="navbar-nav mr-auto __flexBetween">
-                                    <div class="navLeft">
-                                        <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('search_course') }}"><i class="fas fa-search"></i>Recherche de cours<span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('register') }}"><i class="fas fa-user-plus"></i>Inscription</a>
-                                        </li>
+    <!-- Closing wrapper -->
+    </div>
+        {# // <script src='fullcalendar/core/locales/fr.js'></script> #}
+        {# <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+        <script>
 
-                                        
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('login_prof')}}"><i class="fas fa-sign-in-alt"></i>Connexion professeur</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('login_eleve')}}"><i class="fas fa-sign-in-alt"></i>Connexion élève</a>
-                                        </li>
-                                    </div>
-
-                                </ul>
-                            {% endif %}
-
-                            <!-- ELEVE -->
-                            {% if is_granted('ROLE_ELEVE') %}
-                                <ul class="navbar-nav mr-auto __flexBetween">
-                                    <div class="navLeft">
-                                        <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('home_eleve', {'id':app.user.id}) }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('show_messages_eleve', {'id':app.user.id}) }}"><i class="far fa-comment-alt"></i>Messagerie ({{ app.session.get('nbMsgNonLus') }})</a>
-                                        </li>
-                                    </div>
-                                    <div class="navRight">
-                                        <li class="nav-item activeNav">
-                                            <a class="nav-link" href="{{ path('search_course_eleve') }}"><i class="fas fa-search"></i>Recherche de cours<span class="sr-only">(current)</span></a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{path('logout_eleve')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
-                                        </li>
-                                    </div>
-                                </ul>
-
-                            <!-- PROF -->
-                            {% elseif is_granted('ROLE_PROF') %}
-                            <ul class="navbar-nav mr-auto __flexBetween">
-                            <!-- <ul class="navbar-nav mr-auto __flexBetween"> -->
-                                <div class="navLeft">
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="navCalendar" href="{{ path('home_prof') }}"><i class="far fa-calendar-alt"></i>Planning <span class="sr-only">(current)</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="navProfil" href="{{ path('show_profile_prof', {'id':app.user.id} ) }}"><i class="far fa-id-card"></i>Profil</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="navMsg" href="{{ path('show_messages_prof', {'id':app.user.id} )}}"><i class="far fa-comment-alt"></i>Messagerie ({{ app.session.get('nbMsgNonLus') }})</a>
-                                    </li>
-                                </div>
-                                <div class="navRight">
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="navCours" href="{{ path('show_liste_cours') }}">Proposer un cours</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{path('logout_prof')}}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
-                                    </li>
-                                </div>
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </nav>
-                {% endif %}
-            </header>
-        {% block body %}
-
-        {% endblock %}
-
-        <!-- Closing wrapper -->
-        </div>
-
-        {% block javascripts %}
-
-            {# // <script src='fullcalendar/core/locales/fr.js'></script> #}
-            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-            <script>
-
-            // Get the modal
-            var modal = document.getElementById('id01');
-            
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+        // Get the modal
+        var modal = document.getElementById('id01');
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
-            </script>
-        {% endblock %}
+        }
+        </script> #}
+
+        <!-- JAVASCRIPTS -->
+        <script src="/assets/plugins/jquery/jquery.min.js"></script>
+        <script src="/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/assets/plugins/smoothscroll/SmoothScroll.min.js"></script>
+        <script src="/assets/plugins/waypoints/waypoints.min.js"></script>
+        <script src="/assets/plugins/counter-up/jquery.counterup.min.js"></script>
+        <script src="/assets/plugins/datepicker/bootstrap-datepicker.min.js"></script>
+        <script src="/assets/plugins/selectbox/jquery.selectbox-0.1.3.min.js"></script>
+        <script src="/assets/plugins/owl-carousel/owl.carousel.min.js"></script>
+        <script src="/assets/plugins/isotope/isotope.min.js"></script>
+        <script src="/assets/plugins/fancybox/jquery.fancybox.min.js"></script>
+        <script src="/assets/plugins/isotope/isotope-triger.min.js"></script>
+        <script src="/assets/plugins/rateyo/jquery.rateyo.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU79W1lu5f6PIiuMqNfT1C6M0e_lq1ECY"></script>
+        <script src="/assets/plugins/map/js/rich-marker.js"></script>
+        <script src="/assets/plugins/map/js/infobox_packed.js"></script>
+        <script src="/assets/js/app.js"></script> 
+        <script src="/assets/js/map.js"></script>
+
+    {% block javascripts %}
+
+    {% endblock %}
 
     </body>
 </html>

@@ -41,7 +41,7 @@ class SecurityProfController extends ProfController
         return $this->redirectToRoute("search_course");
     }
 
-        /**
+    /**
      * @Route("/reset_password/{token}", name="app_reset_password")
      */
     public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)

@@ -3,20 +3,58 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-   <h2 style="text-align: center">Inscription</h2>
+    <section class="clearfix pageTitleSection" style="background-image: url();">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pageTitle">
+                        <h2>Créer un compte professeur</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="col-lg-5 registerForm">
-        {{ form_start(registrationForm) }}
+    <section class="clearfix signUpSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="signUpForm">
+                    {{ form_start(registrationForm) }}
+                        <h3>Vos informations</h3>
+                        <p>Veuillez remplir les champs ci-dessous afin de créer votre compte professeur. Un email de confirmation vous sera envoyé. Si vous avez déjà un compte <a href="login.html">cliquez ici</a>.</p>
+                        
+                        <div class="row">
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{ form_row(registrationForm.prenom) }}
+                            </div>
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{ form_row(registrationForm.nom) }}
+                            </div>
+                            <div class="form-group col-xs-12">
+                                {{ form_row(registrationForm.email) }}
+                            </div>
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{ form_row(registrationForm.plainPassword.first) }}
+                            </div>
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{ form_row(registrationForm.plainPassword.second) }}
+                            </div>
+                            <p>En vous inscrivant, vous acceptez nos <a href="#">mentions legales</a>.</p>
 
-            {{ form_row(registrationForm.nom) }}
-            {{ form_row(registrationForm.prenom) }}
-            {{ form_row(registrationForm.email) }}
-            {{ form_row(registrationForm.plainPassword) }}
-            {{ form_row(registrationForm.isEleve) }}
-            {{ form_row(registrationForm.submit) }}
-            {{ form_errors(registrationForm) }}
-            
-        {{ form_end(registrationForm) }} 
-    </div>
-
+                            <div class="form-group col-xs-12 mb0">
+                                {{ form_row(registrationForm.submit) }}
+                            </div>
+                        </div>
+                        {{ form_errors(registrationForm) }}
+                    {{ form_end(registrationForm) }} 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
+
+{% block javascripts %}
+
+{% endblock %} 

@@ -18,27 +18,11 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('email',EmailType::class,[
-                'attr' => [
-                    'placeholder' => 'Email',
-                ],
+                'label' => 'Adresse email',
                 "mapped" => false,
-                'label' => false,
+                'label' => 'Email',
             ])
   
-            // ->add('plainPassword', PasswordType::class, [
-            //     'attr' => [
-            //         'placeholder' => 'Mot de passe',
-            //     ],
-            //     'mapped' => false,
-            //     'constraints' => [
-            //         new Length([
-            //             'min' => 6,
-            //             'minMessage' => 'Votre mot de passe doit contenir au moins 6 caractères !',
-            //             'max' => 4096,
-            //         ]),
-            //     ],
-            //     'label' => false
-            // ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les mots de passe doivent être identiques',
@@ -60,35 +44,25 @@ class RegistrationType extends AbstractType
             ])
 
             ->add('nom',TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Nom',
-                ],
                 "mapped" => false,
-                'label' => false
+                'label' => 'Nom',
 
             ])
             ->add('prenom',TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Prenom',
-                ],
                 "mapped" => false,
-                'label' => false
-
+                'label' => 'Prenom'
             ])
 
-            ->add('isEleve', ChoiceType::class, [
-                'attr' => [
-                    'placeholder' => 'email',
-                ],
-                "choices" => [
-                    'Eleve' => true,
-                    'Prof' => false
-                ],
-                "mapped" => false,
-                'label' => false,
-                'expanded' => true,
-                'multiple' => false,
-            ])
+            // ->add('isEleve', ChoiceType::class, [
+            //     "choices" => [
+            //         'Eleve' => true,
+            //         'Prof' => false
+            //     ],
+            //     "mapped" => false,
+            //     'label' => false,
+            //     'expanded' => true,
+            //     'multiple' => false,
+            // ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'
