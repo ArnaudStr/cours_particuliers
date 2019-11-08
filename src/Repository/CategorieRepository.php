@@ -19,22 +19,37 @@ class CategorieRepository extends ServiceEntityRepository
         parent::__construct($registry, Categorie::class);
     }
 
+
     /**
      * @param string $term
-     * @return Result[]
+     * @return category
      */
-    public function findAllWithSearch(string $term)
+    public function findOneWithSearch(string $term)
     {
-        $Result = $this->createQueryBuilder('r');
-            $Result->andWhere('r.nom LIKE :term')
-                ->setParameter('term', '%' .$term. '%');    
-        
-                return $Result
-                    ->orderBy('r.nom', 'DESC')
-                    ->getQuery()
-                    ->getResult();
-        
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.nom LIKE :term')
+            ->setParameter('term', $term)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
+
+    // /**
+    //  * @param string $term
+    //  * @return Result[]
+    //  */
+    // public function findOneWithSearch(string $term)
+    // {
+    //     $Result = $this->createQueryBuilder('r');
+    //         $Result->andWhere('r.nom LIKE :term')
+    //             ->setParameter('term', '%' .$term. '%');    
+        
+    //             return $Result
+    //                 ->orderBy('r.nom', 'DESC')
+    //                 ->getQuery()
+    //                 ->getResult();
+        
+    // }
 
     // /**
     //  * @return Categorie[] Returns an array of Categorie objects

@@ -43,26 +43,46 @@
                          </a> 
                       </div>
           
-                      {% if not is_granted('ROLE_USER') %}
-
-                      <!-- Collect the nav links, forms, and other content for toggling -->
-                      <div class="collapse navbar-collapse navbar-ex1-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="{{ path('search_course') }}">Acceuil / Rechercher un cours </a>
-                            </li>     
-                          <li class=" dropdown singleDrop">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Connection / Inscription <i class="fa fa-angle-down" aria-hidden="true"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ path('register') }}">Créer un compte</a></li>
-                                <li><a href="{{ path('login_eleve') }}">Connection élève</a></li>
-                                <li><a href="{{ path('login_prof') }}">Connection professeur</a></li>
+                    {% if not is_granted('ROLE_USER') %}
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse navbar-ex1-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="{{ path('search_course') }}">Accueil / Rechercher un cours </a>
+                                </li>     
+                                <li class=" dropdown singleDrop">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Connexion / Inscription <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ path('register', {'isEleve':1} ) }}">Créer un compte élève</a></li>
+                                        <li><a href="{{ path('register', {'isEleve':0} ) }}">Créer un compte professeur</a></li>
+                                        <li><a href="{{ path('login_eleve') }}">Connexion élève</a></li>
+                                        <li><a href="{{ path('login_prof') }}">Connexion professeur</a></li>
+                                    </ul>
+                                </li>
                             </ul>
-                          </li>
-                        </ul>
-                      </div>
-                      {% endif %}
+                        </div>
 
+                    {% elseif is_granted('ROLE_ELEVE') %}
+                        <div class="collapse navbar-collapse navbar-ex1-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a class="nav-link" href="{{ path('home_eleve', {'id':app.user.id}) }}">Planning</a>
+                                </li>     
+                                <li class="dropdown">
+                                    <a class="nav-link" href="{{ path('show_profile_eleve', {'id':app.user.id} ) }}">Profil</a>
+                                </li>     
+                                <li class="dropdown">
+                                    <a class="nav-link" href="{{ path('show_messages_eleve', {'id':app.user.id}) }}">Messagerie ({{ app.session.get('nbMsgNonLus') }})</a>          
+                                </li>     
+                                <li class="dropdown">
+                                    <a href="{{ path('search_course') }}">Accueil / Rechercher un cours </a>
+                                </li>     
+                                <li class="dropdown">
+                                    <a class="nav-link" href="{{path('logout_eleve')}}">Déconnexion</a>
+                                </li>     
+                            </ul>
+                        </div>
+                    {% endif %}
 
                       {# <a class="btn btn-default navbar-btn" href="add-listings.html"> + <span>Add Listing</span></a> #}
                     </div>

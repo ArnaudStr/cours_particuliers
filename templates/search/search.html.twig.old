@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    {% if categories is not empty %}
+        <h2>Résultat de la recherche '{{ recherche }}' ({{ categories|length }} résultats)</h2>
+    {% elseif activites is not empty %}
+        <h2>Résultat de la recherche '{{ recherche }}' ({{ activites|length }} résultats)</h2>
+    {% else %}
+        <h2>Pas de résultat pour la recherche {{ recherche }}</h2>
+    {% endif %}
+
+       
+    <!-- <div class="row"> -->
+
+    <div class="containerSearch">
+
+        {% for categorie in categories %}
+            {% for activite in categorie.activites %}
+                {% for cours in activite.coursS %}
+                    <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
+                        <div class="courseSearch">
+                            <img class="photoCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
+                            <div class="descriptionMiniCours">
+                                <p>{{ cours.prof.nom }}</p>
+                                <p>{{ cours.tarifHoraire }}</p>
+                                <p>{{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
+                                <p>{{ cours.description }}</p>
+                            </div>
+                        </div>
+                    </a>
+
+                {# <div class="column">
+                    <div class="card">
+                        <img src="img1.jpg" alt="Jane" style="width:100%">
+                        <div class="container">
+                            <h2>Jane Doe</h2>
+                            <p class="title">CEO &amp; Founder</p>
+                            <p>Some text that describes me lorem ipsum ipsum lorem.</p>
+                            <p>example@example.com</p>
+                            <p><button class="button" href="{{ path('display_course_eleve', {'id':cours.id} ) }}">Contact</button></p>
+                        </div>
+                    </div>
+                </div> #}
+
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for activite in activites %}
+            {% for cours in activite.coursS %}
+                <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}" class="courseSearch"> 
+                    <img class="photoCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
+                    <div class="descriptionMiniCours">
+                        <p>{{ cours.prof.nom }}</p>
+                        <p>{{ cours.tarifHoraire }}€/h</p>
+                        <p>Note : {{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
+                        <p>{{ cours.description }}</p>
+                        {% if is_granted('ROLE_ELEVE') %}
+                        {#<p><a href="{{ path('send_message_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Envoyer un message</button></a></p>
+                        <p><a href="{{ path('voir_profil_prof', {'id':cours.prof.id}) }}"><button type="button" class="btn btn-warning btn-lg">Voir profil du prof</button></a></p>
+                        <p><a href="{{ path('inscription_cours_eleve', {'idProf':cours.prof.id, 'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">S'inscrire au cours</button></a></p> #}
+                        {% endif %}
+                    </div>
+                </a>           
+                {#<div class="column">
+                    <div class="card">
+                        <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Jane" style="width:100%">
+                        <div class="container">
+                            <p>{{ cours.prof.nom }}</p>
+                            <p>{{ cours.tarifHoraire }}€/h</p>
+                            <p>Note : {{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
+                            <p>{{ cours.description }}</p>
+                            <p><button class="button" href="{{ path('display_course_eleve', {'id':cours.id} ) }}">Plus d'infos</button></p>
+                        </div>
+                    </div>
+                </div> #}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{%  block javascripts %}
+{%  endblock %}

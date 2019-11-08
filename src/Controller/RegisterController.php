@@ -16,10 +16,10 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class RegisterController extends AbstractController
 {
      /**
-     * @Route("/register", name="register")
+     * @Route("/register/{isEleve}", name="register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer,
-    TokenGeneratorInterface $tokenGenerator): Response
+    TokenGeneratorInterface $tokenGenerator, int $isEleve): Response
     {       
         $form = $this->createForm(RegistrationType::class);
         $form->handleRequest($request);
@@ -29,7 +29,7 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Si la personne s'enregistre en tant qu'élève
-            if ( $form->get('isEleve')->getData() ) {
+            if ( $isEleve == 1 ) {
 
                 $email = $form->get('email')->getData();
 
@@ -163,6 +163,7 @@ class RegisterController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'isEleve' => $isEleve
         ]);
     }
 

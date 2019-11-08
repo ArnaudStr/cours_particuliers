@@ -11,11 +11,11 @@
 				<div class="banerInfo">
 					<h1>Trouvez le professeur parfait à Strasbourg</h1>
 					{# <p>Listty helps to find out great things arround you</p> #}
-					<form class="form-inline" action="listings-half-screen-map-list.html">
+					<form class="form-inline" method="GET" action='{{ path('liste_cours_visitor_search') }}'>
 						<div class="form-group">
 							<div class="input-group">
 								{# <div class="input-group-addon">Find</div> #}
-								<input type="text" class="form-control" id="findItem" placeholder="Quelle matière ? Essayez Maths, Piano, ...">
+								<input type="text" name='s' class="form-control" id="findItem" placeholder="Quelle matière ? Essayez Maths, Piano, ...">
 								<div class="input-group-addon addon-right"></div>
 							</div>
 						</div>

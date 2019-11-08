@@ -21,19 +21,16 @@ class ActiviteRepository extends ServiceEntityRepository
 
     /**
      * @param string $term
-     * @return Result[]
+     * @return activite
      */
-    public function findAllWithSearch(string $term)
+    public function findOneWithSearch(string $term)
     {
-        $Result = $this->createQueryBuilder('r');
-            $Result->andWhere('r.nom LIKE :term')
-                ->setParameter('term', '%' .$term. '%');    
-        
-                return $Result
-                    ->orderBy('r.nom', 'DESC')
-                    ->getQuery()
-                    ->getResult();
-        
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.nom LIKE :term')
+            ->setParameter('term', $term)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     // /**

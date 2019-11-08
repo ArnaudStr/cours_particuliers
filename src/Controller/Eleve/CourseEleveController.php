@@ -6,10 +6,13 @@ use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Eleve;
 use App\Entity\Seance;
+use App\Entity\Activite;
+use App\Entity\Categorie;
 use App\Entity\DemandeCours;
+use App\Controller\Eleve\EleveController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use App\Controller\Eleve\EleveController;
 
 /**
  * @Route("/eleve")
@@ -26,6 +29,29 @@ class CourseEleveController extends EleveController
         $this->setNbMsgNonLus();
 
         return $this->render('course/searchCourse.html.twig', [
+        ]);
+    }
+
+    /**
+     * @Route("/eleve/listeCoursEleveSearch", name="liste_cours_eleve_search")
+     */
+    public function listeCoursEleveSearch(Request $request)
+    {
+
+        $searchActivite = $request->query->get('s');
+
+        $categories = $this->getDoctrine()
+            ->getRepository(Categorie::class)
+            ->findAllWithSearch(ucfirst($searchActivite));  
+                    
+        $activites = $this->getDoctrine()
+            ->getRepository(Activite::class)
+            ->findAllWithSearch(ucfirst($searchActivite));       
+
+        return $this->render('search/search.html.twig', [
+            'categories' => $categories,
+            'activites' => $activites,
+            'recherche' => $searchActivite
         ]);
     }
 

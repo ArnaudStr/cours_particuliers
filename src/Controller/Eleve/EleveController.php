@@ -27,7 +27,6 @@ class EleveController extends AbstractController
         $session = new SessionUser();
         $session->set('nbMsgNonLus', $nbMessagesNonLus);
     }
-
    
     /**
      * Page d'acceuil, avec le planning de l'élève

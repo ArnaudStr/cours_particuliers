@@ -3,7 +3,89 @@
 {% block title %}S'inscrire au cours {{ cours }} !{% endblock %}
 
 {% block body %}
-    <h2>Inscription au cours de {{ cours }}</h2>
+<!-- LISTINGS DETAILS TITLE SECTION -->
+<section class="clearfix paddingAdjustBottom" id="listing-details">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4">
+                    <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
+                </div>
+                <div class="col-xs-8">
+                    <div class="listingTitleArea">
+                        <h2>{{ cours.prof }}</h2>
+                        <p>Localisation</p>
+                        <div class="listingReview">
+                            {% if cours.prof.noteMoyenne %}
+                                <ul class="list-inline rating">
+                                    {% if cours.prof.noteMoyenne|round >= 1 %}
+                                        {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                            <!-- Etoiles pleines -->
+                                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if cours.prof.noteMoyenne|round != 5 %}         
+                                        {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                            <!-- Etoiles vides -->
+                                            <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+        						<span>({{ cours.prof.avis|length }} avis)</span>
+                            {% endif %}
+                        </div>
+                        <p>Cours : {{ cours }}</p>
+                        <p>Niveaux enseignés : {{ cours.niveaux }}</p>
+                        <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
+                        <p>Mode d'enseignement : </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+       
+    <!-- LISTINGS DETAILS INFO SECTION -->
+<section class="clearfix paddingAdjustTop">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-xs-12">
+                    <div class="listDetailsInfo">
+                        <div class="detailsInfoBox">
+                            <h3>Description du cours</h3>
+                            <p>{{ cours.description }}</p>
+                        </div>
+                        <div class="detailsInfoBox">
+                            <h3>Reviews (3)</h3>
+
+                            <div class="media media-comment">
+                                <div class="media-left">
+                                    <h4 class="media-heading">Jessica Brown</h4>
+                                </div>
+                                <div class="media-body">
+                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudan
+                                    totam rem ape riam,</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-xs-12">
+                    {% if app.user %}
+                        <div data-entry-ideleve={{app.user.id}}></div>
+                        <div data-entry-idcours={{cours.id}}></div>
+                        <div data-entry-idprof={{cours.prof.id}}></div>
+                        <!-- PLANNING DES DISPONIBILITES DU COURS -->
+                        {% include '@Calendar/calendar.html' %} 
+                    {% else %}
+                        <h2>Pour vous inscrire à ce cours, veuilllez <a href="#">vous connecter</a> si vous possedez déjà un compte, ou <a href="#">vous enregistrer</a> sinon</h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {#<h2>Inscription au cours de {{ cours }}</h2>
     <div class="displayCourse">
         <div class="displayCourseLeft">
             <div class="photoAndInfos">
@@ -22,7 +104,6 @@
                 {% for niveau in cours.niveaux %}
                     {{ niveau }}
                 {% endfor %}
-
             </div>
             {% if app.user %}
                 <a href="{{ path('conversation_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
@@ -32,16 +113,17 @@
                 </a>
             {% endif %}
         </div>
+        {% if app.user %}
+            <div class="displayCourseRight">
+                <div data-entry-ideleve={{app.user.id}}>
+                <div data-entry-idcours={{cours.id}}>
+                <div data-entry-idprof={{cours.prof.id}}>
+                <!-- PLANNING DES DISPONIBILITES DU COURS -->
+                {% include '@Calendar/calendar.html' %} 
+            </div>
+        {% endif %}
 
-        <div class="displayCourseRight">
-            <div data-entry-ideleve={{app.user.id}}>
-            <div data-entry-idcours={{cours.id}}>
-            <div data-entry-idprof={{cours.prof.id}}>
-            <!-- PLANNING DES DISPONIBILITES DU COURS -->
-            {% include '@Calendar/calendar.html' %} 
-
-        </div>
-    </div>
+    </div>#}
 
 {% endblock %}
 

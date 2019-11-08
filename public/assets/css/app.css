@@ -130,7 +130,7 @@ p {
 
 h1, h2, h3, h4, h5 {
   font-family: 'Poppins', sans-serif;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   margin-top: 0;
   font-weight: 700;
   color: #222222;
@@ -175,7 +175,7 @@ h3 {
 }
 
 h3 a {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   color: #222222;
 }
 
@@ -186,12 +186,12 @@ h3 a:hover {
 h4 {
   font-size: 18px;
   margin-bottom: 20px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 h5 {
   font-size: 14px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .no-js #loader {
@@ -299,7 +299,7 @@ a:hover, a:focus {
   color: #2196f3;
   font-size: 90px;
   line-height: 42px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
 }
 
@@ -740,7 +740,7 @@ section {
 }
 
 .btn-transparent span strong {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
   font-size: 26px;
   line-height: 30px;
@@ -1098,7 +1098,7 @@ a.link:hover {
 
 .processArea h2 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0 0 25px 0;
 }
 
@@ -1566,7 +1566,7 @@ a.link:hover {
 
 .tabCommon.singleTab .tab-pane .blogCommnets .media-body .btn-link {
   color: #2196f3;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 @media (min-width: 768px) {
@@ -1760,7 +1760,7 @@ a.link:hover {
 }
 
 .blogDetials .commentArea .btn-replay {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-top: 10px;
   display: inline-block;
 }
@@ -1885,7 +1885,7 @@ a.link:hover {
 
 .page-header h2 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 30px;
   margin: 0;
 }
@@ -1910,7 +1910,7 @@ a.link:hover {
   line-height: 60px;
   background-color: #2196f3;
   color: #ffffff;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 20px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
@@ -1966,7 +1966,7 @@ a.link:hover {
 .pageTitle h2 {
   margin-bottom: 0;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   text-align: center;
   font-size: 25px;
   line-height: 30px;
@@ -2038,7 +2038,7 @@ a.link:hover {
   font-weight: 400;
   margin-top: 40px;
   margin-bottom: 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .dashboard-breadcrumb-section .breadcrumb {
@@ -2127,7 +2127,7 @@ a.link:hover {
 
 .locationSelect .sbSelector:link, .locationSelect .sbSelector:visited, .locationSelect .sbSelector:hover {
   color: #848484 !important;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .locationSelect .sbSelector {
@@ -2196,7 +2196,7 @@ a.link:hover {
 
 .searchSelectbox .sbSelector:link, .searchSelectbox .sbSelector:visited, .searchSelectbox .sbSelector:hover {
   color: #848484 !important;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .searchSelectbox .sbSelector {
@@ -2266,7 +2266,7 @@ a.link:hover {
 
 .searchSelectboxes .sbSelector:link, .searchSelectboxes .sbSelector:visited, .searchSelectboxes .sbSelector:hover {
   color: #848484 !important;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   text-align: left !important;
 }
 
@@ -2337,7 +2337,7 @@ a.link:hover {
 
 .searchBoxSelect .sbSelector:link, .searchBoxSelect .sbSelector:visited, .searchBoxSelect .sbSelector:hover {
   color: #a8afba !important;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   text-align: left !important;
 }
 
@@ -2408,7 +2408,7 @@ a.link:hover {
 
 .contactSelect .sbSelector:link, .contactSelect .sbSelector:visited, .contactSelect .sbSelector:hover {
   color: #222222 !important;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .contactSelect .sbSelector {
@@ -2792,7 +2792,7 @@ a.link:hover {
   margin-top: 10px;
   margin-bottom: 5px;
   font-size: 14px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 700;
 }
 
@@ -3623,7 +3623,7 @@ a.link:hover {
 
 .navbar-default.navbar-dashboard .navbar-nav > li > a {
   color: #a8afba;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 500;
   line-height: 17px;
   padding: 10px;
@@ -4436,7 +4436,7 @@ footer {
   text-align: center;
   position: relative;
   color: #222222;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   margin-bottom: 10px;
@@ -4586,7 +4586,7 @@ footer {
   font-weight: 500;
   color: #ffffff;
   margin: 0 0 8px 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 24px;
 }
 
@@ -4613,6 +4613,7 @@ i.fa.fa-heart-o.active:before {
 }
 
 .thingsCaption {
+  height:100px;
   padding: 20px 30px;
   border: 1px solid #e5e5e5;
   border-top: none;
@@ -4754,7 +4755,7 @@ i.fa.fa-heart-o.active:before {
   background-color: transparent;
   border-radius: 6px;
   font-size: 16px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   color: #ffffff;
   transition: all 0.3s ease-in-out;
   font-weight: 400;
@@ -4984,7 +4985,7 @@ i.fa.fa-heart-o.active:before {
 }
 
 .categoryBox h2 {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
   padding-bottom: 15px;
   border-bottom: 1px solid #e5e5e5;
@@ -5310,7 +5311,7 @@ i.fa.fa-heart-o.active:before {
   height: 45px;
   display: block;
   color: #848484;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
   border-radius: 4px;
   padding: 0 10px;
@@ -5653,7 +5654,7 @@ figure:hover .overlay {
 .categoryItem h2 {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0 0 10px 0;
 }
 
@@ -5741,7 +5742,7 @@ figure:hover .overlay {
 
 .servicesInfo h2 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 20px;
   margin: 0 0 15px 0;
 }
@@ -5753,6 +5754,8 @@ figure:hover .overlay {
 /*=== 5.15 CATEGORY GRID SECTION  ===*/
 .resultBar {
   display: block;
+  padding-top: 15px;
+  margin-top: 25px;
   padding-bottom: 15px;
   margin-bottom: 25px;
   border-bottom: 1px solid #e5e5e5;
@@ -5761,14 +5764,15 @@ figure:hover .overlay {
 .resultBar h2 {
   color: #848484;
   font-weight: 400;
-  text-transform: capitalize;
-  font-size: 15px;
+  color: #222222;
+  /*text-transform: capitalize;*/
+  font-size: 30px;
   margin-bottom: 0;
   display: inline-block;
 }
 
 .resultBar h2 span {
-  font-weight: 500;
+  font-weight: 600;
   color: #222222;
 }
 
@@ -5834,7 +5838,7 @@ figure:hover .overlay {
 
 .categoryDetails h2 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 24px;
   margin: 0;
 }
@@ -5942,7 +5946,7 @@ figure:hover .overlay {
   font-size: 28px;
   color: #fff;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 /*=== 5.18 CERTIFICATE SECTION ===*/
@@ -6009,7 +6013,7 @@ figure:hover .overlay {
   text-align: center;
   color: #222222;
   font-size: 15px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .testimonial-content .testimonial-author h5 span {
@@ -6102,7 +6106,7 @@ figure:hover .overlay {
   color: #ffffff;
   margin-bottom: 40px;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .started-bussiness .content p {
@@ -6292,7 +6296,7 @@ figure:hover .overlay {
 .termsList li h3 {
   font-weight: 300;
   font-size: 20px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .termsList li p {
@@ -6328,7 +6332,7 @@ figure:hover .overlay {
   font-size: 20px;
   margin: 0 0 15px 0;
   font-weight: 500;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .howWorksInfo.text-right {
@@ -6389,7 +6393,7 @@ figure:hover .overlay {
   font-size: 30px;
   font-weight: 400;
   margin: 0 0 20px 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .businessIntro p {
@@ -6416,7 +6420,7 @@ figure:hover .overlay {
 
 .businessLink h3 {
   font-weight: 300;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 20px;
 }
 
@@ -6512,7 +6516,7 @@ figure:hover .overlay {
   color: #fffefe;
   font-size: 32px;
   font-weight: 500;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .businessAdd p {
@@ -6544,7 +6548,7 @@ figure:hover .overlay {
 
 .signUpFormArea .priceTableTitle h2 {
   margin-bottom: 20px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .signUpFormArea .priceTableTitle p {
@@ -6574,7 +6578,7 @@ figure:hover .overlay {
 .formSection h3 {
   font-weight: 300;
   font-size: 20px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 25px;
 }
 
@@ -7032,7 +7036,7 @@ figure:hover .overlay {
 
 .blogContent .caption h3 {
   font-weight: 500;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 20px;
 }
 
@@ -7092,7 +7096,7 @@ figure:hover .overlay {
 .commentArea h3 {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 25px;
 }
 
@@ -7266,7 +7270,7 @@ figure:hover .overlay {
 
 .profileIntro h2 {
   font-size: 30px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
   margin: 0 0 17px 0;
 }
@@ -7277,7 +7281,7 @@ figure:hover .overlay {
 
 .profileIntro h3 {
   font-size: 20px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 500;
 }
 
@@ -7372,13 +7376,13 @@ figure:hover .overlay {
 
 .profileUserInfo h2 {
   font-size: 30px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
 }
 
 .profileUserInfo h5 {
   font-size: 14px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 25px;
   font-weight: 400;
 }
@@ -7394,7 +7398,7 @@ figure:hover .overlay {
   color: #222222;
   font-size: 12px;
   letter-spacing: 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   width: 75px;
   line-height: 25px;
   padding: 0;
@@ -7452,7 +7456,7 @@ figure:hover .overlay {
   background-color: transparent;
   color: #848484;
   font-size: 14px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
 }
 
@@ -7547,7 +7551,7 @@ figure:hover .overlay {
 
 .dashboardPageTitle h2 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 30px;
 }
 
@@ -7593,7 +7597,7 @@ figure:hover .overlay {
   color: #848484;
   font-size: 12px;
   padding: 6px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   letter-spacing: 0;
   font-family: 'Muli', sans-serif;
   width: 60px;
@@ -7611,7 +7615,7 @@ figure:hover .overlay {
 
 .btn-toolbar .btn-default {
   color: #222222;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   padding: 7px 15px;
 }
 
@@ -7904,7 +7908,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 
 .listingsInfo li:last-child h3 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 9px;
   margin: 5px 0;
 }
@@ -7930,7 +7934,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .listingsInfo li:last-child h5 {
   font-family: 'Muli', sans-serif;
   font-size: 13px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   color: #848484;
   margin: 0 0 4px 0;
   font-weight: 400;
@@ -7997,7 +8001,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   padding: 0 20px;
   height: 44px;
   line-height: 44px;
@@ -8128,7 +8132,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .listName h3 {
   font-size: 15px;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0;
 }
 
@@ -8221,7 +8225,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 
 .messageCommon .messageInfo h5 {
   font-size: 15px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
   margin: 0 0 6px 0;
   color: #848484;
@@ -8274,7 +8278,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   color: #848484;
   font-size: 12px;
   padding: 4px 6px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   letter-spacing: 0;
   font-family: 'Muli', sans-serif;
 }
@@ -8381,7 +8385,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 
 .listingTitleArea h2 {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 500;
   margin: 0 0 14px 0;
   font-size: 35px;
@@ -8450,7 +8454,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .detailsInfoBox h3 {
   font-weight: 400;
   font-size: 24px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0 0 10px 0;
 }
 
@@ -8489,7 +8493,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 
 .media-comment.media .media-heading {
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 15px;
   font-weight: 400;
   margin: 0 0 10px 0;
@@ -8534,7 +8538,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .listSidebar h3 {
   font-weight: 400;
   font-size: 24px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0 0 30px 0;
 }
 
@@ -8619,7 +8623,7 @@ button.close-btn {
   padding: 0;
   color: #848484;
   font-size: 14px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
 }
 
@@ -8767,7 +8771,7 @@ button.close-btn {
 
 .booking-list-media .media-body .media-heading {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 20px;
   line-height: 40px;
 }
@@ -9296,7 +9300,7 @@ button.close-btn {
 .banner-home-city .owl-carousel .single-item .text-block-center h1 {
   color: #ffffff;
   font-weight: 700;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin: 0;
   font-weight: 500;
 }
@@ -9922,14 +9926,14 @@ body.rtl .page-error-section .addon-form-style .form-group .btn-default {
 .user-profile-section .user-profile .user-profile-content .user-name {
   font-size: 22px;
   margin-bottom: 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-weight: 400;
 }
 
 .user-profile-section .user-profile .user-profile-content .designation {
   font-size: 16px;
   font-weight: 600;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .user-profile-section .user-profile .user-profile-content p {
@@ -9954,7 +9958,7 @@ body.rtl .page-error-section .addon-form-style .form-group .btn-default {
   border-radius: 5px;
   color: #ffffff;
   margin-bottom: 35px;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   font-size: 18px;
   display: inline-block;
 }
@@ -9969,7 +9973,7 @@ body.rtl .page-error-section .addon-form-style .form-group .btn-default {
 .user-profile-section .user-contact h3 {
   font-size: 26px;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   border-bottom: 1px solid #e5e5e5;
   padding-bottom: 20px;
 }
@@ -9995,7 +9999,7 @@ body.rtl .page-error-section .addon-form-style .form-group .btn-default {
 .user-profile-section .listContentHeading h2 {
   font-size: 20px;
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   margin-bottom: 10px;
 }
 
@@ -10079,7 +10083,7 @@ body.rtl .page-error-section .addon-form-style .form-group .btn-default {
 
 .coming-soon-section .coming-soon h1 {
   font-weight: 400;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 .coming-soon-section .count-down {
@@ -10383,4 +10387,16 @@ body.pattern-04 {
   background-repeat: repeat;
   background-attachment: fixed;
   background-position: center;
+}
+
+
+/* MES AJOUTS */
+
+.miniSearchBar #findItem {
+  width :80%;
+  margin-right: 10px;
+}
+
+.miniSearchBar .btn-primary {
+  width :17%;
 }
