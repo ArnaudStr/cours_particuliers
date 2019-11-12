@@ -11,152 +11,148 @@
         {% endfor %}
     {% endblock %}
 
-    <!-- <h1>Votre profil</h1> -->
-    <div class="up">
-        <div class="infosEtDescription">
-            <div class="infos">
-                <div class="photo">
-                    <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
-                </div>
-                <div class="coordonnees">
-                    <p>{{ app.user }}</p>
-                    <p>{{ app.user.email }}</p>
-                    <p>{{ app.user.adresse }}</p>
-                    <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}"><button type="button">Modifier mon profil</button></a></p>
-                    <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}"><button type="button">Modifier mes disponibilités</button></a></p>
-                </div>
-                <div class="avis">
-                    {% if app.user.noteMoyenne %}
-                        <h3>Note : {{ app.user.noteMoyenne }}</h3>
-                    {% endif %}
-                        
-                    {% if nbEtoiles %}
-                        {% if nbEtoiles >= 1 %}
-                            {% for i in 1..nbEtoiles %}
-                                <i class="fas fa-star"></i>
-                            {% endfor %}
-                        {% endif %}
-            
-                        {% if nbEtoiles != 5 %}         
-                            {% for i in nbEtoiles .. 4 %}
-                                <i class="far fa-star"></i>
-                            {% endfor %}
-                        {% endif %}
-                    {% endif %}
 
-        
-                    <a href="#">VOIR MES AVIS</a>
-                    {#{% for avis in app.user.avis %}
-                        <p>{{ avis.eleve }}</p>
-                        <p>{{ avis.commentaire }}</p>
-                    {% endfor %} #}
+    <!-- DASHBOARD PROFILE SECTION -->
+<section class="clearfix bg-dark profileSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <div class="dashboardBoxBg mb30">
+                    <div class="profileImage">
+                        <img src="/assets/pictures/{{ app.user.pictureFilename }}" alt="Image User" class="img-circle">
+                    </div>
+                    <div class="profileUserInfo bt profileName">
+                        <h2>{{ app.user }}</h2>
+                        <h3>{{ app.user.email }}</h3>
+                        <p>{{ app.user.adresse }}</p>
+                        <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}" class="">Modifier mon profil</a></p>
+                        <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}" class="">Modifier mes disponibilités</a></p>
+                    </div>
                 </div>
             </div>
-            <div class="description">
-                <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita praesentium suscipit voluptatibus dolorem
-                    a ipsum cum non magnam esse unde nemo illo aliquid ullam ipsa ex dolore, molestiae enim! Voluptate!
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-                    quis provident quam pariatur quasi laborum?
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-                    quis provident quam pariatur quasi laborum?
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-                    quis provident quam pariatur quasi laborum?
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-                    veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-                    quis provident quam pariatur quasi laborum?
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem provident quae tempore, pariatur asperiores delectus? Ea perferendis voluptates inventore. Laborum eaque rem mollitia debitis illo, reprehenderit amet omnis ratione rerum!
-                </p>
-            </div>
-        </div>
-
-        <div class="creneaux">
-            <h2>Mes creneaux</h2>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                    <th scope="col">Jour</th>
-                    <th scope="col">Début</th>
-                    <th scope="col">Fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#<tr>{{ app.user.disponibilites }}</tr> #}
-                {% for jour, creneaux in creneauxSemaine %}
-                    {% for creneau in creneaux %}
-                    <tr>
-                        {% if jour == 'Mon' %}
-                            <td>Lundi</td>
-                        {% elseif jour == 'Tue' %}
-                            <td>Mardi</td>
-                        {% elseif jour == 'Wed' %}
-                            <td>Mercredi</td>
-                        {% elseif jour == 'Thu' %}
-                            <td>Jeudi</td>
-                        {% elseif jour == 'Fri' %}
-                            <td>Vendredi</td>
-                        {% elseif jour == 'Sat' %}
-                            <td>Samedi</td>
-                        {% elseif jour == 'Sun' %}
-                            <td>Dimanche</td>
-                        {% endif %}
-
-                        <td>{{ creneau[0] }}:00</td>
-                        <td>{{ creneau[1] }}:00</td>
-                    </tr>
-                    {% endfor %} 
-                {% endfor %} 
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <div class="dashboardBoxBg">
+                    <div class="profileIntro">
+                        <h3>Mes disponibilites</h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                <th scope="col">Jour</th>
+                                <th scope="col">Début</th>
+                                <th scope="col">Fin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jour, creneaux in creneauxSemaine %}
+                                    {% for creneau in creneaux %}
+                                    <tr>
+                                        {% if jour == 'Mon' %}
+                                            <td>Lundi</td>
+                                        {% elseif jour == 'Tue' %}
+                                            <td>Mardi</td>
+                                        {% elseif jour == 'Wed' %}
+                                            <td>Mercredi</td>
+                                        {% elseif jour == 'Thu' %}
+                                            <td>Jeudi</td>
+                                        {% elseif jour == 'Fri' %}
+                                            <td>Vendredi</td>
+                                        {% elseif jour == 'Sat' %}
+                                            <td>Samedi</td>
+                                        {% elseif jour == 'Sun' %}
+                                            <td>Dimanche</td>
+                                        {% endif %}
                 
-                </tbody> 
-            </table>
-
-             {% if allCoursEtProchaineSeance %}
-                <div class="coursProf">
-                    <h2>Nombre de cours enseignés : {{ allCoursEtProchaineSeance|length }}</h2>
-                    {% for coursEleves in allCoursEtProchaineSeance %}
-                    <button class="accordion">{{ coursEleves.cours.activite }}</button>
-                        <div class="panel">
-                            {% for prochaineSeance in coursEleves.seances %}
-                                <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
-                                    à {{ prochaineSeance.dateDebut|date('H:i') }}
-                                </p>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
+                                        <td>{{ creneau[0] }}:00</td>
+                                        <td>{{ creneau[1] }}:00</td>
+                                    </tr>
+                                    {% endfor %} 
+                                {% endfor %} 
+                            </tbody> 
+                        </table>
+                    </div>
                 </div>
-            {% endif %}
+                
+                <div class="dashboardBoxBg mt30">
+                    <div class="profileIntro">
+                        <h3>Mes cours</h3>
+                        <div class="row">
+                            {% if allCoursEtProchaineSeance %}
+                                {% for coursEleves in allCoursEtProchaineSeance %}
+                                <button class="accordion">{{ coursEleves.cours.activite }}</button>
+                                    <div class="panel">
+                                        {% for prochaineSeance in coursEleves.seances %}
+                                            <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
+                                                à {{ prochaineSeance.dateDebut|date('H:i') }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
 
+                <div class="dashboardBoxBg mt30">
+                    <div class="profileIntro">
+                        <h3>Mes avis</h3>
+                        <div class="row">
+                            {% if app.user.noteMoyenne %}
+                            <h3>Note : {{ app.user.noteMoyenne }}</h3>
+                            {% endif %}
+                            
+                            {% if nbEtoiles %}
+                                {% if nbEtoiles >= 1 %}
+                                    {% for i in 1..nbEtoiles %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                {% endif %}
+                    
+                                {% if nbEtoiles != 5 %}         
+                                    {% for i in nbEtoiles .. 4 %}
+                                        <i class="far fa-star"></i>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                
+                            <p><a href="#">VOIR MES AVIS</a></p>
+                            {#{% for avis in app.user.avis %}
+                                <p>{{ avis.eleve }}</p>
+                                <p>{{ avis.commentaire }}</p>
+                            {% endfor %} #}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboardBoxBg mt30">
+                    <div class="profileIntro">
+                        <h3>Ma description</h3>
+                        <div class="row">
+                            <p>{{ app.user.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</section>
 
 {% endblock %}
 
 {% block javascripts %}
 <script>
-        var active = document.getElementById('navProfil')
-        active.classList.add('activeNav')
-
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-        
-        for (i = 0; i < acc.length; i++) {
-          acc[i].addEventListener("click", function() {
-            this.classList.toggle("activeAccordeon");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-              panel.style.maxHeight = null;
-            } else {
-              panel.style.maxHeight = panel.scrollHeight + "px";
-            }
-          });
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+        this.classList.toggle("activeAccordeon");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+        } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
         }
-
-        
+        });
+    }
 </script>
 {% endblock %}

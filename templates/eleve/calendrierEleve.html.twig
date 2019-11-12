@@ -9,7 +9,12 @@
 {% block body %}
     <div data-entry-ideleve={{app.user.id}}>
 
-    {% include '@Calendar/calendar.html' %} 
+    <div class="row">
+        <div class="center-block col-md-10 col-sm-10 col-xs-12">
+
+            {% include '@Calendar/calendar.html' %} 
+        </div>
+    </div>
 {% endblock %}
 
 

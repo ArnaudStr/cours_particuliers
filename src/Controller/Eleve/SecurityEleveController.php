@@ -39,9 +39,9 @@ class SecurityEleveController extends EleveController
     }
 
      /**
-     * @Route("/forgotten_password", name="app_forgotten_password")
+     * @Route("/forgottenPasswordEleve", name="forgotten_password_eleve")
      */
-    public function forgottenPassword(
+    public function forgottenPasswordEleve(
         Request $request,
         \Swift_Mailer $mailer,
         TokenGeneratorInterface $tokenGenerator
@@ -58,7 +58,7 @@ class SecurityEleveController extends EleveController
  
             if ($user === null) {
                 $this->addFlash('danger', 'Email Inconnu');
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('login_eleve');
             }
             $token = $tokenGenerator->generateToken();
  
@@ -73,17 +73,16 @@ class SecurityEleveController extends EleveController
                 $entityManager->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('login_eleve');
             }
  
-            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->generateUrl('reset_password_eleve', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             $message = (new \Swift_Message('Forgot Password'))
                 ->setFrom('arnaud6757@gmail.com')
-                // ->setFrom('arnaud.straumann@free.fr')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    "Voici le lien pour réinitialiser votre mot de passe : <a href='". $url ."'>Réinitialiser mon mot de passe</a>",
                     'text/html'
                 );
  
@@ -91,16 +90,16 @@ class SecurityEleveController extends EleveController
 
             $this->addFlash('notice', 'Mail envoyé');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('login_eleve');
         }
  
         return $this->render('security/forgotten_password.html.twig');
     }
 
     /**
-     * @Route("/reset_password/{token}", name="app_reset_password")
+     * @Route("/resetPasswordEleve/{token}", name="reset_password_eleve")
      */
-    public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetPasswordEleve(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();

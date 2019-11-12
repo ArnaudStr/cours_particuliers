@@ -156,7 +156,7 @@ class RegisterController extends AbstractController
 
             $mailer->send($message);
 
-            $this->addFlash('confirm', 'Vous avez reçu un email de validation de validation, veuillez confirmer votre compte');
+            $this->addFlash('confirm', 'Vous avez reçu un email de validation, veuillez confirmer votre compte');
 
             return $route;
         }

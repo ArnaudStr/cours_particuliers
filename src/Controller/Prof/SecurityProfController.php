@@ -42,44 +42,9 @@ class SecurityProfController extends ProfController
     }
 
     /**
-     * @Route("/reset_password/{token}", name="app_reset_password")
+     * @Route("/forgottenPasswordProf", name="forgotten_password_prof")
      */
-    public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
-    {
- 
-        if ($request->isMethod('POST')) {
-            $entityManager = $this->getDoctrine()->getManager();
- 
-            $user = $entityManager->getRepository(Prof::class)->findOneByToken($token);
-            /* @var $user User */
- 
-            if ($user === null) {
-                $this->addFlash('danger', 'Token Inconnu');
-                return $this->redirectToRoute('login_prof');
-            }
-            else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
-                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
-                return $this->redirectToRoute('login_prof');
-            }
- 
-            $user->setToken(null);
-            $user->setTokenExpire(null);
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-            $entityManager->flush();
- 
-            $this->addFlash('notice', 'Mot de passe mis à jour');
- 
-            return $this->redirectToRoute('login_prof');
-        }else {
- 
-            return $this->render('security/reset_password.html.twig', ['token' => $token]);
-        }
-    }
-
-    /**
-     * @Route("/forgotten_password", name="app_forgotten_password")
-     */
-    public function forgottenPassword(
+    public function forgottenPasswordProf(
         Request $request,
         \Swift_Mailer $mailer,
         TokenGeneratorInterface $tokenGenerator
@@ -116,14 +81,13 @@ class SecurityProfController extends ProfController
                 return $this->redirectToRoute('home');
             }
  
-            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->generateUrl('reset_password_prof', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             $message = (new \Swift_Message('Forgot Password'))
                 ->setFrom('arnaud6757@gmail.com')
-                // ->setFrom('arnaud.straumann@free.fr')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    "Voici le lien pour réinitialiser votre mot de passe : <a href='". $url ."'>Réinitialiser mon mot de passe</a>",
                     'text/html'
                 );
  
@@ -131,9 +95,44 @@ class SecurityProfController extends ProfController
 
             $this->addFlash('notice', 'Mail envoyé');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('login_prof');
         }
  
         return $this->render('security/forgotten_password.html.twig');
+    }
+
+     /**
+     * @Route("/resetPasswordProf/{token}", name="reset_password_prof")
+     */
+    public function resetPasswordProf(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+    {
+ 
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getDoctrine()->getManager();
+ 
+            $user = $entityManager->getRepository(Prof::class)->findOneByToken($token);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Token Inconnu');
+                return $this->redirectToRoute('login_prof');
+            }
+            else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
+                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
+                return $this->redirectToRoute('login_prof');
+            }
+ 
+            $user->setToken(null);
+            $user->setTokenExpire(null);
+            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $entityManager->flush();
+ 
+            $this->addFlash('notice', 'Mot de passe mis à jour');
+ 
+            return $this->redirectToRoute('login_prof');
+        }else {
+ 
+            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+        }
     }
 }

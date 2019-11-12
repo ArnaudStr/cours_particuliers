@@ -11,7 +11,11 @@
 				<div class="banerInfo">
 					<h1>Trouvez le professeur parfait à Strasbourg</h1>
 					{# <p>Listty helps to find out great things arround you</p> #}
-					<form class="form-inline" method="GET" action='{{ path('liste_cours_visitor_search') }}'>
+					{% if app.user %}
+						<form class="form-inline" method="GET" action='{{ path('liste_cours_eleve_search') }}'>
+					{% else %}
+						<form class="form-inline" method="GET" action='{{ path('liste_cours_visitor_search') }}'>
+					{% endif %}
 						<div class="form-group">
 							<div class="input-group">
 								{# <div class="input-group-addon">Find</div> #}

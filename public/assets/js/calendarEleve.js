@@ -36,8 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },
+        // plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
         plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
         timeZone: 'UTC',
+        // themeSystem: 'bootstrap',
+
     });
     calendar.render();
 });

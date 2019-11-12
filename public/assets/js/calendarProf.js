@@ -25,19 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     var calendarEl = document.getElementById('calendar-holder');
     var profjs = document.querySelector('[data-entry-idprof]').dataset.entryIdprof;
 
-    var Draggable = FullCalendarInteraction.Draggable;
-    var containerEl = document.getElementById('external-events');
-
-
-    new Draggable(containerEl, {
-        itemSelector: '.fc-event',
-        eventData: function(eventEl) {
-        return {
-            title: eventEl.innerText
-        };
-        }
-    });
-
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
         defaultView: 'timeGridWeek',
@@ -82,11 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
         timeZone: 'UTC',
     });
-    var events = calendar.getEvents();
-    console.log(events);
-    
-    sessionStorage.setItem('calendarEvents',events);
+
     calendar.render();
-
-
 });

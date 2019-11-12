@@ -29,6 +29,7 @@ class CourseEleveController extends EleveController
         $this->setNbMsgNonLus();
 
         return $this->render('course/searchCourse.html.twig', [
+            'title' => 'Cours à Strasbourg'
         ]);
     }
 
@@ -38,20 +39,31 @@ class CourseEleveController extends EleveController
     public function listeCoursEleveSearch(Request $request)
     {
 
-        $searchActivite = $request->query->get('s');
+        $search = $request->query->get('s');
 
-        $categories = $this->getDoctrine()
+        $nbResultats = 0;
+
+        $categorie = $this->getDoctrine()
             ->getRepository(Categorie::class)
-            ->findAllWithSearch(ucfirst($searchActivite));  
+            ->findOneWithSearch(ucfirst($search));  
                     
-        $activites = $this->getDoctrine()
+        $activite = $this->getDoctrine()
             ->getRepository(Activite::class)
-            ->findAllWithSearch(ucfirst($searchActivite));       
+            ->findOneWithSearch(ucfirst($search));   
 
+        if ($categorie){
+            foreach($categorie->getActivites() as $activite)
+            $nbResultats += count($activite->getCoursS());
+        }
+        else {
+            $nbResultats = count($activite->getCoursS());
+        }
+            
         return $this->render('search/search.html.twig', [
-            'categories' => $categories,
-            'activites' => $activites,
-            'recherche' => $searchActivite
+            'categorie' => $categorie,
+            'activite' => $activite,
+            'recherche' => $search,
+            'nbResultats' => $nbResultats,
         ]);
     }
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connection professeur{% endblock %}
+{% block title %}Connexion professeur{% endblock %}
 
 {% block body %}
 
@@ -28,7 +28,7 @@
                     <div class="panel-body">
                         <form method="post" class="loginForm">
                             {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div> 
+                                {#<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
                                 <div class="alert alert-danger">Mot de passe / email invalide</div> 
                             {% endif %}
                             <div class="form-group">
@@ -42,10 +42,10 @@
                             <div class="form-group">
                                 <button class="btn btn-lg btn-primary" type="submit">
                                     Connexion
-                                </button><a href="{{ path('app_forgotten_password') }}" class="pull-right link">Mot de passe oublié ?</a>
+                                </button><a href="{{ path('forgotten_password_prof') }}" class="pull-right link">Mot de passe oublié ?</a>
                             </div>
                             <input type="hidden" name="_csrf_token"
-                            value="{{ csrf_token('authenticateEleve') }}">
+                            value="{{ csrf_token('authenticateProf') }}">
                         </form>
                     </div>
                     <div class="panel-footer text-center">

@@ -53,29 +53,9 @@ class VisitorController extends AbstractController
             'activite' => $activite,
             'recherche' => $search,
             'nbResultats' => $nbResultats,
-            'visitor' => true
         ]);
     }
-    /**
-     * Affichage des informations d'un cours
-     * @Route("/displayCourseEleve/{id}", name="display_course_eleve")
-     */
-    public function displayCoursEleve(Cours $cours)
-    {
-        $this->setNbMsgNonLus();
 
-        $nbEtoiles = null;
-        if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
-            $nbEtoiles = round($noteMoyenne);
-        }
-        else $noteMoyenne = 'Pas encore noté';
-
-        return $this->render('course/displayCourse.html.twig', [
-            'cours' => $cours,
-            'noteMoyenne' => $noteMoyenne,
-            'nbEtoiles' => $nbEtoiles,
-        ]);
-    }
 
     /**
      * Affichage des informations d'un cours

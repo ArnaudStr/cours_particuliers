@@ -19,12 +19,17 @@
                     <div class="resultBar">
                          <h2><span>{{ nbResultats }}</span> professeurs de {{ recherche }} à Strasbourg</h2>
                     </div>
+
                     <div class="row">
                         {% for cours in activite.coursS  %}
                                 <div class="col-sm-4 col-xs-12 cardSearch">
                                     <div class="thingsBox thinsSpace">
                                         <div class="thingsImage">
-                                        <a href="{{ path('display_course_visitor', {'id':cours.id} ) }}">
+                                            {% if app.user %}
+                                                <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
+                                            {% else %}
+                                                <a href="{{ path('display_course_visitor', {'id':cours.id} ) }}">
+                                            {% endif %}
                                             <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
                                             <div class="thingsMask">
                                                 <h2>{{ cours.prof }}</h2>
