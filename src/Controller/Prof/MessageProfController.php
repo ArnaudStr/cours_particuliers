@@ -8,7 +8,8 @@ use App\Entity\Message;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Controller\Prof\ProfController;
-
+use DateTime;
+use DateTimeZone;
 
 /**
  * @Route("/prof")
@@ -33,16 +34,20 @@ class MessageProfController extends ProfController
         foreach($allConversations as $conversation){
             $eleve =  $conversation->getEleve();
 
+            $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
+
             $dernierMessage = $this->getDoctrine()
                 ->getRepository(Message::class)
                 ->findDernierMessageProf($eleve, $prof);
+            
+            $differenceDate = date_diff($date, $dernierMessage->getDateEnvoi())->format("%d jours, %h h, %i m, %s s");
 
             $nbMsgNonLus = $this->getDoctrine()
                 ->getRepository(Message::class)
                 ->findNbNonLusProfEleve($prof, $eleve);
 
             // On ajoute l'élève et le nombre de messages non lus
-            array_push($allConversationsNbMsgNonLus, ['eleve' => $eleve, 'nbMsg' => $nbMsgNonLus, 'dernierMsg' => $dernierMessage]);      
+            array_push($allConversationsNbMsgNonLus, ['eleve' => $eleve, 'nbMsg' => $nbMsgNonLus, 'dernierMsg' => $dernierMessage, 'dateDiff' => $differenceDate]);      
         }
 
         return $this->render('prof/showMessageProf.html.twig', [

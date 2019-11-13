@@ -7,26 +7,36 @@
             <div class="col-xs-12">
                 <div class="panel panel-default panel-card">
                     <div class="panel-heading" id="message">
-                        Messages : <span class="label label-default label-sm">{{ app.session.get('nbMsgNonLus') }}</span> non lus
+                        Messagerie : <span class="label label-default label-sm">{{ app.session.get('nbMsgNonLus') }}</span> messages non lus
                     </div>
                     <div class="panel-body panel-message">
                         <ul class="list-unstyled panel-list">
                             {% for conversation in allConversations %}
-                                {% if conversation.nbMsg == 0 %}
-                                    <li class="messageCommon oldMessage listWrapper">
+                                <!-- Conversation avec nouveaux messages -->
+                                {% if conversation.nbMsg != 0 %}
+                                    <li class="messageCommon recentMessage listWrapper">
                                         <span class="messageInfo">
-                                            <h5>{{ conversation.eleve }}
-                                                {{ conversation.dernierMsg.dateEnvoi|date("m/d/Y"}}
-                                                <small>Today <span class="dayTime">2.08 PM</span></small></h5>
-                                            <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.</p>
+                                            <h5>{{ conversation.eleve }}, {{ conversation.nbMsg }} messages non lus</h5>
+                                               {# {{ conversation.dernierMsg.dateEnvoi|date("m/d/Y")}} #}
+                                                <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->
+                                            <p></p>
                                         </span>
-                                        <span class="messageTime">5m ago</span>
+                                        <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
+                                    </li>
+                                <!-- Conversation sans nouveau message -->
+                                {% else %}
+                                    <li class="messageCommon oldMessage listWrapper">                                        <span class="messageInfo">
+                                            <h5>{{ conversation.eleve }}</h5>
+                                                <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->
+                                            <p></p>
+                                        </span>
+                                        <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
                                     </li>
                                 {% endif %}
-                                <a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }})
+                               {# <a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }}) #}
                                 </a></td>
                             {% endfor %}
-                            <li class="messageCommon recentMessage listWrapper">
+                            <!-- <li class="messageCommon recentMessage listWrapper">
                                 <span class="messageInfo">
                                     <h5>Aden, <small>Today <span class="dayTime">11.08 AM</span></small></h5>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -40,7 +50,7 @@
                                     <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.</p>
                                 </span>
                                 <span class="messageTime">5m ago</span>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>

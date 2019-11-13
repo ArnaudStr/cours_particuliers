@@ -4181,6 +4181,7 @@ footer {
 /*================= 5.1 BANNER SECTION ==================*/
 .homeBanner {
   min-height: 624px;
+  height: 100vh;
   position: relative;
   background-repeat: no-repeat;
   background-position: center center;
