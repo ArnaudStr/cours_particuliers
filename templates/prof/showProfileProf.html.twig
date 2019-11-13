@@ -26,7 +26,6 @@
                         <h3>{{ app.user.email }}</h3>
                         <p>{{ app.user.adresse }}</p>
                         <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}" class="">Modifier mon profil</a></p>
-                        <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}" class="">Modifier mes disponibilités</a></p>
                     </div>
                 </div>
             </div>
@@ -69,6 +68,7 @@
                                 {% endfor %} 
                             </tbody> 
                         </table>
+                        <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}" class="">Modifier mes disponibilités</a></p>
                     </div>
                 </div>
                 
@@ -78,8 +78,8 @@
                         <div class="row">
                             {% if allCoursEtProchaineSeance %}
                                 {% for coursEleves in allCoursEtProchaineSeance %}
-                                <button class="accordion">{{ coursEleves.cours.activite }}</button>
-                                    <div class="panel">
+                                <button class="accordionCustom">{{ coursEleves.cours.activite }}</button>
+                                    <div class="panelCustom">
                                         {% for prochaineSeance in coursEleves.seances %}
                                             <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
                                                 à {{ prochaineSeance.dateDebut|date('H:i') }}
@@ -89,6 +89,7 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <p><a href="{{ path('show_liste_cours') }}" class="">Modifier mes cours</a></p>
                     </div>
                 </div>
 
@@ -129,6 +130,7 @@
                         <div class="row">
                             <p>{{ app.user.description }}</p>
                         </div>
+                        <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}" class="">Modifier ma description</a></p>
                     </div>
                 </div>
             </div>
@@ -140,12 +142,12 @@
 
 {% block javascripts %}
 <script>
-    var acc = document.getElementsByClassName("accordion");
+    var acc = document.getElementsByClassName("accordionCustom");
     var i;
     
     for (i = 0; i < acc.length; i++) {
         acc[i].addEventListener("click", function() {
-        this.classList.toggle("activeAccordeon");
+        this.classList.toggle("activeAccordeonCustom");
         var panel = this.nextElementSibling;
         if (panel.style.maxHeight) {
             panel.style.maxHeight = null;

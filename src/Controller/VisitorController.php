@@ -28,7 +28,7 @@ class VisitorController extends AbstractController
     public function listeCoursVisitorSearch(Request $request)
     {
 
-        $search = $request->query->get('s');
+        $search = lcfirst($request->query->get('s'));
 
         $nbResultats = 0;
 
@@ -44,7 +44,7 @@ class VisitorController extends AbstractController
             foreach($categorie->getActivites() as $activite)
             $nbResultats += count($activite->getCoursS());
         }
-        else {
+        else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
             

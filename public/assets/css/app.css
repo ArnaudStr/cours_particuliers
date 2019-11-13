@@ -10402,7 +10402,7 @@ body.pattern-04 {
 }
 
 /* Pour l'affichage des cours d'un cours prof */
-.accordion {
+.accordionCustom {
   background-color: #eee;
   color: #444;
   cursor: pointer;
@@ -10414,7 +10414,7 @@ body.pattern-04 {
   transition: 0.4s;
 }
 
-.panel {
+.panelCustom {
   padding: 0 18px;
   background-color: white;
   max-height: 0;
@@ -10423,12 +10423,12 @@ body.pattern-04 {
 }
 
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .activeAccordeon, .accordion:hover {
+  .activeAccordeonCustom, .accordionCustom:hover {
     background-color: #ccc;
   }
   
   /* Style the accordion panel. Note: hidden by default */
-  .panel {
+  .panelCustom {
     padding: 0 18px;
     background-color: white;
     max-height: 0;
@@ -10436,7 +10436,7 @@ body.pattern-04 {
     transition: max-height 0.2s ease-out;
   }
 
-  .accordion:after {
+  .accordionCustom:after {
     content: '+'; /* Unicode character for "plus" sign (+) */
     /* content: '\02795'; Unicode character for "plus" sign (+) */
     font-size: 13px;
@@ -10445,7 +10445,7 @@ body.pattern-04 {
     margin-left: 5px;
   }
   
-  .activeAccordeon:after {
+  .activeAccordeonCustom:after {
     content: "-"; /* Unicode character for "minus" sign (-) */
     /* content: "\2796"; Unicode character for "minus" sign (-) */
-  }
+  } 
