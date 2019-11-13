@@ -312,5 +312,43 @@ class MessageRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    // renvoie les messages envoyés de l'élève au prof
+    public function findDernierMessageProf(Eleve $eleve, Prof $prof)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\Message m
+            WHERE m.prof = :prof
+            AND m.eleve = :eleve
+            AND m.auteur = :eleveUsername
+            AND m.date_envoi = (
+                SELECT MAX(date_envoi)
+                FROM App\Entity\Message m
+                WHERE m.prof = :prof
+                AND m.eleve = :eleve
+                AND m.auteur = :eleveUsername)'
+        )->setParameter('eleve', $eleve)
+        ->setParameter('prof', $prof)
+        ->setParameter('eleveUsername', $eleve->getUsername());
+    
+        return $query->execute();
+    }
+
+    // public function findDernierMessageProf(Eleve $eleve, Prof $prof)
+    // {
+    //     return $this->createQueryBuilder('m')
+    //         ->andWhere('m.eleve = :eleve')
+    //         ->andWhere('m.prof = :prof')
+    //         ->andWhere('m.auteur = :eleveUsername')
+    //         ->andWhere('m.dateEnvoi in ')
+    //         ->setParameter('eleve', $eleve)
+    //         ->setParameter('prof', $prof)
+    //         ->setParameter('eleveUsername', $eleve->getUsername())
+    //         ->getQuery()
+    //         ->getOneOrNullResult()
+    //     ;
+    // }
 
 }

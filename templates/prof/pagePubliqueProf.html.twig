@@ -4,8 +4,112 @@
 
 {% block body %}
 
+
+<!-- USER PROFILE SECTION -->
+<section class="user-profile-section bg-light">
+    <div class="container">
+      <div class="user-profile">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="user-img">
+                <img src="/assets/pictures/{{ prof.pictureFilename }}" alt="Image User" class="img-circle">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="user-profile-content">
+              <h3 class="user-name">{{ prof }}  </h3>                                
+                   <span> {% if nbEtoiles >= 1 %}
+                        {% for i in 1..nbEtoiles %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                    {% endif %}
+        
+                    {% if nbEtoiles != 5 %}         
+                        {% for i in nbEtoiles .. 4 %}
+                            <i class="far fa-star"></i>
+                        {% endfor %}
+                    {% endif %}
+                </span>
+               
+              <ul class="user-contact-details">
+                <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="#">{{ prof.email }}</a></li>
+              </ul>
+              <a href="#"><div class="verified-user">Contacter</div></a>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="user-profile-content">
+                <h3 class="user-name">Cours enseignes :</h3>                                
+                {% for cours in prof.coursS  %}
+                    <p>{{ cours }}</p>
+                {% endfor %}                
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="listContentHeading">
+            <h2>Description / Parcours</h2>
+          </div>
+            <div class="listContent">
+                <div class="row">
+                    <p>{{ prof.description }}</p>
+                </div>
+            </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="review-aria">
+                <div class="reviewContent">
+                  <h3 class="reviewTitle">
+                    Avis ({{ prof.avis|length }})
+                  </h3>
+  
+                  {% if prof.avis %}
+                      
+                    <div class="reviewMedia">
+                        <ul class="media-list">
+                        {% for avis in prof.avis %}
+                            <li class="media">
+                                <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object" src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="Image">
+                                </a>
+                                </div>
+                                <div class="media-body">
+                                <h5>{{ avis.eleve }}</h5>
+                                <span>
+                                    {% if avis.note >= 1 %}
+                                        {% for i in 1..avis.note %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                        
+                                    {% if avis.note != 5 %}         
+                                        {% for i in avis.note .. 4 %}
+                                            <i class="far fa-star"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                                </span>
+                                <p>{{ avis.commentaire }}</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                  {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
     <!-- <h1>Votre profil</h1> -->
-    <div class="upPp">
+    {#<div class="upPp">
         <div class="photoPp">
             <img class="profile_pic" src="/assets/pictures/{{ prof.pictureFilename }}" alt="">
         </div>
@@ -47,7 +151,7 @@
             {#{% for avis in app.user.avis %}
                 <p>{{ avis.eleve }}</p>
                 <p>{{ avis.commentaire }}</p>
-            {% endfor %} #}
+            {% endfor %}
         </div>
 
         {% if prof.avis %}
@@ -68,31 +172,12 @@
 
     </div>
     <div class="descriptionPp">
-        <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita praesentium suscipit voluptatibus dolorem
-            a ipsum cum non magnam esse unde nemo illo aliquid ullam ipsa ex dolore, molestiae enim! Voluptate!
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-            veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-            quis provident quam pariatur quasi laborum?
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-            veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-            quis provident quam pariatur quasi laborum?
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-            veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-            quis provident quam pariatur quasi laborum?
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi repellendus qui officia tempora suscipit quia nostrum eius doloremque repellat id,
-            veniam totam molestiae aliquid eveniet fuga pariatur saepe deserunt consectetur?
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos officia, rem ea corporis libero molestiae ipsum, cupiditate explicabo in placeat sapiente repellendus voluptates, 
-            quis provident quam pariatur quasi laborum?
-        </p>
-    </div>
+    </div> #}
       
 {% endblock %}
 
 {% block javascripts %}
-<script>
+<!-- <script>
 
     var slideIndex = 1;
     showSlides(slideIndex);
@@ -122,5 +207,5 @@
         slides[slideIndex-1].style.display = "block";
         dots[slideIndex-1].className += " active";
     }
-</script>
+</script> -->
 {% endblock %}

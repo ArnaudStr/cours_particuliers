@@ -1,32 +1,75 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<section class="clearfix bg-dark equalHeight dashboardSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-default panel-card">
+                    <div class="panel-heading" id="message">
+                        Messages : <span class="label label-default label-sm">{{ app.session.get('nbMsgNonLus') }}</span> non lus
+                    </div>
+                    <div class="panel-body panel-message">
+                        <ul class="list-unstyled panel-list">
+                            {% for conversation in allConversations %}
+                                {% if conversation.nbMsg == 0 %}
+                                    <li class="messageCommon oldMessage listWrapper">
+                                        <span class="messageInfo">
+                                            <h5>{{ conversation.eleve }}
+                                                {{ conversation.dernierMsg.dateEnvoi|date("m/d/Y"}}
+                                                <small>Today <span class="dayTime">2.08 PM</span></small></h5>
+                                            <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.</p>
+                                        </span>
+                                        <span class="messageTime">5m ago</span>
+                                    </li>
+                                {% endif %}
+                                <a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }})
+                                </a></td>
+                            {% endfor %}
+                            <li class="messageCommon recentMessage listWrapper">
+                                <span class="messageInfo">
+                                    <h5>Aden, <small>Today <span class="dayTime">11.08 AM</span></small></h5>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </span>
+                                <span class="messageTime">5m ago</span>
+                            </li>
+                          
+                            <li class="messageCommon oldMessage listWrapper">
+                                <span class="messageInfo">
+                                    <h5>Alexa Deos, <small>Today <span class="dayTime">2.08 PM</span></small></h5>
+                                    <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.</p>
+                                </span>
+                                <span class="messageTime">5m ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-<h2 class="titre" data-test="messagerie">Messagerie</h2>
+{#<h2 class="titre" data-test="messagerie">Messagerie</h2>
 
 <table class="table table-hover">
     <thead>
         <tr>
-            {# <th scope="col">Elève</th> #}
-            {# <th scope="col">Ouvrir la conversation</th> #}
+             <th scope="col">Elève</th>
+            {# <th scope="col">Ouvrir la conversation</th> 
         </tr>
     </thead>
     <tbody>
         {% for conversation in allConversations %}
-            {# {% set listEleves = listEleves|merge([idEleve]) %} #}
+            {# {% set listEleves = listEleves|merge([idEleve]) %}
             <tr>
                 <td><a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }})
                 </a></td>
             </tr>
         {% endfor %}
     </tbody>
-</table>
+</table>#}
 
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        var active = document.getElementById('navMsg')
-        active.classList.add('activeNav')
-    </script>
 {% endblock %}

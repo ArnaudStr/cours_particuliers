@@ -33,12 +33,16 @@ class MessageProfController extends ProfController
         foreach($allConversations as $conversation){
             $eleve =  $conversation->getEleve();
 
+            $dernierMessage = $this->getDoctrine()
+                ->getRepository(Message::class)
+                ->findDernierMessageProf($eleve, $prof);
+
             $nbMsgNonLus = $this->getDoctrine()
                 ->getRepository(Message::class)
                 ->findNbNonLusProfEleve($prof, $eleve);
 
             // On ajoute l'élève et le nombre de messages non lus
-            array_push($allConversationsNbMsgNonLus, ['eleve' => $eleve, 'nbMsg' => $nbMsgNonLus]);      
+            array_push($allConversationsNbMsgNonLus, ['eleve' => $eleve, 'nbMsg' => $nbMsgNonLus, 'dernierMsg' => $dernierMessage]);      
         }
 
         return $this->render('prof/showMessageProf.html.twig', [

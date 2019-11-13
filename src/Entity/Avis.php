@@ -40,6 +40,11 @@ class Avis
      */
     private $prof;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $note;
+
     public function __construct()
     {
         $this->dateAvis = new DateTime('now',new DateTimeZone('Europe/Paris'));
@@ -94,6 +99,18 @@ class Avis
     public function setProf(?Prof $prof): self
     {
         $this->prof = $prof;
+
+        return $this;
+    }
+
+    public function getNote(): ?int
+    {
+        return $this->note;
+    }
+
+    public function setNote(int $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }
