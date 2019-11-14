@@ -189,7 +189,8 @@ class MessageRepository extends ServiceEntityRepository
             'SELECT m
             FROM App\Entity\Message m
             WHERE m.eleve = :eleve
-            AND m.prof = :prof'
+            AND m.prof = :prof
+            ORDER BY m.dateEnvoi ASC'
         )->setParameter('eleve', $eleve)
         ->setParameter('prof', $prof);
     
@@ -335,6 +336,33 @@ class MessageRepository extends ServiceEntityRepository
     
     //     return $query->execute();
     // }
+
+
+    public function findRecusProf(Eleve $eleve, Prof $prof)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.eleve = :eleve')
+            ->andWhere('m.prof = :prof')
+            ->andWhere('m.auteur = :eleveUsername')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('prof', $prof)
+            ->setParameter('eleveUsername', $eleve->getUsername())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findRecusEleve(Eleve $eleve, Prof $prof)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.eleve = :eleve')
+            ->andWhere('m.prof = :prof')
+            ->andWhere('m.auteur = :profUsername')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('prof', $prof)
+            ->setParameter('profUsername', $prof->getUsername())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     public function findDernierMessageProf(Eleve $eleve, Prof $prof)
     {

@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Controller\Prof\ProfController;
 use DateTime;
 use DateTimeZone;
+use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
+
 
 /**
  * @Route("/prof")
@@ -21,6 +23,7 @@ class MessageProfController extends ProfController
      * @Route("/showMessagesProf/{id}", name="show_messages_prof")
      */
     public function showMessagesProf(Prof $prof) {
+
         $this->setNbMsgNonLus();
 
         // Conversations entre le prof et chaque eleve
@@ -77,10 +80,10 @@ class MessageProfController extends ProfController
         $msgNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findConversationNonLusProf($eleve, $prof);
-
-        $msgEnvoyes = $this->getDoctrine()
-            ->getRepository(Message::class)
-            ->findConversationEnvoyesProf($eleve, $prof);
+        
+        // $msgRecus = $this->getDoctrine()
+        // ->getRepository(Message::class)
+        // ->findRecusProf($eleve, $prof);
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -103,13 +106,12 @@ class MessageProfController extends ProfController
             'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
-            'msgEnvoyes' => $msgEnvoyes
         ]);
     }
 
     /**     
      * Refresh en cas de nouveau message reçu
-     * @Route("/conversationProf/{idProf}/{idEleve}/refreshMsg", name="conversation_prof_refresh_msg")
+     * @Route("/conversationProf/{idProf}/{idEleve}/refreshMsgProf", name="conversation_prof_refresh_msg")
      * @ParamConverter("prof", options={"id" = "idProf"})
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
@@ -126,8 +128,6 @@ class MessageProfController extends ProfController
         }   
 
         return $this->render('prof/test.html.twig', [
-            'prof' => $prof,
-            'eleve' => $eleve,
             'nouveauMessage' => $nouveauMessage,
         ]);
     }
