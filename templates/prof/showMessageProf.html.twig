@@ -25,6 +25,7 @@
                                 <!-- </a> -->
                                 <!-- Conversation sans nouveau message -->
                                 {% else %}
+                                <a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}">
                                     <li class="messageCommon oldMessage listWrapper">                                        <span class="messageInfo">
                                             <h5>{{ conversation.eleve }}</h5>
                                                 <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->
@@ -32,6 +33,7 @@
                                         </span>
                                         <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
                                     </li>
+                                </a>
                                 {% endif %}
                                {# <a href="{{ path('conversation_prof', { 'idProf':app.user.id, 'idEleve':conversation.eleve.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.eleve }} </strong> ({{ conversation.nbMsg }}) #}
                                 </a></td>

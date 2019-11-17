@@ -67,7 +67,7 @@ class MessageProfController extends ProfController
     public function conversationProf(Prof $prof, Eleve $eleve) {
         $this->setNbMsgNonLus();
 
-        $session = new SessionUser();
+        // $session = new SessionUser();
 
         $allMsg = $this->getDoctrine()
             ->getRepository(Message::class)
@@ -96,7 +96,11 @@ class MessageProfController extends ProfController
             ->getRepository(Message::class)
             ->findNbNonLusProf($prof);
 
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
+
+        $prof->setNbMsgNonLus($nbMessagesNonLus);
+
+        $entityManager->persist($prof);
 
         $entityManager->flush();
 

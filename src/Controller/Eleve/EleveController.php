@@ -20,12 +20,13 @@ class EleveController extends AbstractController
 {
     // Récupère le nombre de messages non lus
     public function setNbMsgNonLus() {
-        $nbMessagesNonLus = $this->getDoctrine()
+        // $nbMessagesNonLus = $this->getDoctrine()
+        return $this->getDoctrine()
             ->getRepository(Message::class)
             ->findNbNonLusEleve($this->getUser());
 
-        $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+        // $session = new SessionUser();
+        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
     }
    
     /**

@@ -83,7 +83,10 @@ class MessageEleveController extends EleveController
             ->getRepository(Message::class)
             ->findNbNonLusEleve($eleve);
 
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
+        // $eleve->setNbMsgNonLus($nbMessagesNonLus);
+
+        // $entityManager->persist($eleve);
+        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
         $entityManager->flush();
 

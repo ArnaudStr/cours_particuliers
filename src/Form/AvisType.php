@@ -18,7 +18,7 @@ class AvisType extends AbstractType
             ->add('commentaire', TextareaType::class, [
             ])
             ->add('note', NumberType::class, [
-                'mapped' => false
+                // 'mapped' => false
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'

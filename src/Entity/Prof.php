@@ -96,10 +96,10 @@ class Prof implements UserInterface
      */
     private $coursS;
 
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $notes = [];
+    // /**
+    //  * @ORM\Column(type="array", nullable=true)
+    //  */
+    // private $notes = [];
 
     /**
      * @var string le token qui servira lors de l'oubli de mot de passe
@@ -117,10 +117,10 @@ class Prof implements UserInterface
      */
     private $seances;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $noteMoyenne;
+    // /**
+    //  * @ORM\Column(type="float", nullable=true)
+    //  */
+    // private $noteMoyenne;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -132,6 +132,11 @@ class Prof implements UserInterface
      */
     private $disponibilites = [];
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbMsgNonLus;
+
     public function __construct()
     {
         $this->aConfirme = false;
@@ -140,6 +145,7 @@ class Prof implements UserInterface
         $this->dateCreation = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $this->coursS = new ArrayCollection();
         $this->seances = new ArrayCollection();
+        $this->nbMsgNonLus = 0;
     }
 
     public function getId(): ?int
@@ -389,26 +395,26 @@ class Prof implements UserInterface
         return $this;
     }
     
-    public function getNotes(): ?array
-    {
-        return $this->notes;
-    }
+    // public function getNotes(): ?array
+    // {
+    //     return $this->notes;
+    // }
 
-    public function setNotes(?array $notes): self
-    {
-        $this->notes = $notes;
+    // public function setNotes(?array $notes): self
+    // {
+    //     $this->notes = $notes;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function addNote(Float $note): self
-    {
-        if ($note<=5 && $note>=0) {
-            $this->notes[] = $note;
-        }
+    // public function addNote(Float $note): self
+    // {
+    //     if ($note<=5 && $note>=0) {
+    //         $this->notes[] = $note;
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
     
 
     /**
@@ -510,6 +516,18 @@ class Prof implements UserInterface
     public function setDisponibilites(?array $disponibilites): self
     {
         $this->disponibilites = $disponibilites;
+
+        return $this;
+    }
+
+    public function getNbMsgNonLus(): ?int
+    {
+        return $this->nbMsgNonLus;
+    }
+
+    public function setNbMsgNonLus(int $nbMsgNonLus): self
+    {
+        $this->nbMsgNonLus = $nbMsgNonLus;
 
         return $this;
     }
