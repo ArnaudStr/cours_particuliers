@@ -3,10 +3,10 @@
 {% block body %}
 
     {% for cours in app.user.coursS %}
-        <p><a href="{{ path('edit_propose_cours', {'idProf':app.user.id, 'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier le cours {{ cours }}</button></a></p>
+        <p><a href="{{ path('edit_propose_cours', {'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier le cours {{ cours }}</button></a></p>
     {% endfor %}
 
-    <p><a href="{{ path('add_propose_cours', {'idProf':app.user.id}) }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p>
+    <p><a href="{{ path('add_propose_cours') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p>
 
 {% endblock %}
 

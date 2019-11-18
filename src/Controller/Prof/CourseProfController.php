@@ -20,15 +20,13 @@ class CourseProfController extends ProfController
 {
     /**
      * Création ou modification d'un cours
-     * @Route("/addProposeCours/{idProf}", name="add_propose_cours")
-     * @Route("/editProposeCours/{idProf}/{idCours}", name="edit_propose_cours")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/addProposeCours", name="add_propose_cours")
+     * @Route("/editProposeCours/{idCours}", name="edit_propose_cours")
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function addEditCoursProf(Prof $prof, Cours $cours = null, ObjectManager $manager, Request $request) {
+    public function addEditCoursProf(Cours $cours = null, ObjectManager $manager, Request $request) {
        
-        $this->setNbMsgNonLus();
-
+        $prof = $this->getUser();
         $modif = true;
 
         // si $creaneauCours est null (add)
@@ -77,17 +75,18 @@ class CourseProfController extends ProfController
      */
     public function demandesSeanceProf(Seance $seance) {
       
-        $this->setNbMsgNonLus();
+        if ($seance->getProf() == $this->getUser()) {
+            $demandesCours = $this->getDoctrine()
+                ->getRepository(DemandeCours::class)
+                ->findBySeance($seance);  
 
-        $demandesCours = $this->getDoctrine()
-            ->getRepository(DemandeCours::class)
-            ->findBySeance($seance);  
+                return $this->render('prof/demandesSeance.html.twig', [
+                    'title' => 'Demande d\'inscription à une séance',
+                    'seance' => $seance,
+                    'demandesCours' => $demandesCours,
+                ]);
+        }
 
-            return $this->render('prof/demandesSeance.html.twig', [
-                'title' => 'Demande d\'inscription à une séance',
-                'seance' => $seance,
-                'demandesCours' => $demandesCours,
-            ]);
     }
 
     /**
@@ -95,24 +94,25 @@ class CourseProfController extends ProfController
      */
     public function validationSeanceProf(DemandeCours $demandeCours, int $valider) {
 
-        $this->setNbMsgNonLus();
-
         $seance = $demandeCours->getSeance();
-        if ($valider == 1) {
-            $seance->setEleve($demandeCours->getEleve());
-            $seance->setCours($demandeCours->getCours());
+        if ($seance->getProf() == $this->getUser()) {
 
-            // On ajoute l'élève au cours si il n'y est pas encore (pour pouvoir afficher la liste des élèves pour un cours)
-            if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
-                $seance->getCours()->addEleve($demandeCours->getEleve());
-            };
+            if ($valider == 1) {
+                $seance->setEleve($demandeCours->getEleve());
+                $seance->setCours($demandeCours->getCours());
+
+                // On ajoute l'élève au cours si il n'y est pas encore (pour pouvoir afficher la liste des élèves pour un cours)
+                if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
+                    $seance->getCours()->addEleve($demandeCours->getEleve());
+                };
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($demandeCours);
+            $entityManager->persist($seance);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('demandes_seance_prof', ['id' => $seance->getId()]);
         }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($demandeCours);
-        $entityManager->persist($seance);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('demandes_seance_prof', ['id' => $seance->getId()]);
     }
 }

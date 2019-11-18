@@ -4,13 +4,16 @@
 
 {% block body %}
 <!-- BANNER SECTION -->
-<section class="clearfix homeBanner" style="background-image: url(assets/img/banner/banner_index.jpg);">
+{% if app.user is defined %}
+    <section class="clearfix homeBanner" style="background-image: url(../assets/img/banner/banner_index.jpg);">
+{% else %}
+    <section class="clearfix homeBanner" style="background-image: url(assets/img/banner/banner_index.jpg);">
+{% endif %}
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="banerInfo">
 					<h1>Trouvez le professeur parfait à Strasbourg</h1>
-					{# <p>Listty helps to find out great things arround you</p> #}
 					{% if app.user %}
 						<form class="form-inline" method="GET" action='{{ path('liste_cours_eleve_search') }}'>
 					{% else %}
@@ -18,20 +21,20 @@
 					{% endif %}
 						<div class="form-group">
 							<div class="input-group">
-								{# <div class="input-group-addon">Find</div> #}
 								<input type="text" name='s' class="form-control" id="findItem" placeholder="Quelle matière ? Essayez Maths, Piano, ...">
 								<div class="input-group-addon addon-right"></div>
 							</div>
 						</div>
-						{# <div class="form-group">
-							<div class="input-group">
-								<div class="input-group-addon">Near</div>
-								<input type="text" class="form-control" id="nearLocation" placeholder="Location">
-								<div class="input-group-addon addon-right"><i class="icon-listy icon-target" aria-hidden="true"></i></div>
-							</div>
-						</div> #}
+
 						<button type="submit" class="btn btn-primary">RECHERCHER <i class="fa fa-search" aria-hidden="true"></i></button>
 					</form>
+					{# <ul class="nav" id="side-menu">
+						<li>
+							<a href="#"> Entities<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level" id="entitiesNav">
+							</ul>
+						</li>
+					</ul> #}
 				</div>
 			</div>
 		</div>
@@ -41,5 +44,49 @@
 {% endblock %}
 
 {% block javascripts %}
+{# <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
 
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        var searchRequest = null;
+        $("#findItem").keyup(function() {
+            var minlength = 3;
+            //var that = this; 
+            var value = $(this).val();
+            var entitySelector = $("#entitiesNav").html('');
+            if (value.length >= minlength ) {
+                if (searchRequest != null)
+                    searchRequest.abort();
+                searchRequest = $.ajax({
+                    type: "GET",
+                    url: "{{ path('liste_cours_visitor_search') }}",
+                    data: {
+                        'q' : value
+                    },
+                    dataType: "text",
+                    success: function(msg){
+                        //we need to check if the value is the same
+                        //if (value==$(that).val()) {
+							var result = JSON.parse(msg);
+							console.log(value);
+							console.log(result);
+							//console.log(msg);
+                            $.each(result, function(key, arr) {
+                                $.each(arr, function(id, value) {
+                                    if (key == 'entities') {
+                                        if (id != 'error') {
+                                            entitySelector.append('<li><a href="/daten/'+id+'">'+value+'</a></li>');
+                                        } else {
+                                            entitySelector.append('<li class="errorLi">'+value+'</li>');
+                                        }
+                                    }
+                                });
+                            });
+                        //}
+                     }
+                });
+            }
+        });
+    });
+</script> #}
 {% endblock %} 

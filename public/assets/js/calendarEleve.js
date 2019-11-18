@@ -5,10 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
         defaultView: 'timeGridWeek',
+        selectable: true,
+        eventOverlap: false,
+        eventDurationEditable: false,
         height:'auto',
         allDaySlot: false,
-        minTime:'07:00:00',
-        maxTime:'23:00:00',
+        minTime:'05:00:00',
+        maxTime:'24:00:00',
+        slotDuration: '01:00:00',
         buttonText: 
         { 
             today:    'Aujourd\'hui',
@@ -36,11 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay',
         },
-        // plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
+
         plugins: [ 'interaction', 'dayGrid', 'timeGrid' ], // https://fullcalendar.io/docs/plugin-index
         timeZone: 'UTC',
-        // themeSystem: 'bootstrap',
-
     });
     calendar.render();
 });

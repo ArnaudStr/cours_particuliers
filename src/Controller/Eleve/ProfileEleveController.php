@@ -19,11 +19,11 @@ class ProfileEleveController extends EleveController
 {
     /**
      * Profil de l'élève
-     * @Route("/showProfileEleve/{id}", name="show_profile_eleve")
+     * @Route("/showProfileEleve/", name="show_profile_eleve")
      */
-    public function showProfileEleve(Eleve $eleve) {
-        $this->setNbMsgNonLus();
+    public function showProfileEleve() {
 
+        $eleve = $this->getUser();
         // liste des cours avec la prochaine séance
         $allCoursEtProchaineSeance = [];
 
@@ -56,11 +56,11 @@ class ProfileEleveController extends EleveController
 
     /**
      * Modification des informations
-     * @Route("/editEleve/{id}", name="edit_eleve")
+     * @Route("/editEleve/", name="edit_eleve")
      */
-    public function editEleve(Eleve $eleve, Request $request) {
-        $this->setNbMsgNonLus();
+    public function editEleve(Request $request) {
 
+        $eleve = $this->getUser();
         // On récupere l'image avant le passage par le formulaire
         $pictureBeforeForm = $eleve->getPictureFilename();
 
@@ -95,10 +95,11 @@ class ProfileEleveController extends EleveController
 
     /**
      * Changement de password
-     * @Route("/editPasswordEleve/{id}", name="edit_password_eleve")
+     * @Route("/editPasswordEleve/", name="edit_password_eleve")
      */
-    public function editPasswordEleve(Eleve $eleve, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder){
+    public function editPasswordEleve(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder){
 
+        $eleve = $this->getUser();
         // $manager = $this->getDoctrine()->getManager();
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);

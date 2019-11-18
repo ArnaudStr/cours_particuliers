@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="containerChat">
-    <h3 class=" text-center">Messaging</h3>
+    <h3 class=" text-center">Conversation avec {{ eleve }}</h3>
     <div class="messaging">
         <div class="inbox_msg">
             <div class="msg_history">
@@ -14,7 +14,7 @@
                     <div class="received_msg">
                         <div class="received_withd_msg">
                             <p>{{ message.contenu }}</p>
-                            <span class="time_date">{{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}}</span>
+                            <span class="time_date">{{ eleve }} à {{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}}</span>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="outgoing_msg">
                     <div class="sent_msg">
                         <p>{{ message.contenu }}</p>
-                        <span class="time_date">{{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}} </span>
+                        <span class="time_date">Vous à {{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}} </span>
                     </div>
                 </div>
                 {% endif %}

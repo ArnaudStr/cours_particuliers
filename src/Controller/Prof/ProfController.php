@@ -5,36 +5,25 @@ namespace App\Controller\Prof;
 use DateTime;
 use DateTimeZone;
 use App\Entity\Prof;
-use App\Entity\Message;
 use App\Entity\Seance;
+use App\Entity\Message;
 // use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 
 /**
  * @Route("/prof")
  */
 class ProfController extends AbstractController
 {    
-    // Récupère le nombre de messages non lus
-    public function setNbMsgNonLus() {
-        $nbMessagesNonLus = $this->getDoctrine()
-            ->getRepository(Message::class)
-            ->findNbNonLusProf($this->getUser());
-
-        $session = new SessionUser();
-        $session->set('nbMsgNonLus', $nbMessagesNonLus);
-    }
-
     /**
      * Page d'acceuil (planning du prof)
      * @Route("/", name="home_prof")
      */
     public function indexProf()
     {
-        $this->setNbMsgNonLus();
 
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'
@@ -82,5 +71,15 @@ class ProfController extends AbstractController
                 }
             }
         }
+    }
+
+    public function delFile($dir, $del_file){
+        $fsObject = new Filesystem();
+        $current_dir_path = getcwd();
+            $delTarget = $current_dir_path . "/assets/". $dir ."/". $del_file;
+        
+            if($del_file){
+               return $fsObject->remove($delTarget);
+            }
     }
 }

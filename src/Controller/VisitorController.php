@@ -6,6 +6,7 @@ use App\Entity\Cours;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -27,7 +28,6 @@ class VisitorController extends AbstractController
      */
     public function listeCoursVisitorSearch(Request $request)
     {
-
         $search = lcfirst($request->query->get('s'));
 
         $nbResultats = 0;
@@ -47,6 +47,11 @@ class VisitorController extends AbstractController
         else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
+        // $nbResultats = 5;
+
+        // return new Response(json_encode($activites));
+
+        // return $activites;
             
         return $this->render('search/search.html.twig', [
             'categorie' => $categorie,

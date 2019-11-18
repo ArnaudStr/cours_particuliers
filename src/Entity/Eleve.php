@@ -79,8 +79,8 @@ class Eleve implements UserInterface
      * @ORM\Column(type="string")
      * @Assert\File(
      *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
-     *      maxSize = "1M",
-     *      mimeTypesMessage = "Image non valide",
+     *      maxSize = "2M",
+     *      mimeTypesMessage = "Format de l'image non valide",
      *      maxSizeMessage = "L'image est trop lourde, taille max : {{ size }}"
      */
     private $pictureFilename;
@@ -116,6 +116,11 @@ class Eleve implements UserInterface
      */
     private $tokenExpire;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbMsgNonLus;
+
     public function __construct()
     {
         $this->aConfirme = false;
@@ -125,6 +130,7 @@ class Eleve implements UserInterface
         $this->seances = new ArrayCollection();
         $this->demandesCours = new ArrayCollection();
         $this->cours = new ArrayCollection();
+        $this->nbMsgNonLus = 0;
     }
 
     public function getId(): ?int
@@ -468,4 +474,15 @@ class Eleve implements UserInterface
         return $this;
     }
 
+    public function getNbMsgNonLus(): ?int
+    {
+        return $this->nbMsgNonLus;
+    }
+
+    public function setNbMsgNonLus(int $nbMsgNonLus): self
+    {
+        $this->nbMsgNonLus = $nbMsgNonLus;
+
+        return $this;
+    }
 }

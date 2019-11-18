@@ -1,44 +1,58 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<div class="containerChat">
+    <h3 class=" text-center">Conversation avec {{ prof }}</h3>
+    <div class="messaging">
+        <div class="inbox_msg">
+            <div class="msg_history">
+            {% for message in allMsg %}
+                <!-- Messege reçu déjà lu ou non lu -->
+                {% if message in msgLus or message in msgNonLus %}
+                <div class="incoming_msg">
+                    <div class="incoming_msg_img"> <img src="/assets/pictures/{{ prof.pictureFilename }}" alt="Image User Chat"> </div>
+                    <div class="received_msg">
+                        <div class="received_withd_msg">
+                            <p>{{ message.contenu }}</p>
+                            <span class="time_date">{{ prof }} à {{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}}</span>
+                        </div>
+                    </div>
+                </div>
 
-{#<h2>Conversation avec {{ eleve }}</h2> #}
-<div class="conversation">
-    {% for message in allMsg %}
-        {% if message in msgLus %}
-            <p class="messageRecu">{{ message.prof }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}}<br>
-            {{ message.contenu }}</p>
-        {# Si ce n'est pas un message lu ou non lu, c'est un message de l'élève #}
-        {% elseif message not in msgNonLus %}
-            <p class="messageEnvoi">{{ message.eleve }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
-            {{ message.contenu }}</br>
-        {# Sinon c'est un message non lu (nouveau message) #} 
-        {% else %}
-            <p class="nvMessage">{{ message.prof }} {{ message.dateEnvoi|date("m/d/Y")}} à {{ message.dateEnvoi|date("H:i")}} <br>
-            {{ message.contenu }}</p>       
-        {% endif %}
-    {% endfor %}
+                <!-- Message envoyé  -->
+                {% else %}
+                <div class="outgoing_msg">
+                    <div class="sent_msg">
+                        <p>{{ message.contenu }}</p>
+                        <span class="time_date">Vous à {{ message.dateEnvoi|date("H:i") }} | {{message.dateEnvoi|localizeddate('none', 'none', 'fr', null, 'EEEE d MMM')}} </span>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
 
+            <div class="type_msg">
+              <div class="input_msg_write">
+                <form action='{{ path('send_message_eleve', {'idEleve':app.user.id, 'idProf':prof.id}) }}' method='POST'>
+                    <input type="text" name="text" class="write_msg" placeholder="Entrez votre message">
+                    <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="test">
-
-</div>
-
-<form action='{{ path('send_message_eleve', {'idProf':prof.id, 'idEleve':app.user.id}) }}' method='POST'>
-    <input type="text" name="text" id="textMessage">
-    <button type='submit'>Envoyer message</button>
-</form>
-
+<div class="test"></div>
 
 {% endblock %}
 
 {% block javascripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
-setInterval(function(){
-    $('.test').load('refreshMsg');
- }, 10000) /* time in milliseconds (ie 2 seconds)*/
+    setInterval(function(){
+        $('.test').load('refreshMsgEleve');
+    }, 10000) /* time in milliseconds (ie 2 seconds)*/
 </script>
 
- {% endblock %}
+{% endblock %}

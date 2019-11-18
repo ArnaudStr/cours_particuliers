@@ -19,7 +19,6 @@ class CategorieRepository extends ServiceEntityRepository
         parent::__construct($registry, Categorie::class);
     }
 
-
     /**
      * @param string $term
      * @return category
@@ -28,28 +27,30 @@ class CategorieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.nom LIKE :term')
-            ->setParameter('term', $term)
+            ->setParameter('term',$term)
+            ->orderBy('c.nom', 'DESC')
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
 
-    // /**
-    //  * @param string $term
-    //  * @return Result[]
-    //  */
-    // public function findOneWithSearch(string $term)
-    // {
-    //     $Result = $this->createQueryBuilder('r');
-    //         $Result->andWhere('r.nom LIKE :term')
-    //             ->setParameter('term', '%' .$term. '%');    
-        
-    //             return $Result
-    //                 ->orderBy('r.nom', 'DESC')
-    //                 ->getQuery()
-    //                 ->getResult();
-        
-    // }
+        /**
+     * @param string $term
+     * @return category
+     */
+    public function findWithSearch(string $term)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.nom LIKE :term')
+            ->setParameter('term','%'. $term .'%')
+            ->orderBy('c.nom', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
 
     // /**
     //  * @return Categorie[] Returns an array of Categorie objects

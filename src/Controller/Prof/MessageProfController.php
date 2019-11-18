@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Controller\Prof\ProfController;
 use DateTime;
 use DateTimeZone;
-use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 
 
 /**
@@ -20,11 +19,11 @@ class MessageProfController extends ProfController
 {
     /**
      * Liste des conversations du prof
-     * @Route("/showMessagesProf/{id}", name="show_messages_prof")
+     * @Route("/showMessagesProf", name="show_messages_prof")
      */
-    public function showMessagesProf(Prof $prof) {
+    public function showMessagesProf() {
 
-        $this->setNbMsgNonLus();
+        $prof = $this->getUser();
 
         // Conversations entre le prof et chaque eleve
         $allConversations = $this->getDoctrine()
@@ -34,10 +33,12 @@ class MessageProfController extends ProfController
         // tableau [ [eleve, nombreMessagesNonLus],  [eleve, nombreMessagesNonLus], ...] 
         $allConversationsNbMsgNonLus = [];
 
+        $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
+
+
         foreach($allConversations as $conversation){
             $eleve =  $conversation->getEleve();
 
-            $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
             $dernierMessage = $this->getDoctrine()
                 ->getRepository(Message::class)
@@ -60,14 +61,12 @@ class MessageProfController extends ProfController
     
     /**
      * Conversation avec un élève
-     * @Route("/conversationProf/{idProf}/{idEleve}/", name="conversation_prof")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/conversationProf/{idEleve}/", name="conversation_prof")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function conversationProf(Prof $prof, Eleve $eleve) {
-        $this->setNbMsgNonLus();
+    public function conversationProf(Eleve $eleve) {
 
-        // $session = new SessionUser();
+        $prof = $this->getUser();
 
         $allMsg = $this->getDoctrine()
             ->getRepository(Message::class)
@@ -92,11 +91,11 @@ class MessageProfController extends ProfController
             $entityManager->persist($message);
         }
 
+        $entityManager->flush();
+
         $nbMessagesNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findNbNonLusProf($prof);
-
-        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
 
         $prof->setNbMsgNonLus($nbMessagesNonLus);
 
@@ -115,12 +114,13 @@ class MessageProfController extends ProfController
 
     /**     
      * Refresh en cas de nouveau message reçu
-     * @Route("/conversationProf/{idProf}/{idEleve}/refreshMsgProf", name="conversation_prof_refresh_msg")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/conversationProf/{idEleve}/refreshMsgProf", name="conversation_prof_refresh_msg")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function refreshMsgProf(Prof $prof, Eleve $eleve) {
     
+        $prof = $this->getUser();
+
         $msgNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findConversationNonLusProf($eleve, $prof);
@@ -138,13 +138,12 @@ class MessageProfController extends ProfController
 
     /**
      * Envoi d'un message à un élève
-     * @Route("/sendMessageProf/{idProf}/{idEleve}", name="send_message_prof")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/sendMessageProf/{idEleve}", name="send_message_prof")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function sendMessageProf(Prof $prof, Eleve $eleve)
     {
-        $this->setNbMsgNonLus();
+        $prof = $this->getUser();
 
         $contenu = $_POST['text'];
         $message = new Message();

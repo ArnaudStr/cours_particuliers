@@ -115,12 +115,12 @@
                                 {% endif %}
                             {% endif %}
                 
-                            <p><a href="#">VOIR MES AVIS</a></p>
                             {#{% for avis in app.user.avis %}
                                 <p>{{ avis.eleve }}</p>
                                 <p>{{ avis.commentaire }}</p>
                             {% endfor %} #}
                         </div>
+                        <p><a href="{{ path('show_reviews_prof') }}">VOIR MES AVIS</a></p>
                     </div>
                 </div>
 

@@ -13,6 +13,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\Prof\ProfController;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @Route("/prof")
@@ -21,13 +22,11 @@ class ProfileProfController extends ProfController
 {
      /**
      * Profil du prof
-     * @Route("/showProfileProf/{id}", name="show_profile_prof")
+     * @Route("/showProfileProf/", name="show_profile_prof")
      */
-    public function showProfileProf(Prof $prof)
+    public function showProfileProf()
     {
-        // dd($prof->getDisponibilites());
-        $this->setNbMsgNonLus();
-
+        $prof = $this->getUser();
         $nbEtoiles = null;
         if ($noteMoyenne = $prof->getNoteMoyenne()){
             $nbEtoiles = round($noteMoyenne);
@@ -71,7 +70,6 @@ class ProfileProfController extends ProfController
         $jours = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
         $creneauxSemaine = [];
-        // dump($prof->getDisponibilites());
 
         foreach($jours as $jour){
             foreach($prof->getDisponibilites() as $jourC=>$creneauxJour){
@@ -81,8 +79,6 @@ class ProfileProfController extends ProfController
             }
         }
 
-        // dd($creneauxSemaine);
-
         return $this->render('prof/showProfileProf.html.twig', [
             'allCoursEtProchaineSeance' => $allCoursEtProchaineSeance,
             'nbEtoiles' => $nbEtoiles,
@@ -90,24 +86,14 @@ class ProfileProfController extends ProfController
         ]);
     }
    
-    public function delFile($dir, $del_file){
-        $fsObject = new Filesystem();
-        $current_dir_path = getcwd();
-            $delTarget = $current_dir_path . "/assets/". $dir ."/". $del_file;
-        
-            if($del_file){
-               return $fsObject->remove($delTarget);
-            }
-    }
-
     /**
      * Modification du profil du prof
-     * @Route("/editProfileProf/{id}", name="edit_profile_prof")
+     * @Route("/editProfileProf/", name="edit_profile_prof")
      */
-    public function editProfileProf(Prof $prof, Request $request, ObjectManager $manager)
+    public function editProfileProf(Request $request, ObjectManager $manager)
     {       
-        $this->setNbMsgNonLus();
-
+        $prof = $this->getUser();
+        
         $pictureBeforeForm = $prof->getPictureFilename();
         
         $form = $this->createForm(EditProfType::class, $prof);
@@ -116,12 +102,15 @@ class ProfileProfController extends ProfController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Upload de la photo et inscription en BDD du nom de l'image
-            if ( $pictureFilename = $form->get("pictureFilename")->getData() ){
-                $this->delFile('pictures',$pictureBeforeForm);
-                $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
-                $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
-                $prof->setPictureFilename($filename);
+            if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
+                if ($pictureFilename!='default_avatar.png'){
+                    $this->delFile('pictures',$pictureBeforeForm);
+                }
+                    $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
+                    $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
+                    $prof->setPictureFilename($filename);
             }
+
             else
             {
                 $prof->setPictureFilename($pictureBeforeForm);
@@ -143,9 +132,11 @@ class ProfileProfController extends ProfController
     }
 
     /**
-     * @Route("/editPasswordProf/{id}", name="edit_password_prof")
+     * @Route("/editPasswordProf/", name="edit_password_prof")
      */
-    public function editPasswordProf(Prof $prof, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder){
+    public function editPasswordProf(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $passwordEncoder){
+
+        $prof = $this->getUser();
 
         // $manager = $this->getDoctrine()->getManager();
         $form = $this->createForm(ChangePasswordType::class);
@@ -184,34 +175,26 @@ class ProfileProfController extends ProfController
 
 
     /**
-     * @Route("/editDisponibilitesProf/{id}", name="edit_disponibilites_prof")
+     * @Route("/editDisponibilitesProf/", name="edit_disponibilites_prof")
      */
-    public function editDisponibilitesProf(Prof $prof, Request $request, ObjectManager $manager)
+    public function editDisponibilitesProf()
     {       
-        $this->setNbMsgNonLus();
-
-
         return $this->render('prof/disposProf.html.twig', [
             'title' => 'Disponibilites prof'
         ]);
-
     }
 
      /**
-     * @Route("/changementsDispos/{id}", name="changements_dispos")
+     * @Route("/changementsDispos/", name="changements_dispos")
      */
-    public function changementsDispos(Prof $prof,  ObjectManager $manager) {
+    public function changementsDispos(ObjectManager $manager) {
 
-        $this->setNbMsgNonLus();
-
-        // dd(json_decode($_COOKIE['dispos'], true));
+        $prof = $this->getUser();
 
         $dispoAvantModif = $prof->getDisponibilites();
         $nouvellesDispos = json_decode($_COOKIE['dispos'], true);
         
         $prof->setDisponibilites($nouvellesDispos);
-
-        // dd($prof->getDisponibilites());
         
         $manager->persist($prof);
         
@@ -223,13 +206,25 @@ class ProfileProfController extends ProfController
         // Anciennes dispos
         $toDelete = ArrayDiffMultidimensional::compare($dispoAvantModif,$nouvellesDispos);
 
-        // dump($toDelete);
         $this->supprSeances($toDelete, $manager, $prof);
 
         $manager->flush();
 
         return $this->redirectToRoute('show_profile_prof', [
             'id' => $prof->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/showReviewsProf/", name="show_reviews_prof")
+     */
+    public function showReviewsProf()
+    {       
+        $prof = $this->getUser();
+
+        return $this->render('/reviews.html.twig', [
+            'title' => 'Mes avis',
+            'prof' => $prof
         ]);
     }
 }

@@ -1,32 +1,50 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<section class="clearfix bg-dark equalHeight dashboardSection">
+    <div class="containerChat">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-default panel-card">
+                    <div class="panel-heading" id="message">
+                        Messagerie : <span class="label label-default label-sm">{{ app.user.getNbMsgNonLus }}</span> messages non lus
+                    </div>
+                    <div class="panel-body panel-message">
+                        <ul class="list-unstyled panel-list">
+                            {% for conversation in allConversations %}
+                                <!-- Conversation avec nouveaux messages -->
+                                {% if conversation.nbMsg != 0 %}
+                                <a href="{{ path('conversation_eleve', { 'idEleve':app.user.id, 'idProf':conversation.prof.id }) }}">
+                                    <li class="messageCommon recentMessage listWrapper">
+                                         <span class="messageInfo">
+                                            <h5>{{ conversation.prof }}, {{ conversation.nbMsg }} messages non lus</h5>
+                                        </span>
+                                        <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span> 
+                                    </li>
+                                </a>
 
-<h2 class="titre" data-test="messagerie">Messagerie</h2>
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            {# <th scope="col">Elève</th> #}
-            {# <th scope="col">Ouvrir la conversation</th> #}
-        </tr>
-    </thead>
-    <tbody>
-        {% for conversation in allConversations %}
-            {# {% set listEleves = listEleves|merge([idEleve]) %} #}
-            <tr>
-                <td><a href="{{ path('conversation_eleve', { 'idProf':conversation.prof.id, 'idEleve':app.user.id }) }}"><i class="fal fa-comments-alt" style="font-size: 2.5em"></i><strong>{{ conversation.prof }} </strong> ({{ conversation.nbMsg }})
-                </a></td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                                <!-- Conversation sans nouveau message -->
+                                {% else %}
+                                <a href="{{ path('conversation_eleve', { 'idEleve':app.user.id, 'idProf':conversation.prof.id }) }}">
+                                    <li class="messageCommon oldMessage listWrapper">                                        <span class="messageInfo">
+                                            <h5>{{ conversation.prof }}</h5>
+                                                <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->
+                                            <p></p>
+                                        </span>
+                                        <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
+                                    </li>
+                                </a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        var active = document.getElementById('navMsg')
-        active.classList.add('activeNav')
-    </script>
 {% endblock %}

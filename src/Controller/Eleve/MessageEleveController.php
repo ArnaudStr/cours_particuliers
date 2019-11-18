@@ -2,12 +2,14 @@
 
 namespace App\Controller\Eleve;
 
+use DateTime;
+use DateTimeZone;
 use App\Entity\Prof;
 use App\Entity\Eleve;
 use App\Entity\Message;
+use App\Controller\Eleve\EleveController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use App\Controller\Eleve\EleveController;
 
 /**
  * @Route("/eleve")
@@ -16,10 +18,11 @@ class MessageEleveController extends EleveController
 {
     /**
      * Liste des conversations d'un élève
-     * @Route("/showMessagesEleve/{id}", name="show_messages_eleve")
+     * @Route("/showMessagesEleve/", name="show_messages_eleve")
      */
-    public function showMessagesEleve(Eleve $eleve) {
-        $this->setNbMsgNonLus();
+    public function showMessagesEleve() {
+
+        $eleve = $this->getUser();
 
         // Conversations entre le prof et chaque eleve
         $allConversations = $this->getDoctrine()
@@ -29,15 +32,23 @@ class MessageEleveController extends EleveController
         // tableau [ [prof, nombreMessagesNonLus],  [prof, nombreMessagesNonLus], ...] 
         $allConversationsNbMsgNonLus = [];
 
+        $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
+
         foreach($allConversations as $conversation){
             $prof =  $conversation->getProf();
+
+            $dernierMessage = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->findDernierMessageProf($eleve, $prof);
+
+            $differenceDate = date_diff($date, $dernierMessage->getDateEnvoi())->format("%d jours, %h h, %i m, %s s");
 
             $nbMsgNonLus = $this->getDoctrine()
                 ->getRepository(Message::class)
                 ->findNbNonLusEleveProf($prof, $eleve);
 
             // On ajoute l'élève et le nombre de messages non lus
-            array_push($allConversationsNbMsgNonLus, ['prof' => $prof, 'nbMsg' => $nbMsgNonLus]);      
+            array_push($allConversationsNbMsgNonLus, ['prof' => $prof, 'nbMsg' => $nbMsgNonLus, 'dernierMsg' => $dernierMessage, 'dateDiff' => $differenceDate]);         
         }
 
         return $this->render('eleve/showMessageEleve.html.twig', [
@@ -47,14 +58,12 @@ class MessageEleveController extends EleveController
 
     /**
      * Conversation avec un prof
-     * @Route("/conversationEleve/{idEleve}/{idProf}/", name="conversation_eleve")
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @Route("/conversationEleve/{idProf}/", name="conversation_eleve")
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
-    public function conversationEleve(Eleve $eleve, Prof $prof) {
-        $this->setNbMsgNonLus();
+    public function conversationEleve(Prof $prof) {
 
-        $session = new SessionUser();
+        $eleve = $this->getUser();
 
         $allMsg = $this->getDoctrine()
             ->getRepository(Message::class)
@@ -68,10 +77,6 @@ class MessageEleveController extends EleveController
             ->getRepository(Message::class)
             ->findConversationNonLusEleve($eleve, $prof);
 
-        $msgEnvoyes = $this->getDoctrine()
-            ->getRepository(Message::class)
-            ->findConversationEnvoyesEleve($eleve, $prof);
-
         $entityManager = $this->getDoctrine()->getManager();
 
         foreach($msgNonLus as $message){
@@ -79,14 +84,15 @@ class MessageEleveController extends EleveController
             $entityManager->persist($message);
         }
 
+        $entityManager->flush();
+
         $nbMessagesNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findNbNonLusEleve($eleve);
 
-        // $eleve->setNbMsgNonLus($nbMessagesNonLus);
+        $eleve->setNbMsgNonLus($nbMessagesNonLus);
 
-        // $entityManager->persist($eleve);
-        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
+        $entityManager->persist($eleve);
 
         $entityManager->flush();
 
@@ -96,18 +102,18 @@ class MessageEleveController extends EleveController
             'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
-            'msgEnvoyes' => $msgEnvoyes
         ]);
     }
 
     /**
      * Refresh en cas de nouveau message     
-     * @Route("/conversationEleve/{idEleve}/{idProf}/refreshMsg", name="conversation_eleve_refresh_msg")
+     * @Route("/conversationEleve/{idEleve}/{idProf}/refreshMsgEleve", name="conversation_eleve_refresh_msg")
      * @ParamConverter("prof", options={"id" = "idProf"})
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function refreshMsgEleve(Prof $prof, Eleve $eleve) {
+    public function refreshMsgEleve(Prof $prof) {
     
+        $eleve = $this->getUser();
+
         $msgNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findConversationNonLusEleve($eleve, $prof);
@@ -119,22 +125,19 @@ class MessageEleveController extends EleveController
         }   
 
         return $this->render('prof/test.html.twig', [
-            'prof' => $prof,
-            'eleve' => $eleve,
             'nouveauMessage' => $nouveauMessage,
         ]);
     }
 
     /**
      * Envoi de message
-     * @Route("/sendMessageEleve/{idProf}/{idEleve}", name="send_message_eleve")
+     * @Route("/sendMessageEleve/{idProf}/", name="send_message_eleve")
      * @ParamConverter("prof", options={"id" = "idProf"})
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function sendMessageEleve(Prof $prof, Eleve $eleve)
-    {
-        $this->setNbMsgNonLus();
-        
+    public function sendMessageEleve(Prof $prof)
+    {       
+        $eleve = $this->getUser();
+
         $contenu = $_POST['text'];
         $message = new Message();
         $message->setProf($prof);
@@ -144,6 +147,7 @@ class MessageEleveController extends EleveController
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($message);
+        $prof->setNbMsgNonLus($prof->getNbMsgNonLus()+1);
         $entityManager->flush();
 
         return $this->redirectToRoute('conversation_eleve', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);

@@ -1,7 +1,73 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Proposer un cours{% endblock %}
+
 {% block body %}
-    {{ form_start(form) }}
+    <section class="clearfix pageTitleSection" style="background-image: url();">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pageTitle">
+                        <h2>Proposer un cours</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="clearfix signUpSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="signUpForm">
+                    {{ form_start(form) }}
+                        <h3>Informations du cours</h3>
+                        <p>Veuillez remplir les champs ci-dessous afin de créer un cours.</p>
+                        
+                        <div class="row">
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{form_row(form.activite) }} 
+                            </div>
+                            <div class="form-group col-sm-6 col-xs-12">
+                                {{form_row(form.tarifHoraire) }}
+                            </div>
+
+                            <div class="form-group col-sm-4 col-xs-12">
+                                {{form_row(form.webcam) }}
+                            </div>
+                            <div class="form-group col-sm-4 col-xs-12">
+                                {{form_row(form.chezProf) }}
+                            </div>
+                            <div class="form-group col-sm-4 col-xs-12">
+                                {{form_row(form.chezEleve) }}
+                            </div>
+
+                            <div class="form-group col-xs-12">
+                                {{form_row(form.description) }}
+                            </div>
+
+                            <div class="form-group col-xs-12">
+                                {{form_row(form.niveaux) }}
+                            </div>
+
+                            <div class="form-group col-xs-12 mb0">
+                                {{ form_row(form.submit) }}
+                            </div>
+                        </div>
+                        {{ form_errors(form) }}
+                    {{ form_end(form) }} 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %} 
+
+  {#  {{ form_start(form) }}
 
         {{form_row(form.activite) }} 
         {{form_row(form.tarifHoraire) }}
@@ -19,9 +85,4 @@
 
 {% block javascripts %}
 
-<script>
-        var active = document.getElementById('navCours')
-        active.classList.add('activeNav')
-</script>
-
-{% endblock %}
+{% endblock %} #}

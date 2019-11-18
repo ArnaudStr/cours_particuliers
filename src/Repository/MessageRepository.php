@@ -364,6 +364,7 @@ class MessageRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    // Récupere le dernier message envoyé par l'élève passé en paramètre
     public function findDernierMessageProf(Eleve $eleve, Prof $prof)
     {
         return $this->createQueryBuilder('m')
@@ -374,6 +375,21 @@ class MessageRepository extends ServiceEntityRepository
             ->setParameter('eleve', $eleve)
             ->setParameter('prof', $prof)
             ->setParameter('eleveUsername', $eleve->getUsername())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    // Récupere le dernier message envoyé par le prof passé en paramètre
+    public function findDernierMessageEleve(Eleve $eleve, Prof $prof)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m, MAX(m.dateEnvoi) AS HIDDEN date_envoi')
+            ->andWhere('m.eleve = :eleve')
+            ->andWhere('m.prof = :prof')
+            ->andWhere('m.auteur = :profUsername')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('prof', $prof)
+            ->setParameter('profUsername', $prof->getUsername())
             ->getQuery()
             ->getOneOrNullResult();
     }

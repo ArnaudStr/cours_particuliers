@@ -1,26 +1,3 @@
-// TO DO : boutons pour scroll les heures de la journée!
-// var minTimeTab =[]
-// minTimeTab.push('00:00:00', '06:00:00', '15:00:00')
-// var pos=1
-
-// var tabBtn = document.querySelectorAll('.btnA')
-// console.log(tabBtn)
-// tabBtn.forEach(function(e){
-//     console.log(tabBtn)
-//     e.addEventListener('click', function(r){
-//         console.log(pos)
-//         if (r.dataset.btn === 'up'){
-//             pos--
-//             console.log(pos)
-//         }
-
-//         if (r.dataset.btn === 'down'){
-//             pos++
-//             console.log(pos)
-//         }
-//     })
-// })
-
 document.addEventListener('DOMContentLoaded', () => {
     var calendarEl = document.getElementById('calendar-holder');
     var profjs = document.querySelector('[data-entry-idprof]').dataset.entryIdprof;
@@ -30,13 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
         defaultView: 'timeGridWeek',
         selectable: true,
         // editable: true,
-        droppable: true, // this allows things to be dropped onto the calendar
+        // droppable: true, // this allows things to be dropped onto the calendar
         eventOverlap: false,
         eventDurationEditable: false,
         height:'auto',
         allDaySlot: false,
-        minTime:'07:00:00',
-        maxTime:'23:00:00',
+        minTime:'05:00:00',
+        maxTime:'24:00:00',
         slotDuration: '01:00:00',
         buttonText: 
             { 

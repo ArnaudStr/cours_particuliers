@@ -11,30 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Session\Session as SessionUser;
 
 /**
  * @Route("/eleve")
  */
 class EleveController extends AbstractController
 {
-    // Récupère le nombre de messages non lus
-    public function setNbMsgNonLus() {
-        // $nbMessagesNonLus = $this->getDoctrine()
-        return $this->getDoctrine()
-            ->getRepository(Message::class)
-            ->findNbNonLusEleve($this->getUser());
-
-        // $session = new SessionUser();
-        // $session->set('nbMsgNonLus', $nbMessagesNonLus);
-    }
    
     /**
      * Page d'acceuil, avec le planning de l'élève
      * @Route("/", name="home_eleve")
      */
     public function indexEleve() {
-        $this->setNbMsgNonLus();
 
         return $this->render('eleve/calendrierEleve.html.twig', [
             'title' => 'Planning'
@@ -47,8 +35,6 @@ class EleveController extends AbstractController
      */
     public function voirProfilProf(Prof $prof)
     {
-        $this->setNbMsgNonLus();
-
         $nbEtoiles = null;
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
@@ -68,8 +54,6 @@ class EleveController extends AbstractController
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
     public function emettreAvis(Eleve $eleve, Prof $prof, Request $request) {
-        $this->setNbMsgNonLus();
-
         $avis = new Avis();
 
         $form = $this->createForm(AvisType::class, $avis);
@@ -89,8 +73,6 @@ class EleveController extends AbstractController
             $entityManager->persist($prof);
 
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
 
             return $this->redirectToRoute('home_eleve');
         }

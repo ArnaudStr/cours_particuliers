@@ -67,17 +67,17 @@ jQuery(document).ready(function(){
 
   //============================== SMOOTH SCROLLING TO SECTION =========================
 
-  $('.scrolling  a[href*="#"]').on('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var target = $(this).attr('href');
-    $(target).velocity('scroll', {
-      duration: 800,
-      offset: -150,
-      easing: 'easeOutExpo',
-      mobileHA: false
-    });
-  });
+  // $('.scrolling  a[href*="#"]').on('click', function (e) {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   var target = $(this).attr('href');
+  //   $(target).velocity('scroll', {
+  //     duration: 800,
+  //     offset: -150,
+  //     easing: 'easeOutExpo',
+  //     mobileHA: false
+  //   });
+  // });
 
   // scroll to a div with the ID "scrollToThis" by clicking a link with the class "scrollLink"
   $('.scrolling').click( function() {

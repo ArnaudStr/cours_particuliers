@@ -26,19 +26,17 @@ class CourseEleveController extends EleveController
      */
     public function searchCourseEleve()
     {
-        $this->setNbMsgNonLus();
-
         return $this->render('course/searchCourse.html.twig', [
-            'title' => 'Cours à Strasbourg'
+            'title' => 'Cours à Strasbourg',
+            'transparent' => true
         ]);
     }
 
     /**
-     * @Route("/eleve/listeCoursEleveSearch", name="liste_cours_eleve_search")
+     * @Route("/listeCoursEleveSearch", name="liste_cours_eleve_search")
      */
     public function listeCoursEleveSearch(Request $request)
     {
-
         $search = $request->query->get('s');
 
         $nbResultats = 0;
@@ -64,6 +62,7 @@ class CourseEleveController extends EleveController
             'activite' => $activite,
             'recherche' => $search,
             'nbResultats' => $nbResultats,
+
         ]);
     }
 
@@ -73,8 +72,6 @@ class CourseEleveController extends EleveController
      */
     public function displayCoursEleve(Cours $cours)
     {
-        $this->setNbMsgNonLus();
-
         $nbEtoiles = null;
         if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
             $nbEtoiles = round($noteMoyenne);
@@ -95,7 +92,6 @@ class CourseEleveController extends EleveController
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function inscriptionCoursEleve(Prof $prof, Cours $cours) {
-        $this->setNbMsgNonLus();
         
         return $this->render('course/inscriptionCours.html.twig', [
             'prof' => $prof,
@@ -111,7 +107,6 @@ class CourseEleveController extends EleveController
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function demandeInscriptionSeance(Seance $seance, Eleve $eleve, Cours $cours) {
-        $this->setNbMsgNonLus();
 
         // Inscription élève au cours
         $demandeCours = new DemandeCours();

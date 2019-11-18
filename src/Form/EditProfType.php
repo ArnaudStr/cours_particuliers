@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Prof;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,6 +35,16 @@ class EditProfType extends AbstractType
                     'onmousedown' => 'return false',
                     'placeholder' => 'Selectionnez une image',
                     'onkeydown' => 'return false'
+                ],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5024k',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpeg',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez respecter le format d\'image (.jpeg ou .png)',
+                    ])
                 ],
                 'label' => 'Modifier image',
                 'required' => false,

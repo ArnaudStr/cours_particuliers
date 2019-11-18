@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<section class="clearfix bg-dark dashboard-review-section">
+    <div class="container">
+        <div class="row">
+        {% for avis in prof.avis %}
+            <div class="col-xs-12 col-lg-6">
+                <div class="dashboard-list-box">
+                        <div class="single-list">
+                            <div class="media comments-media">
+                                <div class="media-left">
+                                    <p>Kathy Brown zezezezeze</p>
+                                    <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                                </div>
+                                <div class="media-body">
+                                <h4 class="media-heading">Kathy Brown <a href="">on Burger House</a> <div class="visitor star"></div></h4>
+                                <div class="date">Feb 2018</div>
+                                <p>Morbi velit eros, sagittis in facilisis non, rhoncus et erat. Nam posuere tristique sem, eu ultricies tortor imperdiet vitae. Curabitur lacinia neque non metus</p>
+                                <div class="content-img">
+                                    <img src="assets/img\dashboard\burger-img-01.png" alt="Image">
+                                    <img src="assets/img\dashboard\burger-img-02.jpg" alt="Image">
+                                </div>
+                                <a href="" class="btn btn-primary"><i class="fa fa-reply" aria-hidden="true"></i>Reply to this review</a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %} 

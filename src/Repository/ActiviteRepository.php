@@ -28,8 +28,25 @@ class ActiviteRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->andWhere('a.nom LIKE :term')
             ->setParameter('term', $term)
+            ->orderBy('a.nom', 'DESC')
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @param string $term
+     * @return activite[]
+     */
+    public function findWithSearch(string $term)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.nom LIKE :term')
+            ->setParameter('term', '%'. $term .'%')
+            ->orderBy('a.nom', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
         ;
     }
 
