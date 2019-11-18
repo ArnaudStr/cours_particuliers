@@ -107,7 +107,7 @@ class MessageEleveController extends EleveController
 
     /**
      * Refresh en cas de nouveau message     
-     * @Route("/conversationEleve/{idEleve}/{idProf}/refreshMsgEleve", name="conversation_eleve_refresh_msg")
+     * @Route("/conversationEleve/{idProf}/refreshMsgEleve", name="conversation_eleve_refresh_msg")
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
     public function refreshMsgEleve(Prof $prof) {

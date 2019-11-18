@@ -30,11 +30,11 @@ class EditProfType extends AbstractType
 
             ->add('pictureFilename', FileType::class, [
                 'attr' =>[
-                    'multiple' => 'multiple',
+                    // 'multiple' => 'multiple',
                     'id' => 'preview',
-                    'onmousedown' => 'return false',
+                    // 'onmousedown' => 'return false',
                     'placeholder' => 'Selectionnez une image',
-                    'onkeydown' => 'return false'
+                    // 'onkeydown' => 'return false'
                 ],
                 'constraints' => [
                     new File([

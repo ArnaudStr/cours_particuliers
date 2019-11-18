@@ -25,7 +25,7 @@
                         <h2>{{ app.user }}</h2>
                         <h3>{{ app.user.email }}</h3>
                         <p>{{ app.user.adresse }}</p>
-                        <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}" class="">Modifier mon profil</a></p>
+                        <p><a href="{{ path('edit_profile_prof') }}" class="">Modifier mon profil</a></p>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                                 {% endfor %} 
                             </tbody> 
                         </table>
-                        <p><a href="{{ path('edit_disponibilites_prof', {'id':app.user.id}) }}" class="">Modifier mes disponibilités</a></p>
+                        <p><a href="{{ path('edit_disponibilites_prof') }}" class="">Modifier mes disponibilités</a></p>
                     </div>
                 </div>
                 
@@ -130,7 +130,7 @@
                         <div class="row">
                             <p>{{ app.user.description }}</p>
                         </div>
-                        <p><a href="{{ path('edit_profile_prof', {'id':app.user.id}) }}" class="">Modifier ma description</a></p>
+                        <p><a href="{{ path('edit_profile_prof') }}" class="">Modifier ma description</a></p>
                     </div>
                 </div>
             </div>

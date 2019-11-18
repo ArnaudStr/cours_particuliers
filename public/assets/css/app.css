@@ -95,7 +95,6 @@ body {
   line-height: 21px;
   color: #848484;
   font-weight: 400;
-  /* overflow: hidden; */
 }
 
 ul {
@@ -1684,7 +1683,7 @@ a.link:hover {
 
 .comments-media .media-left {
   padding-right: 20px;
-  width: 100px;
+  min-width:80px !important;
 }
 
 .comments-media .media-left img {
@@ -1694,7 +1693,7 @@ a.link:hover {
 }
 
 .comments-media .media-body {
-  overflow: visible;
+  /* overflow: scroll !important; */
 }
 
 .comments-media .media-body h4.media-heading {
@@ -10588,5 +10587,10 @@ body.pattern-04 {
 
 .panel-list a :hover{
   background-color: #4c4c4c;
-  
+}
+
+@media  (max-width: 400px) {
+  .comments-media .media-left {
+    display:none;
+  }
 }

@@ -22,7 +22,9 @@
           </div>   
           <div id="prev"> </div>
           {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
+          {{ form_errors(editForm.pictureFilename) }}
           {{form_row(editForm.submit) }}
+          
           {{ form_rest(editForm) }}
         
      {{ form_end(editForm, {'render_rest': false}) }}

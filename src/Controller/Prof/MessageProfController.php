@@ -117,7 +117,7 @@ class MessageProfController extends ProfController
      * @Route("/conversationProf/{idEleve}/refreshMsgProf", name="conversation_prof_refresh_msg")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function refreshMsgProf(Prof $prof, Eleve $eleve) {
+    public function refreshMsgProf(Eleve $eleve) {
     
         $prof = $this->getUser();
 
