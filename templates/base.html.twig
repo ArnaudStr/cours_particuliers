@@ -61,6 +61,120 @@
 
     <!-- Closing wrapper -->
     </div>
+
+     <!-- FOOTER -->
+     <footer >
+        <!-- FOOTER INFO -->
+        <div style="background-image: url(/assets/img/background/bg-footer.jpg);">
+          <div class="clearfix footerInfo" style="background-image: url(/assets/img/background/bg-footer.jpg);">
+            <div class="container">
+              <div class="row">
+
+                <div class="col-sm-7 col-xs-12">
+                  <div class="footerText">
+                    <!-- <a href="index.html" class="footerLogo">
+                    </a> -->
+                    <p>StrasProf est une plateforme de cours particuliers regroupant élèves et enseignants sur Strasbourg. L'inscription est 100% gratuite pour les professeurs ou les étudiants.</p>
+                    <ul class="list-styled list-contact">
+                      <li><i class="fa fa-phone" aria-hidden="true"></i>42 42 42 42 42</li>
+                      <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="#">info@strasprof.com</a></li>
+                    </ul>
+                  </div>
+                </div>
+                {% if is_granted('ROLE_PROF') %}
+                <div class="col-sm-3 col-xs-12">
+                  <div class="footerInfoTitle">
+                    <h4>Liens</h4>
+                  </div>
+                  <div class="useLink">
+                    <ul class="list-unstyled">
+                      <li><a href="{{ path('home_prof') }}">Planning</a></li>
+                      <li><a href="{{ path('show_profile_prof') }}">Profil</a></li>
+                      <li><a href="{{ path('show_messages_prof') }}">Messagerie</a></li>
+                      <li><a href="{{ path('add_propose_cours') }}">Proposer un cours</a></li>
+                      <li><a href="{{ path('logout_prof') }}">Déconnexion</a></li>
+                    </ul>
+                  </div>
+                </div>
+                {% elseif is_granted('ROLE_ELEVE') %}
+                <div class="col-sm-3 col-xs-12">
+                    <div class="footerInfoTitle">
+                      <h4>Liens</h4>
+                    </div>
+                    <div class="useLink">
+                      <ul class="list-unstyled">
+                        <li><a href="{{ path('home_eleve') }}">Planning</a></li>
+                        <li><a href="{{ path('show_profile_eleve') }}">Profil</a></li>
+                        <li><a href="{{ path('show_messages_eleve') }}">Messagerie</a></li>
+                        <li><a href="{{ path('search_course_eleve') }}">Rechercher un cours</a></li>
+                        <li><a href="{{ path('logout_eleve') }}">Déconnexion</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                {% else %}
+                  
+                <div class="col-sm-3 col-xs-12">
+                  <div class="footerInfoTitle">
+                    <h4>Liens</h4>
+                  </div>
+                  <div class="useLink">
+                    <ul class="list-unstyled">
+                      <li><a href="{{ path('register', {'isEleve':1} ) }}">Créer un compte élève</a></li>
+                      <li><a href="{{ path('register', {'isEleve':0} ) }}">Créer un compte professeur</a></li>
+                      <li><a href="{{ path('login_eleve') }}">Connexion élève</a></li>
+                      <li><a href="{{ path('login_prof') }}">Connexion professeur</a></li>
+                    </ul>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="col-sm-2 col-xs-12">
+                  <div class="footerInfoTitle">
+                    <h4>StrasProf</h4>
+                  </div>
+                  <div class="useLink">
+                    <ul class="list-unstyled">
+                      <li><a href="#">Nous contacter</a></li>
+                      <li><a href="#">Comment ça marche ?</a></li>
+                      <li><a href="#">Conditions d'utilisation</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- COPY RIGHT -->
+          <div class="clearfix copyRight">
+            <div class="container">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="copyRightWrapper">
+                    <div class="row">
+                      <div class="col-sm-5 col-sm-push-7 col-xs-12">
+                        <ul class="list-inline socialLink">
+                          <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                          <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                          <li><a href="#"><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
+                          <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-7 col-sm-pull-5 col-xs-12">
+                        <div class="copyRightText">
+                          <p>Copyright &copy; 2019. Tous droits réservés par <strong>Arnaud STRAUMANN</strong></a></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+
+
+<!-- JAVASCRIPT -->
         {# // <script src='fullcalendar/core/locales/fr.js'></script> #}
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>

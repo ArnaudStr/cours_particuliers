@@ -2,11 +2,43 @@
 
 {% block body %}
 
-    {% for cours in app.user.coursS %}
+
+
+<!-- CATEGORY LIST SECTION -->
+<section class="clerfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="resultBar barSpaceAdjust">
+                    <h2>Vous dispensez <span>{{ app.user.coursS|length }}</span> matières / activités
+                </div>
+                {% for cours in app.user.coursS %}
+                    <div class="listContent">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12">
+                                <div class="categoryDetails">
+                                    <h2 style="color: #222222">{{ cours }}<span class="likeCount">{{ cours.tarifHoraire }} €/h</span></h2>
+                                    <p>Niveaux : <span class="placeName">{{ cours.niveaux }}</span></p>
+                                    <p>{{ cours.description|slice(0,149) }}...</p>
+                                    <ul class="list-inline list-tag">
+                                        <li><a href="{{ path('edit_propose_cours', {'idCours':cours.id}) }}">Modifier</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+   {# {% for cours in app.user.coursS %}
         <p><a href="{{ path('edit_propose_cours', {'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier le cours {{ cours }}</button></a></p>
     {% endfor %}
 
-    <p><a href="{{ path('add_propose_cours') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p>
+    <p><a href="{{ path('add_propose_cours') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p> #}
 
 {% endblock %}
 

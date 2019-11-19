@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // droppable: true, // this allows things to be dropped onto the calendar
         eventOverlap: false,
         eventDurationEditable: false,
+        // height:'parent',
         height:'auto',
         allDaySlot: false,
         minTime:'05:00:00',

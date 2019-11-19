@@ -146,7 +146,6 @@ class CalendarListener
                     'textColor' => 'white',
                     'url'=> $this->router->generate('demande_inscription_seance', [
                                 'idSeance' => $seance->getId(),
-                                'idEleve' => $filters['eleve'],
                                 'idCours' => $filters['cours'],
                     ])
                 ]); 
@@ -168,7 +167,6 @@ class CalendarListener
                     'textColor' => 'white',
                     'url' => $this->router->generate('emettre_avis', [
                                 'idProf' => $seance->getProf()->getId(),
-                                'idEleve' => $filters['eleve']
                     ])
                 ]);
 
@@ -190,7 +188,6 @@ class CalendarListener
                         'textColor' => 'white',
                         // 'url' => $this->router->generate('emettre_avis', [
                         //     'idProf' => $seance->getProf()->getId(),
-                        //     'idEleve' => $filters['eleve']
                         // ])
                     ]);
                 }
@@ -222,7 +219,7 @@ class CalendarListener
                 // Séance disponible avec aucune demande d'élève
                 else {
                     $seanceEvent = new Event(
-                        'Creneau libre',
+                        'Séance libre',
                         $seance->getDateDebut(),
                         $dateFin // If the end date is null or not defined, a all day event is created.
                     );

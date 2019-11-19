@@ -60,7 +60,7 @@ class SecurityProfController extends ProfController
             /* @var $user User */
  
             if ($user === null) {
-                $this->addFlash('danger', 'Email Inconnu');
+                $this->addFlash('forgotPwd', 'Email Inconnu');
                 return $this->redirectToRoute('home');
             }
             $token = $tokenGenerator->generateToken();
@@ -77,8 +77,8 @@ class SecurityProfController extends ProfController
 
                 $entityManager->flush();
             } catch (\Exception $e) {
-                $this->addFlash('warning', $e->getMessage());
-                return $this->redirectToRoute('home');
+                $this->addFlash('forgotPwd', $e->getMessage());
+                return $this->redirectToRoute('login_prof');
             }
  
             $url = $this->generateUrl('reset_password_prof', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -93,7 +93,7 @@ class SecurityProfController extends ProfController
  
             $mailer->send($message);
 
-            $this->addFlash('notice', 'Mail envoyé');
+            $this->addFlash('forgotPwd', 'Vous avez reçu un email pour changer votre mot de passe!');
 
             return $this->redirectToRoute('login_prof');
         }
@@ -114,11 +114,11 @@ class SecurityProfController extends ProfController
             /* @var $user User */
  
             if ($user === null) {
-                $this->addFlash('danger', 'Token Inconnu');
+                $this->addFlash('resetPwd', 'Token Inconnu');
                 return $this->redirectToRoute('login_prof');
             }
             else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
-                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
+                $this->addFlash('resetPwd', 'Votre token de changement de mot de passe a expiré');
                 return $this->redirectToRoute('login_prof');
             }
  
@@ -127,7 +127,7 @@ class SecurityProfController extends ProfController
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  
-            $this->addFlash('notice', 'Mot de passe mis à jour');
+            $this->addFlash('resetPwd', 'Mot de passe mis à jour');
  
             return $this->redirectToRoute('login_prof');
         }else {

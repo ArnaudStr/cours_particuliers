@@ -4,11 +4,7 @@
 
 {% block body %}
 <!-- BANNER SECTION -->
-{% if app.user is defined %}
-    <section class="clearfix homeBanner" style="background-image: url(../assets/img/banner/banner_index.jpg);">
-{% else %}
-    <section class="clearfix homeBanner" style="background-image: url(assets/img/banner/banner_index.jpg);">
-{% endif %}
+    <section class="clearfix homeBanner" style="background-image: url(/assets/img/banner/banner_index.jpg);">
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
@@ -40,6 +36,55 @@
 		</div>
 	</div>
 </section>
+
+<!-- CATEGORY SECTION -->
+<section class="clearfix bg-light">
+    <div class="container">
+        <div class="page-header text-center">
+            <h2>Cherchez un cours par catégorie</h2>
+        </div>
+        <div class="row">
+        {% for categorie in categories %}                
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="categoryItem">
+                    {# <i class="icon-listy icon-car-1"></i> #}
+                    <h2>{{ categorie }}</h2>
+                    <ul class="list-unstyled">
+                    {% for activite in categorie.activites  %}
+                        <li><a href="">{{ activite }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if not is_granted('ROLE_USER') %}
+
+<section class="testimonial-section">
+    <div class="container-fluid">
+        <div class="page-header text-center">
+        <h2>Découvrez les professeurs<small>Retrouvez ci-dessous quelques informations sur les professeurs</small></h2>
+        </div>
+        <div class="row testimonial-slider owl-carousel">
+        {% for prof in profs %}
+            <div class="testimonial-content">
+                <div class="testimonial-box">
+                    <div class="testimonial">{{ prof.description|slice(0,199) }}...</div>
+                </div>
+                <div class="testimonial-author">
+                    <img src="/assets/pictures/{{ prof.pictureFilename }}" alt="user-image">
+                    <h5>{{ prof }}</h5>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endif %}
 
 {% endblock %}
 

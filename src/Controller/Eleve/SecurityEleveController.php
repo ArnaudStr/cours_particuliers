@@ -57,7 +57,7 @@ class SecurityEleveController extends EleveController
             /* @var $user User */
  
             if ($user === null) {
-                $this->addFlash('danger', 'Email Inconnu');
+                $this->addFlash('forgotPwd', 'Email Inconnu');
                 return $this->redirectToRoute('login_eleve');
             }
             $token = $tokenGenerator->generateToken();
@@ -72,7 +72,7 @@ class SecurityEleveController extends EleveController
                 );
                 $entityManager->flush();
             } catch (\Exception $e) {
-                $this->addFlash('warning', $e->getMessage());
+                $this->addFlash('forgotPwd', $e->getMessage());
                 return $this->redirectToRoute('login_eleve');
             }
  
@@ -88,7 +88,7 @@ class SecurityEleveController extends EleveController
  
             $mailer->send($message);
 
-            $this->addFlash('notice', 'Mail envoyé');
+            $this->addFlash('forgotPwd', 'Vous avez reçu un email pour changer votre mot de passe!');
 
             return $this->redirectToRoute('login_eleve');
         }
@@ -108,11 +108,11 @@ class SecurityEleveController extends EleveController
             /* @var $user User */
  
             if ($user === null) {
-                $this->addFlash('danger', 'Token Inconnu');
+                $this->addFlash('resetPwd', 'Token Inconnu');
                 return $this->redirectToRoute('login_eleve');
             }
             else if ($user->getTokenExpire()<new DateTime('now',new DateTimeZone('Europe/Paris'))){
-                $this->addFlash('danger', 'Votre token de changement de mot de passe a expiré');
+                $this->addFlash('resetPwd', 'Votre token de changement de mot de passe a expiré');
                 return $this->redirectToRoute('login_eleve');
             }
  
@@ -121,7 +121,7 @@ class SecurityEleveController extends EleveController
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $entityManager->flush();
  
-            $this->addFlash('notice', 'Mot de passe mis à jour');
+            $this->addFlash('resetPwd', 'Mot de passe mis à jour');
  
             return $this->redirectToRoute('login_eleve');
         }else {

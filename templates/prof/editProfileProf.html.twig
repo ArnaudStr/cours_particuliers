@@ -1,13 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier profil
+
+{% block title %}Modifier votre profil{% endblock %}
+
+{% block body %}
+
+<section class="clearfix pageTitleSection" style="background-image: url();">
+     <div class="container">
+          <div class="row">
+               <div class="col-xs-12">
+                    <div class="pageTitle">
+                         <h2>Modification de vos informations</h2>
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
+  
+<section class="clearfix signUpSection">
+     <div class="container">
+          <div class="row">
+               <div class="col-sm-12 col-xs-12">
+                    <div class="signUpForm">
+
+                    {{ form_start(editForm, {
+                         'attr' :{
+                              'enctype' : 'multipart/form-data',
+                         }}) }}
+                         <h3>Vos informations</h3>
+                         <p>Vous pouvez modifier vos informations ci-dessous.</p>
+                         
+                         <div class="row">
+                              <p><a href="{{ path('edit_password_prof') }}">Modifier votre mot de passe</a></p>
+
+                         <div class="form-group col-sm-6 col-xs-12">
+                              {{form_row(editForm.nom) }}
+                         </div>
+                         <div class="form-group col-sm-6 col-xs-12">
+                              {{form_row(editForm.prenom) }}
+                         </div>
+
+                         <div class="form-group col-sm-12 col-xs-12">
+                              {{form_row(editForm.description) }}
+                         </div>
+
+                         <div class="form-group col-sm-6 col-xs-12">
+                              <div id="imageActuelle">
+                                   <p>Image de profil actuelle :</p><img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
+                              </div>
+                         </div>
+
+                         <div class="form-group col-sm-6 col-xs-12">
+                              <p>Modifier photo de profil :</p>
+                              <div id="prev"> </div>
+                              {{form_widget(editForm.pictureFilename, { 'id': 'preview' })}}
+                              {{ form_errors(editForm.pictureFilename) }}
+                         </div>
+
+                         <div class="form-group col-xs-12 mb0">
+                              {{form_row(editForm.submit) }}
+                         </div>
+                         </div>
+                         {{ form_errors(editForm) }}
+                    {{ form_end(editForm, {'render_rest': false}) }} 
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
 
 {% endblock %}
 
-{% block body %}
-     <a href="{{ path('edit_password_prof', {'id':app.user.id}) }}"><button type="button">
-          Modifier votre mot de passe
-     </button></a>
+{#<a href="{{ path('edit_password_prof') }}">Modifier votre mot de passe</a>
+
      {{form_start(editForm, {
           'attr' :{
                'enctype' : 'multipart/form-data',
@@ -29,7 +94,7 @@
         
      {{ form_end(editForm, {'render_rest': false}) }}
 
-{% endblock %}
+{% endblock %}#}
 
 {% block javascripts %}
 
@@ -40,8 +105,8 @@
              if (prev.getElementsByTagName('img').length == i) {
                   function creationBalise() {
                        var imgElement = document.createElement('img');
-                       imgElement.style.maxWidth = '250px';
-                       imgElement.style.maxHeight = '250px';
+                       imgElement.style.maxWidth = '200px';
+                       imgElement.style.maxHeight = '200px';
                        imgElement.src = this.result;
                        prev.appendChild(imgElement);
                   }
@@ -70,7 +135,7 @@
         }
            
         var noms = nomFiles.join(" / ");
-        prev.innerHTML = '<p>Nouvelle image ('+noms+') :</p>';     
+        /* prev.innerHTML = '<p>Nouvelle image ('+noms+') :</p>';    */ 
    }  
    document.getElementById('preview').addEventListener('change', function(){
         var fileInput = document.getElementById('preview');

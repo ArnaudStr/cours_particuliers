@@ -6,8 +6,6 @@ use DateTime;
 use DateTimeZone;
 use App\Entity\Prof;
 use App\Entity\Seance;
-use App\Entity\Message;
-// use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +22,6 @@ class ProfController extends AbstractController
      */
     public function indexProf()
     {
-
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'
         ]);

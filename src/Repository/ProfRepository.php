@@ -37,6 +37,19 @@ class ProfRepository extends ServiceEntityRepository
         
     }
 
+    /**
+    * @return Prof[] Returns an array of Prof objects
+    */
+    public function findBestFive()
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.noteMoyenne', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Prof[] Returns an array of Prof objects
     //  */

@@ -51,7 +51,7 @@ class CreationCoursType extends AbstractType
             ->add('description', TextareaType::class, [
             ])
 
-            ->add('niveaux', TextareaType::class, [
+            ->add('niveaux', TextType::class, [
                 'label' => 'Veuillez renseigner les niveaux pour lesquels vous voulez enseigner',
                 'required' => false,
                 ])

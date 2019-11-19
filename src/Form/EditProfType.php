@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class EditProfType extends AbstractType
 {
@@ -24,7 +25,7 @@ class EditProfType extends AbstractType
             ->add('adresse',TextType::class, [
                 "required" => false              
             ])
-            ->add('description',TextType::class, [
+            ->add('description',TextareaType::class, [
                 "required" => false              
             ])
 
@@ -33,7 +34,7 @@ class EditProfType extends AbstractType
                     // 'multiple' => 'multiple',
                     'id' => 'preview',
                     // 'onmousedown' => 'return false',
-                    'placeholder' => 'Selectionnez une image',
+                    // 'placeholder' => 'Selectionnez une image',
                     // 'onkeydown' => 'return false'
                 ],
                 'constraints' => [
@@ -46,7 +47,7 @@ class EditProfType extends AbstractType
                         'mimeTypesMessage' => 'Veuillez respecter le format d\'image (.jpeg ou .png)',
                     ])
                 ],
-                'label' => 'Modifier image',
+                // 'label' => 'Modifier image',
                 'required' => false,
                 'data_class' => null,
             ])

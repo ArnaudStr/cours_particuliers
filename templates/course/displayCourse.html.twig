@@ -77,7 +77,7 @@
                         <!-- PLANNING DES DISPONIBILITES DU COURS -->
                         {% include '@Calendar/calendar.html' %} 
                     {% else %}
-                        <h2>Pour vous inscrire à ce cours, veuilllez <a href="#">vous connecter</a> si vous possedez déjà un compte, ou <a href="#">vous enregistrer</a> sinon</h2>
+                        <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a> si vous possedez déjà un compte, ou <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> sinon</h2>
                     {% endif %}
                 </div>
             </div>

@@ -10594,3 +10594,51 @@ body.pattern-04 {
     display:none;
   }
 }
+
+.main-wrapper{
+  min-height: 100vh;
+}
+
+.calendrier{
+  padding-top: 50px;
+}
+
+.calendrier .fc-widget-content{
+  height: 30px !important;
+}
+
+/* .calendrier .fc-event{
+  height: 28px;
+} */
+
+
+/* #external-events {
+  position: fixed;
+  z-index: 2;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  background: #eee;
+}*/
+
+#external-events .fc-event {
+  margin: 1em 0;
+  cursor: move;
+  height:40px;
+  width: 160px;
+}
+
+.profile_pic{
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.testimonial-box{
+  min-height: 250px;
+}
+
+#menuBar a:hover {
+  color: #2196f3 !important;
+}

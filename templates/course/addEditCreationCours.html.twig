@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Proposer un cours{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     <section class="clearfix pageTitleSection" style="background-image: url();">
@@ -8,7 +8,11 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="pageTitle">
-                        <h2>Proposer un cours</h2>
+                        {% if editMode == true %}
+                            <h2>Modification du cours {{ cours }}</h2>
+                        {% else %}
+                            <h2>Proposer un cours</h2>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -65,24 +69,4 @@
 
 {% block javascripts %}
 
-{% endblock %} 
-
-  {#  {{ form_start(form) }}
-
-        {{form_row(form.activite) }} 
-        {{form_row(form.tarifHoraire) }}
-        {{form_row(form.webcam) }}
-        {{form_row(form.chezProf) }}
-        {{form_row(form.chezEleve) }}
-        {{form_row(form.description) }}
-        {{form_row(form.niveaux) }}
-
-        {{form_row(form.submit) }} 
-
-    {{ form_end(form) }}
-
 {% endblock %}
-
-{% block javascripts %}
-
-{% endblock %} #}

@@ -8,22 +8,26 @@
 
 {% block body %}
 
-    <div data-entry-idprof={{app.user.id}}>
-    <!-- <a class="btnA" href="#" type="button" data-btn="up">Haut</a>
-    <a class="btnA" href='#' type="button" data-btn="down">Bas</a> -->
-    <div id='external-events'>
-        <p>
-          <strong>Draggable Events</strong>
-        </p>
-        <div class='fc-event'>My Event 1</div>
-    </div>
+    <div data-entry-idprof={{app.user.id}}></div>
 
-    <div id="calendarContainer">
-        {% include '@Calendar/calendar.html' %} 
+    <div class="row calendrier">
+        <div class="center-block col-md-6 col-sm-9 col-xs-12">
+            <div id='external-events'>
+                <p>
+                    <strong>Déplacez le bouton 'Nouveau créneau' ci-dessous sur le calendrier afin de créer un nouveau créneau.</br>
+                            Vous pouvez également déplacer, modifier ou supprimer (en cliquant dessus) un créneau sur le calendrirer.
+                    </strong>
+                </p>
+                <div class='fc-event'>Nouveau créneau</div>
+            </div>
+        </div>
+        <div class="center-block col-md-10 col-sm-10 col-xs-12">
+            {% include '@Calendar/calendar.html' %} 
+        </div>
     </div>
 
     {#<a id="boutton"><button type="button">#}
-    <a id="boutton" href="{{ path('changements_dispos', {'id': app.user.id}) }}"><button type="button">
+    <a id="boutton" href="{{ path('changements_dispos') }}"><button type="button">
         Valider mes disponibilites
     </button></a>
 {% endblock %}
@@ -31,12 +35,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="/js/disposProf.js">
+    <script src="/assets/js/disposProf.js">
     </script>
     <script>
-
-        //<i class="fas fa-times"></i>
-
         var plageHoraire = [];
         var tabJourHoraire = {};
         var btn = document.getElementById("boutton");
@@ -63,9 +64,7 @@
                 })
 
                 document.cookie = 'dispos='+JSON.stringify(tabJourHoraire)+'; path=/';
-         
         })
-
-        </script>
+    </script>
 {% endblock %}
 

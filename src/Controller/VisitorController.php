@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Activite;
 use App\Entity\Categorie;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -17,9 +17,19 @@ class VisitorController extends AbstractController
      */
     public function searchCourse()
     {
+        $profs = $this->getDoctrine()
+            ->getRepository(Prof::class)
+            ->findBestFive();  
+
+        $categories = $this->getDoctrine()
+            ->getRepository(Categorie::class)
+            ->findAll();  
+
         return $this->render('course/searchCourse.html.twig', [
             'title' => 'Cours à Strasbourg',
-            'transparent' => true
+            'transparent' => true,
+            'profs' => $profs,
+            'categories' => $categories,
         ]);
     }
 

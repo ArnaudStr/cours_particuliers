@@ -2,11 +2,9 @@
 
 namespace App\Controller\Eleve;
 
-use App\Entity\Eleve;
 use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Form\AvisType;
-use App\Entity\Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +31,7 @@ class EleveController extends AbstractController
      * Affichage du profil public d'un prof
      * @Route("/voirProfilProf/{id}", name="voir_profil_prof")
      */
-    public function voirProfilProf(Prof $prof)
-    {
+    public function voirProfilProf(Prof $prof) {
         $nbEtoiles = null;
         if ($notes = $prof->getNotes()){
             $noteMoyenne = round(array_sum($notes)/count($notes),1);
@@ -45,15 +42,15 @@ class EleveController extends AbstractController
             'prof' => $prof,
             'nbEtoiles' => $nbEtoiles,
         ]);
- 
     }
 
     /**
-     * @Route("/emettreAvis/{idEleve}/{idProf}", name="emettre_avis")
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @Route("/emettreAvis/{idProf}", name="emettre_avis")
      * @ParamConverter("prof", options={"id" = "idProf"})
      */
-    public function emettreAvis(Eleve $eleve, Prof $prof, Request $request) {
+    public function emettreAvis(Prof $prof, Request $request) {
+        $eleve = $this->getUser();
+
         $avis = new Avis();
 
         $form = $this->createForm(AvisType::class, $avis);

@@ -26,9 +26,14 @@ class CourseEleveController extends EleveController
      */
     public function searchCourseEleve()
     {
+        $categories = $this->getDoctrine()
+        ->getRepository(Categorie::class)
+        ->findAll();  
+
         return $this->render('course/searchCourse.html.twig', [
             'title' => 'Cours à Strasbourg',
-            'transparent' => true
+            'transparent' => true,
+            'categories' => $categories,
         ]);
     }
 
@@ -106,8 +111,9 @@ class CourseEleveController extends EleveController
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function demandeInscriptionSeance(Seance $seance, Eleve $eleve, Cours $cours) {
+    public function demandeInscriptionSeance(Seance $seance, Cours $cours) {
 
+        $eleve = $this->getUser();
         // Inscription élève au cours
         $demandeCours = new DemandeCours();
 
