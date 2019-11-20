@@ -18,6 +18,7 @@ use App\Controller\Prof\ProfController;
  */
 class CourseProfController extends ProfController
 {
+
     /**
      * Création ou modification d'un cours
      * @Route("/addProposeCours", name="add_propose_cours")
@@ -26,10 +27,10 @@ class CourseProfController extends ProfController
      */
     public function addEditCoursProf(Cours $cours = null, ObjectManager $manager, Request $request) {
        
-        $prof = $this->getUser();
-        $modif = true;
+        $prof = $this->getUser();   // On récupère le prof en session
+        $modif = true;              // Modification d'un cours existant (par défaut)
 
-        // si $creaneauCours est null (add)
+        // si $cours est null (ajout d'un cours)
         if (!$cours){
             $modif = false;
             $cours = new Cours();
@@ -41,20 +42,26 @@ class CourseProfController extends ProfController
             $title = 'Modification de cours '.$cours;
         }
 
+        // on prépare le formulaire
         $form = $this->createForm(CreationCoursType::class, $cours);
 
-        $form->handleRequest($request);
+        // Récupère les données du formulaires 
+        $form->handleRequest($request); 
                
+        // Vérifie si le formulaire a été remplis et validé
         if($form->isSubmitted() && $form->isValid()) {
 
-            // // On met les creneaux dans le cours
+            // Sauvegarde l'objet avant de l'envoyer en base de données 
             $manager->persist($cours);
 
+            // Execute la requête d'ajout/modif en base de données
             $manager->flush();
  
-            return $this->redirectToRoute('home_prof');
-            // return $this->redirectToRoute('showInfoseanceCours', ['id' => $seanceCours->getId()]);
+            // Une fois le cours ajouté en base de données, on redigire le prof vers la liste de ses cours
+            return $this->redirectToRoute('show_liste_cours');
         }
+
+        // Sinon c'est que le formulaire n'est pas valide ou n'a pas encore été remplis, on l'affiche donc
         return $this->render('course/addEditCreationCours.html.twig', ['form' => $form->createView(),
         'title' => $title, 'editMode' => $modif, 'cours' => $cours
         ]);
@@ -66,7 +73,7 @@ class CourseProfController extends ProfController
      */
     public function showListeCours() {
         return $this->render('prof/showListeCoursProf.html.twig', [
-            'title' => 'Planning'
+            'title' => 'Mes cours'
         ]);
     }
 

@@ -141,7 +141,7 @@ class MessageProfController extends ProfController
      * @Route("/sendMessageProf/{idEleve}", name="send_message_prof")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
-    public function sendMessageProf(Prof $prof, Eleve $eleve)
+    public function sendMessageProf(Eleve $eleve)
     {
         $prof = $this->getUser();
 

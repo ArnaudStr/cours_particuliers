@@ -37,13 +37,13 @@ class CreationCoursType extends AbstractType
             ])
 
             ->add('chezProf', CheckboxType::class, [
-                "label" => "Cours chez le professeur",
+                "label" => "Cours chez vous",
                 'required' => false,
 
             ])
 
             ->add('chezEleve', CheckboxType::class, [
-                "label" => "Cours chez l'élève",
+                "label" => "Déplacement chez l'élève",
                 'required' => false,
 
             ])
@@ -52,7 +52,7 @@ class CreationCoursType extends AbstractType
             ])
 
             ->add('niveaux', TextType::class, [
-                'label' => 'Veuillez renseigner les niveaux pour lesquels vous voulez enseigner',
+                'label' => 'Veuillez renseigner les niveaux pour lesquels vous voulez enseigner ce cours',
                 'required' => false,
                 ])
 
