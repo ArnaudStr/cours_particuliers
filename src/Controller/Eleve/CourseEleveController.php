@@ -106,9 +106,8 @@ class CourseEleveController extends EleveController
     
     /**
      * Envoie une demande d'inscription au prof pour le cours en question
-     * @Route("/demandeInscriptionSeance/{idSeance}/{idEleve}/{idCours}", name="demande_inscription_seance")
+     * @Route("/demandeInscriptionSeance/{idSeance}/{idCours}", name="demande_inscription_seance")
      * @ParamConverter("seance", options={"id" = "idSeance"})
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
     public function demandeInscriptionSeance(Seance $seance, Cours $cours) {

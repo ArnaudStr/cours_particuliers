@@ -33,6 +33,7 @@ class RegistrationType extends AbstractType
                 'attr' => [
                     'class' => 'uk-input'
                 ],
+                
                 'constraints' => [
                     new Length([
                         'min' => 6,

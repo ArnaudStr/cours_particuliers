@@ -55,17 +55,19 @@
                             <p>{{ cours.description }}</p>
                         </div>
                         <div class="detailsInfoBox">
-                            <h3>Reviews (3)</h3>
+                            <h3>Avis sur {{ cours.prof }} ({{ cours.prof.avis|length }})</h3>
 
-                            <div class="media media-comment">
-                                <div class="media-left">
-                                    <h4 class="media-heading">Jessica Brown</h4>
+                            {% for avis in cours.prof.avis %}
+                                <div class="media media-comment">
+                                    <div class="media-left">
+                                        <h4 class="media-heading">{{ avis.eleve }}</h4>
+                                        <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>{{ avis.commentaire }}</p>
+                                    </div>
                                 </div>
-                                <div class="media-body">
-                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudan
-                                    totam rem ape riam,</p>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
