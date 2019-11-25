@@ -11,7 +11,75 @@
         {% endfor %}
     {% endblock %}
 
-    <div class="up">
+
+    <!-- DASHBOARD PROFILE SECTION -->
+<section class="clearfix bg-dark profileSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <div class="dashboardBoxBg mb30">
+                    <div class="profileImage">
+                        <img src="/assets/pictures/{{ app.user.pictureFilename }}" alt="Image User" class="img-circle">
+                    </div>
+                    <div class="profileUserInfo bt profileName">
+                        <h2>{{ app.user }}</h2>
+                        <h3>{{ app.user.email }}</h3>
+                        <p><a href="{{ path('edit_profile_eleve') }}" class="">Modifier mon profil</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <div class="dashboardBoxBg">
+                    <div class="profileIntro">
+                        <h3>Mes cours</h3>
+                        {% if allCoursEtProchaineSeance %}
+                            {% for coursSeance in allCoursEtProchaineSeance %}
+                               <h4>Cours de {{ coursSeance.cours }} avec {{ coursSeance.cours.prof }}</h4>
+                                {% if coursSeance.lastSeance %}
+                                    <p>Dernière séance le {{ coursSeance.lastSeance.dateDebut|date('d/m/Y') }}
+                                        à {{ coursSeance.lastSeance.dateDebut|date('H:i') }}
+                                    </p>
+                                {% endif %}
+
+                                {% if coursSeance.nextSeance %}
+                                    <p>Prochaine séance le {{ coursSeance.nextSeance.dateDebut|date('d/m/Y') }}
+                                        à {{ coursSeance.nextSeance.dateDebut|date('H:i') }}
+                                    </p>
+                                {% endif %}
+                                </br>
+                            {% endfor %}
+                        {% else %}
+                            <p>Vous n'êtes inscrit à aucun cours</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var acc = document.getElementsByClassName("accordionCustom");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+        this.classList.toggle("activeAccordeonCustom");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+        } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+        });
+    }
+</script>
+{% endblock %}
+
+    {#<div class="up">
         <div class="infosEtPhoto">
             <div class="photo">
                 <img class="profile_pic" src="/assets/pictures/{{ app.user.pictureFilename }}" alt="">
@@ -40,7 +108,7 @@
             </div>
         {% endif %}
     </div>
-    {# <div class="down">
+     <div class="down">
         <div class="coursEleve">
             <h2>Liste des cours suivis</h2>
             <ul class="list-group">
@@ -51,5 +119,5 @@
                 {% endfor %}
             </ul>
         </div>
-    </div> #}
-{% endblock %}
+    </div> 
+{% endblock %}#}

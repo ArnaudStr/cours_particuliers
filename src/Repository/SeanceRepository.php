@@ -56,6 +56,36 @@ class SeanceRepository extends ServiceEntityRepository
         return $query->getOneorNullresult();
     }
 
+    public function findLastSeanceEleve(Eleve $eleve, Cours $cours) {
+        // $entityManager = $this->getEntityManager();
+
+        // $query = $entityManager->createQuery(
+        //     'SELECT s
+        //     FROM App\Entity\Seance s
+        //     WHERE s.eleve = :eleve
+        //     AND s.cours = :cours
+        //     AND s.dateDebut < CURRENT_TIMESTAMP()'
+        // )->setParameter('eleve', $eleve)
+        // ->setParameter('cours', $cours)
+        // ->setMaxResults(1);
+    
+        // return $query->getOneorNullresult();
+
+        return $this->createQueryBuilder('s')
+            ->select('s, MAX(s.dateDebut) AS HIDDEN max_date_debut')
+            ->where('s.eleve = :eleve')
+            ->andWhere('s.cours = :cours')
+            ->andWhere('s.dateDebut < CURRENT_TIMESTAMP()')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('cours', $cours)
+            // ->setParameter('date', )
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+
+
+    }
+
 
     // /**
     //  * @return Seance[] Seances à supprimer lorsqu'un prof modifie ses disponibilités

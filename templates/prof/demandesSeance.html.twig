@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h1>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("m/d/Y") }} à {{ seance.dateDebut|date("H:i") }}</h1>
+<h1>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h1>
 {% for demandeCours in demandesCours %}
     <p>Demande de {{ demandeCours.eleve }} pour un cours de {{ demandeCours.cours }}
     

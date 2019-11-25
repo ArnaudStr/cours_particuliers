@@ -37,28 +37,37 @@ class ProfileEleveController extends EleveController
                 ->getRepository(Seance::class)
                 ->findNextSeanceEleve($eleve, $cours); 
 
-            if ($proSeance) {
-                $coursEtProchaineSeance['seance'] = $proSeance;
-            }
-            else {
-                $coursEtProchaineSeance['seance'] = null;
-            }
+            // if ($proSeance) {
+            //     $coursEtProchaineSeance['nextSeance'] = $proSeance;
+            // }
+            // else {
+            //     $coursEtProchaineSeance['nextSeance'] = null;
+            // }
+            $coursEtProchaineSeance['nextSeance'] = $proSeance;
+
+            $lastSeance = $this->getDoctrine()
+                ->getRepository(Seance::class)
+                ->findLastSeanceEleve($eleve, $cours); 
+
+            $coursEtProchaineSeance['lastSeance'] = $lastSeance;
 
             array_push($allCoursEtProchaineSeance, $coursEtProchaineSeance);
 
             $coursEtProchaineSeance = [];
         }
 
+        // dd($allCoursEtProchaineSeance);
+
         return $this->render('eleve/showProfileEleve.html.twig', [
-            'prochainesSeances' => $allCoursEtProchaineSeance
+            'allCoursEtProchaineSeance' => $allCoursEtProchaineSeance,
         ]);
     }   
 
     /**
      * Modification des informations
-     * @Route("/editEleve/", name="edit_eleve")
+     * @Route("/editProfileEleve/", name="edit_profile_eleve")
      */
-    public function editEleve(Request $request) {
+    public function editProfileEleve(Request $request) {
 
         $eleve = $this->getUser();
         // On récupere l'image avant le passage par le formulaire
@@ -71,13 +80,16 @@ class ProfileEleveController extends EleveController
 
             // Upload de la photo et inscription en BDD du nom de l'image, (si il y a eu une image dans le formulaire)
             if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
+                if ($pictureFilename!='default_avatar.png'){
+                    $this->delFile('pictures',$pictureBeforeForm);
+                }
                 $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
                 $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
                 $eleve->setPictureFilename($filename);
             }
-            else {
-                $eleve->setPictureFilename($pictureBeforeForm);
-            }
+            // else {
+            //     $eleve->setPictureFilename($pictureBeforeForm);
+            // }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($eleve);
@@ -88,7 +100,6 @@ class ProfileEleveController extends EleveController
 
         return $this->render('eleve/editProfileEleve.html.twig', [
             'editForm' => $form->createView(),
-            // 'picture' => $pictureBeforeForm
         ]);
     }
 

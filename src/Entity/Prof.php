@@ -342,7 +342,7 @@ class Prof implements UserInterface
     }
 
     // public function setPictureFilename(?string $pictureFilename): self
-    public function setPictureFilename($pictureFilename)
+    public function setPictureFilename(?string $pictureFilename)
     {
         $this->pictureFilename = $pictureFilename;
 

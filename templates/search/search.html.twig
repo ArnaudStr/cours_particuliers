@@ -31,7 +31,7 @@
                                             {% else %}
                                                 <a href="{{ path('display_course_visitor', {'id':cours.id} ) }}">
                                             {% endif %}
-                                            <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
+                                            <img class="listeCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
                                             <div class="thingsMask">
                                                 <h2>{{ cours.prof }}</h2>
                                                 <p>{{ cours.tarifHoraire }}€ /h</p>

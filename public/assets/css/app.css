@@ -4661,7 +4661,7 @@ i.fa.fa-heart-o.active:before {
   color: #2196f3;
 }
 
-.thingsBox.thinsSpace {
+.thingsBox.thinsSpace { 
   margin: 15px 0;
 }
 
@@ -10629,9 +10629,9 @@ body.pattern-04 {
   width: 160px;
 }
 
-.profile_pic{
-  max-width: 200px;
-  max-height: 200px;
+.profile_pic_edit{
+  max-width: 250px;
+  max-height: 250px;
 }
 
 .testimonial-box{
@@ -10641,3 +10641,8 @@ body.pattern-04 {
 #menuBar a:hover {
   color: #2196f3 !important;
 }
+
+/* .listeCours{ 
+  width: 300px;
+  height: 300px;
+} */

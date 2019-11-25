@@ -81,7 +81,7 @@
                                 <button class="accordionCustom">{{ coursEleves.cours.activite }}</button>
                                     <div class="panelCustom">
                                         {% for prochaineSeance in coursEleves.seances %}
-                                            <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('m/d/Y') }}
+                                            <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('d/m/Y') }}
                                                 à {{ prochaineSeance.dateDebut|date('H:i') }}
                                             </p>
                                         {% endfor %}

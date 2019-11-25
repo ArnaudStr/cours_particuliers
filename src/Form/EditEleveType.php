@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\File;
 
 class EditEleveType extends AbstractType
 {
@@ -20,9 +21,6 @@ class EditEleveType extends AbstractType
             ])
             ->add('prenom',TextType::class, [
             ])
-            ->add('adresse',TextType::class, [
-                "required" => false              
-            ])
 
             ->add('pictureFilename', FileType::class, [
                 'attr' =>[
@@ -32,9 +30,22 @@ class EditEleveType extends AbstractType
                     'placeholder' => 'Selectionnez une image',
                     'onkeydown' => 'return false'
                 ],
-                'label' => 'Modifier image',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4096k',
+                        'mimeTypes' => [
+                            'image/jpg',
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'maxSizeMessage' => 'Image trop lourde',
+                        'mimeTypesMessage' => 'Image non valide, formats acceptés : jpeg, jpg & png',
+                    ])
+                ],
+                
+                // 'label' => 'Modifier image',
                 'required' => false,
-                'data_class' => null,
+                'mapped' => false
             ])
 
             ->add('submit', SubmitType::class, [

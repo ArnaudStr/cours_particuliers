@@ -90,7 +90,7 @@ class ProfileProfController extends ProfController
      * Modification du profil du prof
      * @Route("/editProfileProf/", name="edit_profile_prof")
      */
-    public function editProfileProf(Request $request, ObjectManager $manager)
+    public function editProfileProf(Request $request)
     {       
         $prof = $this->getUser();
         
@@ -100,7 +100,7 @@ class ProfileProfController extends ProfController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             // Upload de la photo et inscription en BDD du nom de l'image
             if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
                 if ($pictureFilename!='default_avatar.png'){
@@ -111,14 +111,14 @@ class ProfileProfController extends ProfController
                     $prof->setPictureFilename($filename);
             }
 
-            else
-            {
-                $prof->setPictureFilename($pictureBeforeForm);
-            }
+            // else
+            // {
+            //     $prof->setPictureFilename($pictureBeforeForm);
+            // }
 
-            $manager->persist($prof);
-
-            $manager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($prof);
+            $entityManager->flush();
 
             return $this->redirectToRoute('show_profile_prof', [
                 'id' => $prof->getId()
@@ -127,7 +127,6 @@ class ProfileProfController extends ProfController
 
         return $this->render('prof/editProfileProf.html.twig', [
             'editForm' => $form->createView(),
-            'prof' => $prof
         ]);
     }
 

@@ -23,33 +23,37 @@ class EditProfType extends AbstractType
             ->add('prenom',TextType::class, [
             ])
             ->add('adresse',TextType::class, [
-                "required" => false              
+                "required" => false,
+                'label' => 'Localisation',
             ])
             ->add('description',TextareaType::class, [
                 "required" => false              
             ])
 
             ->add('pictureFilename', FileType::class, [
+                'mapped' => false,
                 'attr' =>[
-                    // 'multiple' => 'multiple',
+                    'multiple' => 'multiple',
                     'id' => 'preview',
-                    // 'onmousedown' => 'return false',
-                    // 'placeholder' => 'Selectionnez une image',
-                    // 'onkeydown' => 'return false'
+                    'onmousedown' => 'return false',
+                    'placeholder' => 'Selectionnez une image',
+                    'onkeydown' => 'return false'
                 ],
                 'constraints' => [
                     new File([
-                        'maxSize' => '5024k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
-                            'image/png',
+                            'image/jpg',
                             'image/jpeg',
+                            'image/png',
                         ],
-                        'mimeTypesMessage' => 'Veuillez respecter le format d\'image (.jpeg ou .png)',
-                    ])
+                        'maxSizeMessage' => 'Image trop lourde',
+                        'mimeTypesMessage' => 'Image non valide, formats acceptés : jpeg, jpg & png',
+                    ]),
                 ],
-                // 'label' => 'Modifier image',
+                
+                'mapped' => false,
                 'required' => false,
-                'data_class' => null,
             ])
 
             ->add('submit', SubmitType::class, [

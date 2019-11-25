@@ -49,11 +49,6 @@ class Eleve implements UserInterface
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $adresse;
-
-    /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Veuillez entrer un email")
      * @Assert\Email
@@ -77,11 +72,6 @@ class Eleve implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\File(
-     *      mimeTypes={ "image/jpg", "image/jpeg", "image/png" })
-     *      maxSize = "2M",
-     *      mimeTypesMessage = "Format de l'image non valide",
-     *      maxSizeMessage = "L'image est trop lourde, taille max : {{ size }}"
      */
     private $pictureFilename;
 
@@ -219,18 +209,6 @@ class Eleve implements UserInterface
     public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getAdresse(): ?string
-    {
-        return $this->adresse;
-    }
-
-    public function setAdresse(string $adresse): self
-    {
-        $this->adresse = $adresse;
 
         return $this;
     }

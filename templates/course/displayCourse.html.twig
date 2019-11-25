@@ -7,10 +7,10 @@
 <section class="clearfix paddingAdjustBottom" id="listing-details">
         <div class="container">
             <div class="row">
-                <div class="col-xs-4">
+                <div class="col-sm-4 col-xs-12">
                     <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
                 </div>
-                <div class="col-xs-8">
+                <div class="col-sm-8 col-xs-12">
                     <div class="listingTitleArea">
                         <h2>{{ cours.prof }}</h2>
                         <p>Localisation</p>
@@ -37,54 +37,89 @@
                         <p>Cours : {{ cours }}</p>
                         <p>Niveaux enseignés : {{ cours.niveaux }}</p>
                         <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
-                        <p>Mode d'enseignement : </p>
+                        <p>Mode d'enseignement : <br/>
+                            {% if cours.webcam %}
+                                <dd> - Téléprésentiel</dd>
+                            {% endif %}
+                            {% if cours.chezProf %}
+                                <dd> - Chez le professeur</dd>
+                            {% endif %}
+                            {% if cours.chezEleve %}
+                                <dd> - A domicile</dd>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-       
-    <!-- LISTINGS DETAILS INFO SECTION -->
-<section class="clearfix paddingAdjustTop">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8 col-xs-12">
-                    <div class="listDetailsInfo">
-                        <div class="detailsInfoBox">
-                            <h3>Description du cours</h3>
-                            <p>{{ cours.description }}</p>
-                        </div>
-                        <div class="detailsInfoBox">
-                            <h3>Avis sur {{ cours.prof }} ({{ cours.prof.avis|length }})</h3>
+    <section class="clearfix paddingAdjustTop">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                        <div id="myModal" class="modal">
 
-                            {% for avis in cours.prof.avis %}
-                                <div class="media media-comment">
-                                    <div class="media-left">
-                                        <h4 class="media-heading">{{ avis.eleve }}</h4>
-                                        <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
-                                    </div>
-                                    <div class="media-body">
-                                        <p>{{ avis.commentaire }}</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <p>Some text in the Modal..</p>
+                            </div>
                         </div>
+                        </div>
+                        </div>
+                        </div>
+                    </section>
+<section class="clearfix paddingAdjustTop">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="listDetailsInfo">
+                {% if app.user %}
+                    <div data-entry-ideleve={{app.user.id}}></div>
+                    <div data-entry-idcours={{cours.id}}></div>
+                    <div data-entry-idprof={{cours.prof.id}}></div>
+                    <!-- PLANNING DES DISPONIBILITES DU COURS -->
+                    {% include '@Calendar/calendar.html' %} 
+                    <!-- The Modal -->
+
+                {% else %}
+                    <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a> si vous possedez déjà un compte, ou <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> sinon</h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+       
+<!-- LISTINGS DETAILS INFO SECTION -->
+<section class="clearfix paddingAdjustTop">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="listDetailsInfo">
+                    <div class="detailsInfoBox">
+                        <h3>Description du cours</h3>
+                        <p>{{ cours.description }}</p>
                     </div>
-                </div>
-                <div class="col-sm-4 col-xs-12">
-                    {% if app.user %}
-                        <div data-entry-ideleve={{app.user.id}}></div>
-                        <div data-entry-idcours={{cours.id}}></div>
-                        <div data-entry-idprof={{cours.prof.id}}></div>
-                        <!-- PLANNING DES DISPONIBILITES DU COURS -->
-                        {% include '@Calendar/calendar.html' %} 
-                    {% else %}
-                        <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a> si vous possedez déjà un compte, ou <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> sinon</h2>
-                    {% endif %}
+                    <div class="detailsInfoBox">
+                        <h3>Avis sur {{ cours.prof }} ({{ cours.prof.avis|length }})</h3>
+
+                        {% for avis in cours.prof.avis %}
+                            <div class="media media-comment">
+                                <div class="media-left">
+                                    <h4 class="media-heading">{{ avis.eleve }}</h4>
+                                    <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                                </div>
+                                <div class="media-body">
+                                    <p>{{ avis.commentaire }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
     {#<h2>Inscription au cours de {{ cours }}</h2>
@@ -135,8 +170,46 @@
     <script>
 
     // TO DO LA MODAL OU TU CHOISIS LE MODE PARCE QUE C'EST INCOMPREHENSIBLE
-        var tabA = document.getElementsByClassName('fc-time-grid-event');
+        /*var tabA = document.getElementsByClassName('fc-time-grid-event');
         console.log(tabA);
         console.log(tabA.length);
+
+        for (i = 0; i < tabA.length; i++) {
+            tabA[i].addEventListener("click", function() {
+            this.classList.toggle("activeAccordeonCustom");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+            });
+        } */
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+        modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+        modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+}
     </script>
 {% endblock %}

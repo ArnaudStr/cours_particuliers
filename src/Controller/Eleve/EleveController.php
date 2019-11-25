@@ -5,6 +5,7 @@ namespace App\Controller\Eleve;
 use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Form\AvisType;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -79,4 +80,15 @@ class EleveController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    public function delFile($dir, $del_file){
+        $fsObject = new Filesystem();
+        $current_dir_path = getcwd();
+            $delTarget = $current_dir_path . "/assets/". $dir ."/". $del_file;
+        
+            if($del_file){
+               return $fsObject->remove($delTarget);
+            }
+    }
+
 }
