@@ -31,7 +31,9 @@
                                                 <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->
                                             <p></p>
                                         </span>
-                                        <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
+                                        {% if conversation.dateDiff != null %}
+                                            <span class="messageTime">Dernier message reçu : il y a {{ conversation.dateDiff }}</span>
+                                        {% endif %}
                                     </li>
                                 </a>
                                 {% endif %}

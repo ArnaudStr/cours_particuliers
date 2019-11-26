@@ -41,6 +41,7 @@ class VisitorController extends AbstractController
         $search = $request->query->get('s');
 
         $nbResultats = 0;
+        $titre = 'Recherhe';
 
         $categorie = $this->getDoctrine()
             ->getRepository(Categorie::class)
@@ -54,6 +55,7 @@ class VisitorController extends AbstractController
             foreach($categorie->getActivites() as $activite)
             $nbResultats += count($activite->getCoursS());
         }
+
         else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
@@ -62,7 +64,7 @@ class VisitorController extends AbstractController
             'categorie' => $categorie,
             'activite' => $activite,
             'nbResultats' => $nbResultats,
-            'title' => $activite->getNom()
+            'title' => $search
         ]);
     }
 

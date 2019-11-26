@@ -2,14 +2,12 @@
 
 namespace App\Controller\Prof;
 
-use App\Entity\Prof;
 use App\Entity\Eleve;
 use App\Entity\Message;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Controller\Prof\ProfController;
 use DateTime;
-use DateTimeZone;
 
 
 /**
@@ -33,8 +31,9 @@ class MessageProfController extends ProfController
         // tableau [ [eleve, nombreMessagesNonLus],  [eleve, nombreMessagesNonLus], ...] 
         $allConversationsNbMsgNonLus = [];
 
-        $date = new DateTime('now', new DateTimeZone('Europe/Paris'));
-
+        $date = new DateTime('now');
+        // pour avoir la bonne date en France
+        $date->add(new \DateInterval('PT1H'));
 
         foreach($allConversations as $conversation){
             $eleve =  $conversation->getEleve();
@@ -138,7 +137,6 @@ class MessageProfController extends ProfController
     /**
      * Envoi d'un message à un élève
      * @Route("/sendMessageProf/{id}", name="send_message_prof")
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function sendMessageProf(Eleve $eleve)
     {
@@ -155,6 +153,6 @@ class MessageProfController extends ProfController
         $entityManager->persist($message);
         $entityManager->flush();
 
-        return $this->redirectToRoute('conversation_prof', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
+        return $this->redirectToRoute('conversation_prof', ['id' => $eleve->getId()]);
     }
 }

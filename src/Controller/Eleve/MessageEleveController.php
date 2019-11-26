@@ -3,9 +3,7 @@
 namespace App\Controller\Eleve;
 
 use DateTime;
-use DateTimeZone;
 use App\Entity\Prof;
-use App\Entity\Eleve;
 use App\Entity\Message;
 use App\Controller\Eleve\EleveController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,8 +31,7 @@ class MessageEleveController extends EleveController
         $allConversationsNbMsgNonLus = [];
 
         $date = new DateTime('now');
-        $date->add(new \DateInterval('P1h'));
-        // $date = new DateTime('now');
+        $date->add(new \DateInterval('PT1H'));
 
         foreach($allConversations as $conversation){
             $prof =  $conversation->getProf();
@@ -52,9 +49,6 @@ class MessageEleveController extends EleveController
                 $differenceDate = date_diff($date, $dernierMessage->getDateEnvoi())->format("%d jours, %h h, %i m, %s s");
             }
             else $differenceDate = null;
-            dump($dernierMessage);
-            dump($date);
-            dd($differenceDate);
 
             // On ajoute l'élève et le nombre de messages non lus
             array_push($allConversationsNbMsgNonLus, ['prof' => $prof, 'nbMsg' => $nbMsgNonLus, 'dernierMsg' => $dernierMessage, 'dateDiff' => $differenceDate]);         

@@ -57,17 +57,17 @@ class CourseEleveController extends EleveController
         if ($categorie){
             foreach($categorie->getActivites() as $activite)
             $nbResultats += count($activite->getCoursS());
+
         }
-        else {
+        else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
             
         return $this->render('search/search.html.twig', [
             'categorie' => $categorie,
             'activite' => $activite,
-            'recherche' => $search,
             'nbResultats' => $nbResultats,
-            'title' => $activite->getNom()
+            'title' => $search
 
         ]);
     }
