@@ -61,8 +61,7 @@ class MessageProfController extends ProfController
     
     /**
      * Conversation avec un élève
-     * @Route("/conversationProf/{idEleve}/", name="conversation_prof")
-     * @ParamConverter("eleve", options={"id" = "idEleve"})
+     * @Route("/conversationProf/{id}/", name="conversation_prof")
      */
     public function conversationProf(Eleve $eleve) {
 
@@ -138,7 +137,7 @@ class MessageProfController extends ProfController
 
     /**
      * Envoi d'un message à un élève
-     * @Route("/sendMessageProf/{idEleve}", name="send_message_prof")
+     * @Route("/sendMessageProf/{id}", name="send_message_prof")
      * @ParamConverter("eleve", options={"id" = "idEleve"})
      */
     public function sendMessageProf(Eleve $eleve)

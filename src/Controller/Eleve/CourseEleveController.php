@@ -67,6 +67,7 @@ class CourseEleveController extends EleveController
             'activite' => $activite,
             'recherche' => $search,
             'nbResultats' => $nbResultats,
+            'title' => $activite->getNom()
 
         ]);
     }
@@ -126,6 +127,22 @@ class CourseEleveController extends EleveController
         $entityManager->flush();
             return $this->render('eleve/calendrierEleve.html.twig', [
                 'title' => 'Planning'
+        ]);
+    }
+
+
+    /**
+     * @Route("/listeCoursEleveActivite/{id}", name="liste_cours_eleve_activite")
+     */
+    public function listeCoursEleveActivite(Activite $activite)
+    {
+        $nbResultats = count($activite->getCoursS());
+        // dd($activite);
+                               
+        return $this->render('search/search.html.twig', [
+            'activite' => $activite,
+            'nbResultats' => $nbResultats,
+            'title' => $activite->getNom()
         ]);
     }
 }

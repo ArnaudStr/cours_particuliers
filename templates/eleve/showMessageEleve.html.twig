@@ -14,7 +14,7 @@
                             {% for conversation in allConversations %}
                                 <!-- Conversation avec nouveaux messages -->
                                 {% if conversation.nbMsg != 0 %}
-                                <a href="{{ path('conversation_eleve', { 'idEleve':app.user.id, 'idProf':conversation.prof.id }) }}">
+                                <a href="{{ path('conversation_eleve', { 'id':conversation.prof.id }) }}">
                                     <li class="messageCommon recentMessage listWrapper">
                                          <span class="messageInfo">
                                             <h5>{{ conversation.prof }}, {{ conversation.nbMsg }} messages non lus</h5>
@@ -25,7 +25,7 @@
 
                                 <!-- Conversation sans nouveau message -->
                                 {% else %}
-                                <a href="{{ path('conversation_eleve', { 'idEleve':app.user.id, 'idProf':conversation.prof.id }) }}">
+                                <a href="{{ path('conversation_eleve', { 'id':conversation.prof.id }) }}">
                                     <li class="messageCommon oldMessage listWrapper">                                        <span class="messageInfo">
                                             <h5>{{ conversation.prof }}</h5>
                                                 <!-- <small>Today <span class="dayTime">2.08 PM</span></small> -->

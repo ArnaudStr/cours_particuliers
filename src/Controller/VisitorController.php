@@ -38,7 +38,7 @@ class VisitorController extends AbstractController
      */
     public function listeCoursVisitorSearch(Request $request)
     {
-        $search = lcfirst($request->query->get('s'));
+        $search = $request->query->get('s');
 
         $nbResultats = 0;
 
@@ -57,16 +57,25 @@ class VisitorController extends AbstractController
         else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
-        // $nbResultats = 5;
-
-        // return new Response(json_encode($activites));
-
-        // return $activites;
             
         return $this->render('search/search.html.twig', [
             'categorie' => $categorie,
             'activite' => $activite,
-            'recherche' => $search,
+            'nbResultats' => $nbResultats,
+            'title' => $activite->getNom()
+        ]);
+    }
+
+    /**
+     * @Route("/listeCoursVisitorActivite/{id}", name="liste_cours_visitor_activite")
+     */
+    public function listeCoursVisitorActivite(Activite $activite)
+    {
+        $nbResultats = count($activite->getCoursS());
+        // dd($activite);
+                               
+        return $this->render('search/search.html.twig', [
+            'activite' => $activite,
             'nbResultats' => $nbResultats,
         ]);
     }

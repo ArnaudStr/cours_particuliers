@@ -33,7 +33,7 @@
 
             <div class="type_msg">
               <div class="input_msg_write">
-                <form action='{{ path('send_message_prof', {'idProf':app.user.id, 'idEleve':eleve.id}) }}' method='POST'>
+                <form action='{{ path('send_message_prof', {'id':eleve.id}) }}' method='POST'>
                     <input type="text" name="text" class="write_msg" placeholder="Entrez votre message">
                     <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
                     <!-- <button type='submit'>Envoyer message</button> -->

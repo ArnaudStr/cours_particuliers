@@ -2,18 +2,35 @@
 
 {% block body %}
 
-<h1>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h1>
-{% for demandeCours in demandesCours %}
-    <p>Demande de {{ demandeCours.eleve }} pour un cours de {{ demandeCours.cours }}
-    
-    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn btn-warning btn-lg">Valider la seance</button></a></p>
+<!-- CATEGORY LIST SECTION -->
+<section class="clerfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="resultBar barSpaceAdjust">
+                    <h2>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h2>
+                </div>
+                {% for demandeCours in demandesCours %}
+                    <p>Demande de {{ demandeCours.eleve }} pour un cours de {{ demandeCours.cours }}
+                    
+                    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn-primary">Valider la seance</button></a></p>
+                
+                    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn-primary">Refuser la seance</button></a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
 
-    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn btn-warning btn-lg">Refuser la seance</button></a></p>
-{% endfor %}
+
+   {# {% for cours in app.user.coursS %}
+        <p><a href="{{ path('edit_propose_cours', {'idCours':cours.id}) }}"><button type="button" class="btn btn-warning btn-lg">Modifier le cours {{ cours }}</button></a></p>
+    {% endfor %}
+
+    <p><a href="{{ path('add_propose_cours') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter un cours</button></a></p> #}
 
 {% endblock %}
 
-
 {% block javascripts %}
-
+    
 {% endblock %}

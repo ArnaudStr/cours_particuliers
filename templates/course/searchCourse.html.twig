@@ -51,7 +51,11 @@
                     <h2>{{ categorie }}</h2>
                     <ul class="list-unstyled">
                     {% for activite in categorie.activites  %}
-                        <li><a href="">{{ activite }}</a></li>
+                        {% if app.user %}
+                            <li><a href=" {{ path('liste_cours_eleve_activite', {'id' : activite.id}) }}">{{ activite }}</a></li>
+                        {% else %}
+                            <li><a href=" {{ path('liste_cours_visitor_activite', {'id' : activite.id}) }}">{{ activite }}</a></li>
+                        {% endif %}
                     {% endfor %}
                     </ul>
                 </div>
