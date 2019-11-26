@@ -5,70 +5,57 @@
 {% block body %}
 <!-- LISTINGS DETAILS TITLE SECTION -->
 <section class="clearfix paddingAdjustBottom" id="listing-details">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4 col-xs-12">
-                    <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
-                </div>
-                <div class="col-sm-8 col-xs-12">
-                    <div class="listingTitleArea">
-                        <h2>{{ cours.prof }}</h2>
-                        <p>Localisation</p>
-                        <div class="listingReview">
-                            {% if cours.prof.noteMoyenne %}
-                                <ul class="list-inline rating">
-                                    {% if cours.prof.noteMoyenne|round >= 1 %}
-                                        {% for i in 1 .. cours.prof.noteMoyenne|round  %}
-                                            <!-- Etoiles pleines -->
-                                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                        {% endfor %}
-                                    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-xs-12">
+                <img src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
+            </div>
+            <div class="col-sm-8 col-xs-12">
+                <div class="listingTitleArea">
+                    <h2>{{ cours.prof }}</h2>
+                    <p>Localisation</p>
+                    <div class="listingReview">
+                        {% if cours.prof.noteMoyenne %}
+                            <ul class="list-inline rating">
+                                {% if cours.prof.noteMoyenne|round >= 1 %}
+                                    {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                        <!-- Etoiles pleines -->
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                    {% endfor %}
+                                {% endif %}
 
-                                    {% if cours.prof.noteMoyenne|round != 5 %}         
-                                        {% for i in cours.prof.noteMoyenne|round .. 4 %}
-                                            <!-- Etoiles vides -->
-                                            <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                                        {% endfor %}
-                                    {% endif %}
-                                </ul>
-        						<span>({{ cours.prof.avis|length }} avis)</span>
-                            {% endif %}
-                        </div>
-                        <p>Cours : {{ cours }}</p>
-                        <p>Niveaux enseignés : {{ cours.niveaux }}</p>
-                        <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
-                        <p>Mode d'enseignement : <br/>
-                            {% if cours.webcam %}
-                                <dd> - Téléprésentiel</dd>
-                            {% endif %}
-                            {% if cours.chezProf %}
-                                <dd> - Chez le professeur</dd>
-                            {% endif %}
-                            {% if cours.chezEleve %}
-                                <dd> - A domicile</dd>
-                            {% endif %}
-                        </p>
+                                {% if cours.prof.noteMoyenne|round != 5 %}         
+                                    {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                        <!-- Etoiles vides -->
+                                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                            <span>({{ cours.prof.avis|length }} avis)</span>
+                        {% endif %}
                     </div>
+                    <p>Cours : {{ cours }}</p>
+                    <p>Niveaux enseignés : {{ cours.niveaux }}</p>
+                    <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
+                    <p>Mode d'enseignement : <br/>
+                        {% if cours.webcam %}
+                            <dd> - Téléprésentiel</dd>
+                        {% endif %}
+                        {% if cours.chezProf %}
+                            <dd> - Chez le professeur</dd>
+                        {% endif %}
+                        {% if cours.chezEleve %}
+                            <dd> - A domicile</dd>
+                        {% endif %}
+                    </p>
+                    <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Envoyer un message</button></a>
+
                 </div>
             </div>
         </div>
-    </section>
-    <section class="clearfix paddingAdjustTop">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12 col-xs-12">
-                        <div id="myModal" class="modal">
+    </div>
+</section>
 
-                            <!-- Modal content -->
-                            <div class="modal-content">
-                            <span class="close">&times;</span>
-                            <p>Some text in the Modal..</p>
-                            </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                    </section>
 <section class="clearfix paddingAdjustTop">
     <div class="container">
         <div class="row">
@@ -121,95 +108,10 @@
     </div>
 </section>
 
-
-    {#<h2>Inscription au cours de {{ cours }}</h2>
-    <div class="displayCourse">
-        <div class="displayCourseLeft">
-            <div class="photoAndInfos">
-                <img class="profile_pic" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="">
-                <div class="infos2">
-                    <p>{{ cours.prof }}</p>
-                    <p>Note : {{ cours.prof.noteMoyenne }}({{ cours.prof.avis|length }} avis)</p>
-                    <a href="{{ path('voir_profil_prof', {'id':cours.prof.id}) }}"><button type="button">
-                        Voir profil du prof
-                        </button>
-                    </a> 
-                </div>
-            </div>
-            <div class="descriptifCours">
-                <p>{{ cours.description }}</p>
-                {% for niveau in cours.niveaux %}
-                    {{ niveau }}
-                {% endfor %}
-            </div>
-            {% if app.user %}
-                <a href="{{ path('conversation_eleve', {'idProf':cours.prof.id, 'idEleve':app.user.id}) }}">
-                    <button type="button">
-                        Contacter le prof
-                    </button>
-                </a>
-            {% endif %}
-        </div>
-        {% if app.user %}
-            <div class="displayCourseRight">
-                <div data-entry-ideleve={{app.user.id}}>
-                <div data-entry-idcours={{cours.id}}>
-                <div data-entry-idprof={{cours.prof.id}}>
-                <!-- PLANNING DES DISPONIBILITES DU COURS -->
-                {% include '@Calendar/calendar.html' %} 
-            </div>
-        {% endif %}
-
-    </div>#}
-
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="/assets/js/calendarInscriptionCours.js"></script>
-    <script>
 
-    // TO DO LA MODAL OU TU CHOISIS LE MODE PARCE QUE C'EST INCOMPREHENSIBLE
-        /*var tabA = document.getElementsByClassName('fc-time-grid-event');
-        console.log(tabA);
-        console.log(tabA.length);
-
-        for (i = 0; i < tabA.length; i++) {
-            tabA[i].addEventListener("click", function() {
-            this.classList.toggle("activeAccordeonCustom");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-            } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-            }
-            });
-        } */
-
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
-        modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-        modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-}
-    </script>
 {% endblock %}

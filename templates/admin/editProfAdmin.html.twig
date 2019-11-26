@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block body %}
+<!-- DASHBOARD PROFILE SECTION -->
+<section class="clearfix bg-dark profileSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <div class="dashboardBoxBg mb30">
+                    <div class="profileImage">
+                        <img src="/assets/pictures/{{ prof.pictureFilename }}" alt="Image User" class="img-circle">
+                    </div>
+                    <div class="profileUserInfo bt profileName">
+                        <h2>{{ prof }}</h2>
+                        <h3>{{ prof.email }}</h3>
+                        <p>{{ prof.adresse }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <div class="dashboardBoxBg mt30">
+                    <div class="profileIntro">
+                        <h3>Avis</h3>
+                        <div class="row">
+                            {% if prof.noteMoyenne %}
+                            <h3>Note : {{ prof.noteMoyenne }}</h3>
+                            {% endif %}
+                            <p><a href="{{ path('show_reviews_prof_admin', {'id':prof.id}) }}">Voir / Supprimer avis</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboardBoxBg mt30">
+                    <div class="profileIntro">
+                        <h3>Description</h3>
+                        <div class="row">
+                            <p>{{ prof.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

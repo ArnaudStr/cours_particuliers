@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Admin;
 use App\Entity\Eleve;
@@ -9,8 +10,8 @@ use App\Entity\Seance;
 use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
-use App\Form\ActiviteType;
 
+use App\Form\ActiviteType;
 use App\Form\CategorieType;
 use App\Form\RegistrationAdminType;
 use App\Security\AdminAuthenticator;
@@ -121,7 +122,7 @@ class AdminController extends AbstractController
             $manager->persist($categorie);
             $manager->flush();
  
-            return $this->redirectToRoute('home_admin');
+            return $this->redirectToRoute('show_list_activites_categories');
             // return $this->redirectToRoute('showInfoCategorie', ['id' => $categorie->getId()]);
         }
         return $this->render('admin/addEditCategory.html.twig', ['form' => $form->createView(),
@@ -174,7 +175,7 @@ class AdminController extends AbstractController
             $manager->persist($activite);
             $manager->flush();
  
-            return $this->redirectToRoute('home_admin');
+            return $this->redirectToRoute('show_list_activites_categories');
             // return $this->redirectToRoute('showInfoActivite', ['id' => $activite->getId()]);
         }
         return $this->render('admin/addEditActivity.html.twig', ['form' => $form->createView(),
@@ -227,7 +228,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/deleteProf/{id}", name="delete_prof")
+     * @Route("/deleteProf/{id}", name="delete_prof_admin")
      */
     public function deleteProf(Prof $prof, ObjectManager $manager) {
         $manager->remove($prof);
@@ -237,7 +238,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/deleteEleve/{id}", name="delete_eleve")
+     * @Route("/deleteEleve/{id}", name="delete_eleve_admin")
      */
     public function deleteEleve(Eleve $eleve, ObjectManager $manager) {
         foreach($eleve->getSeances() as $seance){
@@ -251,6 +252,55 @@ class AdminController extends AbstractController
   
         return $this->redirectToRoute('show_list_members');
     }
+
+    /**
+     * @Route("/showReviewsProfAdmin/{id}", name="show_reviews_prof_admin")
+     */
+    public function showReviewsProfAdmin(Prof $prof) {
+
+        return $this->render('admin/showListReviews.html.twig', [
+            'title' => 'Liste des avis de '.$prof,
+            'prof' => $prof,
+        ]);
+    }
+
+    /**
+     * @Route("/editProfAdmin/{id}", name="edit_prof_admin")
+     */
+    public function editProfAdmin(Prof $prof) {
+
+        return $this->render('admin/editProfAdmin.html.twig', [
+            'title' => 'Profil de '.$prof,
+            'prof' => $prof,
+        ]);
+    }
+
+    /**
+     * @Route("/editEleveAdmin/{id}", name="edit_eleve_admin")
+     */
+    public function editEleveAdmin(Eleve $eleve) {
+
+        return $this->render('admin/editEleveAdmin.html.twig', [
+            'title' => 'Profil de '.$eleve,
+            'eleve' => $eleve,
+        ]);
+    }
+
+    /**
+     * @Route("/deleteReviewProfAdmin/{id}", name="delete_review_admin")
+     */
+    public function deleteReviewProfAdmin(Avis $avis, ObjectManager $manager) {
+
+        $manager->remove($avis);
+        $manager->flush();
+  
+        return $this->redirectToRoute('show_list_members', [
+            'title' => 'Liste des avis de '.$avis->getProf(),
+            'prof' => $avis->getProf(),
+        ]);
+
+    }
+
 
     /**
      * @Route("/deleteSeancesPassees", name="delete_seances_passees")

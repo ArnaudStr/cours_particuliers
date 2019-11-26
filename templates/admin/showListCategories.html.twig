@@ -16,15 +16,15 @@
                 
                 <tr>
                     <td><strong>{{  categorie.nom  }}</strong></td>
-                    <td><strong><a href="{{ path('edit_categorie',{'id':categorie.id}) }}"><i class="fas fa-edit"></i></a></strong></td>
-                    <td><a href="{{ path('delete_categorie',{'id':categorie.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+                    <td><strong><a href="{{ path('edit_categorie',{'id':categorie.id}) }}"><i class="fa fa-edit"></i></a></strong></td>
+                    <td><a href="{{ path('delete_categorie',{'id':categorie.id}) }}"><i class="fa fa-trash"></i></a></td>
                     {#<td><a href="{{ path('show_info_categorie',{'id':categorie.id}) }}"><i class="fas fa-list-alt"></i></a></td> #}
                 </tr>
                 {% for activite in categorie.activites %}
                     <tr>
                         <td>{{  activite.nom  }}</td>
-                        <td><a href="{{ path('edit_activite',{'id':activite.id}) }}"><i class="fas fa-edit"></i></a></td>        
-                        <td><a href="{{ path('delete_activite',{'id':activite.id}) }}"><i class="fas fa-trash-alt"></i></a></td> #}                    
+                        <td><a href="{{ path('edit_activite',{'id':activite.id}) }}"><i class="fa fa-edit"></i></a></td>        
+                        <td><a href="{{ path('delete_activite',{'id':activite.id}) }}"><i class="fa fa-trash"></i></a></td>                    
                     </tr>
                 {% endfor %}
                 
@@ -32,7 +32,7 @@
         </tbody>
     </table>
 
-    <p><a href="{{ path('add_categorie') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter une catégorie</button></a></p>
-    <p><a href="{{ path('add_activite') }}"><button type="button" class="btn btn-warning btn-lg">Ajouter une activité</button></a></p>
+    <p><a href="{{ path('add_categorie') }}"><button type="button" class="btn btn-primary">Ajouter une catégorie</button></a></p>
+    <p><a href="{{ path('add_activite') }}"><button type="button" class="btn btn-primary">Ajouter une activité</button></a></p>
 
 {% endblock %}

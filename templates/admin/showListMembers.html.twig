@@ -9,7 +9,6 @@
                 <th scope="col">Email</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Prenom</th>
-                <th scope="col">Adresse</th>
                 <th scope="col">Profil</th>
                 <th scope="col">Supprimer</th>
             </tr>
@@ -23,9 +22,8 @@
                     <td><strong>{{  prof.username  }}</strong></td>
                     <td><strong>{{  prof.nom  }}</strong></td>
                     <td><strong>{{  prof.prenom  }}</strong></td>
-                    <td><strong>{{  prof.adresse  }}</strong></td>
-                    <td><strong>PROFIL</strong></td>
-                    <td><a href="{{ path('delete_prof',{'id':prof.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+                    <td><a href="{{ path('edit_prof_admin',{'id':prof.id}) }}"><i class="fa fa-edit"></i></a></td>
+                    <td><a href="{{ path('delete_prof_admin',{'id':prof.id}) }}"><i class="fa fa-trash"></i></a></td>
                 </tr>
             {% endfor %}
 
@@ -35,9 +33,8 @@
                     <td><strong>{{  eleve.username  }}</strong></td>
                     <td><strong>{{  eleve.nom  }}</strong></td>
                     <td><strong>{{  eleve.prenom  }}</strong></td>
-                    <td><strong>{{  eleve.adresse  }}</strong></td>
-                    <td><strong>PROFIL</strong></td>
-                    <td><a href="{{ path('delete_eleve',{'id':eleve.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+                    <td><a href="{{ path('edit_eleve_admin',{'id':eleve.id}) }}"><i class="fa fa-edit"></i></a></td>
+                    <td><a href="{{ path('delete_eleve_admin',{'id':eleve.id}) }}"><i class="fa fa-trash"></i></a></td>
                 </tr>
             {% endfor %}
 

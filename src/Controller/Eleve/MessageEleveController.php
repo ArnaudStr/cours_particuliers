@@ -58,8 +58,7 @@ class MessageEleveController extends EleveController
 
     /**
      * Conversation avec un prof
-     * @Route("/conversationEleve/{idProf}/", name="conversation_eleve")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/conversationEleve/{id}/", name="conversation_eleve")
      */
     public function conversationEleve(Prof $prof) {
 
@@ -131,8 +130,7 @@ class MessageEleveController extends EleveController
 
     /**
      * Envoi de message
-     * @Route("/sendMessageEleve/{idProf}/", name="send_message_eleve")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/sendMessageEleve/{id}/", name="send_message_eleve")
      */
     public function sendMessageEleve(Prof $prof)
     {       
@@ -150,6 +148,6 @@ class MessageEleveController extends EleveController
         $prof->setNbMsgNonLus($prof->getNbMsgNonLus()+1);
         $entityManager->flush();
 
-        return $this->redirectToRoute('conversation_eleve', ['idProf' => $prof->getId(), 'idEleve' => $eleve->getId()]);
+        return $this->redirectToRoute('conversation_eleve', ['id' => $prof->getId()]);
     }
 }

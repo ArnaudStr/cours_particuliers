@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+<!-- DASHBOARD PROFILE SECTION -->
+<section class="clearfix bg-dark profileSection">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                
+                <div class="dashboardBoxBg mb30">
+                    <div class="profileImage">
+                        <img src="/assets/pictures/{{ eleve.pictureFilename }}" alt="Image User" class="img-circle">
+                    </div>
+                    <div class="profileUserInfo bt profileName">
+                        <h2>{{ eleve }}</h2>
+                        <h3>{{ eleve.email }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
+

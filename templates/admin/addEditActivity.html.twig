@@ -1,16 +1,54 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(form) }}
+<section class="clearfix pageTitleSection" style="background-image: url();">
+    <div class="container">
+         <div class="row">
+              <div class="col-xs-12">
+                   <div class="pageTitle">
+                        <h3>Ajout / Modif Categorie</h3>
+                   </div>
+              </div>
+         </div>
+    </div>
+</section>
+ 
+<section class="clearfix signUpSection">
+    <div class="container">
+         <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                   <div class="signUpForm">
 
-        {{form_row(form.nom) }} 
-        {{form_row(form.categorie) }} 
-        {{form_row(form.submit) }} 
+                   {{ form_start(form, {
+                        'attr' :{
+                             'enctype' : 'multipart/form-data',
+                        }}) }}                      
+                        <div class="row">
 
-    {{ form_end(form) }}
+                            <div class="form-group col-sm-12 col-xs-12">
+                                {{form_row(form.nom) }}
+                            </div>
+                             
+                            <div class="form-group col-sm-12 col-xs-12">
+                                {{form_row(form.categorie) }} 
+                            </div>
+
+                             <div class="form-group col-xs-12 mb0">
+                                  {{form_row(form.submit) }}
+                             </div>
+                        </div>
+                       {{ form_errors(form) }} 
+                       {{ form_rest(form) }}
+                   {{ form_end(form) }} 
+                   </div>
+              </div>
+         </div>
+    </div>
+</section>
 
 {% endblock %}
 
 {% block javascripts %}
 
 {% endblock %}
+

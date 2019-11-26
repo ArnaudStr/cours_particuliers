@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<section class="clearfix bg-dark dashboard-review-section">
+    <div class="container">
+        <div class="row">
+        {% for avis in prof.avis %}
+            <div class="col-xs-12 col-lg-6">
+                <div class="dashboard-list-box">
+                        <div class="single-list">
+                            <div class="media comments-media">
+                                <div class="media-left">
+                                    <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                                </div>
+                                <div class="media-body">
+                                <h4 class="media-heading">{{ avis.eleve }}</h4>
+                                    <span>
+                                    {% if avis.note >= 1 %}
+                                        {% for i in 1..avis.note %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                        
+                                    {% if avis.note != 5 %}         
+                                        {% for i in avis.note .. 4 %}
+                                            <i class="far fa-star"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                                    </span>
+                                <div class="date">{{ avis.dateAvis|date("d/m/Y")}}</div>
+                                <p>{{ avis.commentaire }}</p>
+                                <a href="{{ path('delete_review_admin',{'id':avis.id}) }}"><i class="fa fa-trash"></i></a></td>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %} 

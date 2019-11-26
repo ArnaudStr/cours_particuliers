@@ -40,22 +40,23 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="">
-                            <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activites <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="">
-                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
-                        </li>
-                        <li class="">
                             <a class="nav-link" href="{{ path('show_list_members') }}">Liste des membres</a>
                         </li>
+                        <li class="">
+                            <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activites</a>
+                        </li>
+                        {#<li class="">
+                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
+                        </li>
+
                         <li class="">
                             <a class="nav-link" href="{{ path('delete_seances_passees') }}">Supprimer séances libres passées</a>
                         </li>
                         <li class="">
                             <a class="nav-link" href="{{ path('delete_messages_passes') }}">Supprimer messages passés</a>
-                        </li>
+                        </li> #}
                         <li class="">
-                            <a class="nav-link" href="{{ path('logout_admin') }}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+                            <a class="nav-link" href="{{ path('logout_admin') }}">Déconnexion</a>
                         </li>
                     </ul>
                 </div>
