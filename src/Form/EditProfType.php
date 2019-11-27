@@ -19,8 +19,10 @@ class EditProfType extends AbstractType
         $builder
 
             ->add('nom',TextType::class, [
+                'label' => 'Nom *'
             ])
             ->add('prenom',TextType::class, [
+                'label' => 'Prenom *'
             ])
             ->add('adresse',TextType::class, [
                 "required" => false,

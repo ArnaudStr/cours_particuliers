@@ -63,7 +63,7 @@ class CourseEleveController extends EleveController
             $nbResultats = count($activite->getCoursS());
         }
             
-        return $this->render('search/search.html.twig', [
+        return $this->render('course/search.html.twig', [
             'categorie' => $categorie,
             'activite' => $activite,
             'nbResultats' => $nbResultats,
@@ -139,7 +139,7 @@ class CourseEleveController extends EleveController
         $nbResultats = count($activite->getCoursS());
         // dd($activite);
                                
-        return $this->render('search/search.html.twig', [
+        return $this->render('course/search.html.twig', [
             'activite' => $activite,
             'nbResultats' => $nbResultats,
             'title' => $activite->getNom()

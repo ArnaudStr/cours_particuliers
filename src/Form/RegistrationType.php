@@ -54,17 +54,6 @@ class RegistrationType extends AbstractType
                 'label' => 'Prenom'
             ])
 
-            // ->add('isEleve', ChoiceType::class, [
-            //     "choices" => [
-            //         'Eleve' => true,
-            //         'Prof' => false
-            //     ],
-            //     "mapped" => false,
-            //     'label' => false,
-            //     'expanded' => true,
-            //     'multiple' => false,
-            // ])
-
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'
             ])

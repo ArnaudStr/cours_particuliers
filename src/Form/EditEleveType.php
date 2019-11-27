@@ -18,8 +18,10 @@ class EditEleveType extends AbstractType
         $builder
 
             ->add('nom',TextType::class, [
+                'label' => 'Nom *'
             ])
             ->add('prenom',TextType::class, [
+                'label' => 'Prenom *'
             ])
 
             ->add('pictureFilename', FileType::class, [

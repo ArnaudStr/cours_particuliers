@@ -4,7 +4,9 @@ namespace App\Controller\Eleve;
 
 use App\Entity\Avis;
 use App\Entity\Prof;
+use App\Entity\Eleve;
 use App\Form\AvisType;
+use App\Entity\DemandeCours;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,8 +48,7 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @Route("/emettreAvis/{idProf}", name="emettre_avis")
-     * @ParamConverter("prof", options={"id" = "idProf"})
+     * @Route("/emettreAvis/{id}", name="emettre_avis")
      */
     public function emettreAvis(Prof $prof, Request $request) {
         $eleve = $this->getUser();
@@ -77,7 +78,26 @@ class EleveController extends AbstractController
 
         return $this->render('eleve/emettreAvis.html.twig', [
             'title' => 'Avis',
+            'prof' => $prof,
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Affiche la liste des cours du prof (avec possibilité de les modifier)
+     * @Route("/showDemandesEleve", name="show_demandes_eleve")
+     */
+    public function showDemandesEleve(Eleve $eleve) {
+
+        $eleve = $this->getUser();
+
+        // $demandesCours = $this->getDoctrine()
+        //     ->getRepository(DemandeCours::class)
+        //     ->findByEleve($eleve);
+
+        return $this->render('eleve/demandesEleve.html.twig', [
+            'title' => 'Mes demandes d\'inscription',
+            'eleve' => $eleve
         ]);
     }
 

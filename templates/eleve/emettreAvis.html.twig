@@ -1,16 +1,58 @@
 {% extends 'base.html.twig' %}
 
+
+{% block title %}{{ title }}{% endblock %}
+
 {% block body %}
-   {{ form_start(form) }}
 
-        {{form_row(form.commentaire) }}
-        {{form_row(form.note) }}
-        {{form_row(form.submit) }} 
-        {{ form_rest(form) }}
-        
-        {{ form_end(form) }} 
+<section class="clearfix pageTitleSection" style="background-image: url();">
+     <div class="container">
+          <div class="row">
+               <div class="col-xs-12">
+                    <div class="pageTitle">
+                         <h2>Emettre un avis sur {{ prof }}</h2>
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
+  
+<section class="clearfix signUpSection">
+     <div class="container">
+          <div class="row">
+               <div class="col-sm-12 col-xs-12">
+                    <div class="signUpForm">
+
+                    {{ form_start(form, {
+                        'attr' :{
+                            'enctype' : 'multipart/form-data',
+                        }}) }}
+                        <h3>Avis</h3>
+                        <p>Veuillez remplir tous les champs ci-dessous</p>
+                        
+                        <div class="row">
+
+                            <div class="form-group col-sm-12 col-xs-12">
+                                {{form_row(form.commentaire) }}
+                            </div>
+
+                            <div class="form-group col-sm-12 col-xs-12">
+                                {{form_row(form.note) }}
+                            </div>
+
+                            <div class="form-group col-xs-12 mb0">
+                                {{form_row(form.submit) }} 
+                            </div>
+                        </div>
+                        {{ form_errors(form) }} 
+                    {{ form_end(form) }} 
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
+
 {% endblock %}
 
-{% block javascripts %}
-    
-{% endblock %}
+
+

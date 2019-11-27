@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+<!-- CATEGORY GRID SECTION -->
+<section class="clerfix categoryGrid">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="miniSearchBar">
+                        <form class="form-inline" method="GET" action='{{ path('liste_cours_visitor_search') }}'>
+                            <input type="text" name='s' class="form-control" id="findItem" placeholder="Quelle matière ? Essayez Maths, Piano, ...">
+                            <!-- <div class="input-group-addon addon-right"></div> -->
+                            <button type="submit" class="btn btn-primary">RECHERCHER <i class="fa fa-search" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                    <div class="resultBar">
+                         <h2><span>{{ nbResultats }}</span> professeurs de {{ title }} à Strasbourg</h2>
+                    </div>
+
+                    {% if nbResultats != 0 %}
+                    <div class="row">
+                        {% if activite %}
+                            {% for cours in activite.coursS  %}
+                                    <div class="col-sm-4 col-xs-12 cardSearch">
+                                        <div class="thingsBox thinsSpace">
+                                            <div class="thingsImage">
+                                                {% if app.user %}
+                                                    <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
+                                                {% else %}
+                                                    <a href="{{ path('display_course_visitor', {'id':cours.id} ) }}">
+                                                {% endif %}
+                                                <img class="listeCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
+                                                <div class="thingsMask">
+                                                    <h2>{{ cours.prof }}</h2>
+                                                    {% if app.user %}
+                                                        <p>{{ cours.tarifHoraire }}€ /h</p>
+                                                        {% if cours.prof.noteMoyenne %}
+                                                            <ul class="list-inline rating">
+                                                                {% if cours.prof.noteMoyenne|round >= 1 %}
+                                                                    {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                                                        <!-- Etoiles pleines -->
+                                                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+
+                                                                {% if cours.prof.noteMoyenne|round != 5 %}         
+                                                                    {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                                                        <!-- Etoiles vides -->
+                                                                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </ul>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="thingsCaption ">
+                                                <p>{{ cours.description|slice(0,49) }}...</p>
+                                            </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        {% elseif categorie %}
+                            {% for activite in categorie.activites  %}
+                                {% for cours in activite.coursS  %}
+                                    <div class="col-sm-4 col-xs-12 cardSearch">
+                                        <div class="thingsBox thinsSpace">
+                                            <div class="thingsImage">
+                                                {% if app.user %}
+                                                    <a href="{{ path('display_course_eleve', {'id':cours.id} ) }}">
+                                                {% else %}
+                                                    <a href="{{ path('display_course_visitor', {'id':cours.id} ) }}">
+                                                {% endif %}
+                                                <img class="listeCours" src="/assets/pictures/{{ cours.prof.pictureFilename }}" alt="Image prof">
+                                                <div class="thingsMask">
+                                                    <h2>{{ cours.prof }}</h2>
+                                                    {% if app.user %}
+                                                        <p>{{ cours.tarifHoraire }}€ /h</p>
+                                                        {% if cours.prof.noteMoyenne %}
+                                                            <ul class="list-inline rating">
+                                                                {% if cours.prof.noteMoyenne|round >= 1 %}
+                                                                    {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                                                        <!-- Etoiles pleines -->
+                                                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+
+                                                                {% if cours.prof.noteMoyenne|round != 5 %}         
+                                                                    {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                                                        <!-- Etoiles vides -->
+                                                                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </ul>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="thingsCaption ">
+                                                <p>{{ cours.description|slice(0,49) }}...</p>
+                                            </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

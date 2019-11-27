@@ -33,6 +33,20 @@ class DemandeCoursRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return DemandeCours[] Returns an array of DemandeCours objects
+     */
+    public function findByEleve(Eleve $eleve)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.eleve = :eleve')
+            ->setParameter('eleve', $eleve)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
     /*
     public function findOneBySomeField($value): ?DemandeCours
     {

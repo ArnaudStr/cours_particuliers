@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<!-- CATEGORY LIST SECTION -->
+<section class="clerfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="resultBar barSpaceAdjust">
+                    <h2>Vous avez {{ app.user.demandesCours }} demandes en attente :</h2>
+                </div>
+                {% for demandeCours in app.user.demandesCours %}
+                    <p>Demande pour un cours de {{ demandeCours.cours }} avec {{ demandeCours.prof }}
+                    
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+

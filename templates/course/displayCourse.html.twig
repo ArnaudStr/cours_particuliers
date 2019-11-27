@@ -13,43 +13,49 @@
             <div class="col-sm-8 col-xs-12">
                 <div class="listingTitleArea">
                     <h2>{{ cours.prof }}</h2>
-                    <p>Localisation</p>
-                    <div class="listingReview">
-                        {% if cours.prof.noteMoyenne %}
-                            <ul class="list-inline rating">
-                                {% if cours.prof.noteMoyenne|round >= 1 %}
-                                    {% for i in 1 .. cours.prof.noteMoyenne|round  %}
-                                        <!-- Etoiles pleines -->
-                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                    {% endfor %}
-                                {% endif %}
+                    {% if app.user %}
+                        
+                        <p>{{ cours.prof.adresse }}</p>
+                        <div class="listingReview">
+                            {% if cours.prof.noteMoyenne %}
+                                <ul class="list-inline rating">
+                                    {% if cours.prof.noteMoyenne|round >= 1 %}
+                                        {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                            <!-- Etoiles pleines -->
+                                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        {% endfor %}
+                                    {% endif %}
 
-                                {% if cours.prof.noteMoyenne|round != 5 %}         
-                                    {% for i in cours.prof.noteMoyenne|round .. 4 %}
-                                        <!-- Etoiles vides -->
-                                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                                    {% endfor %}
-                                {% endif %}
-                            </ul>
-                            <span>({{ cours.prof.avis|length }} avis)</span>
-                        {% endif %}
-                    </div>
+                                    {% if cours.prof.noteMoyenne|round != 5 %}         
+                                        {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                            <!-- Etoiles vides -->
+                                            <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                                <span>({{ cours.prof.avis|length }} avis)</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
                     <p>Cours : {{ cours }}</p>
-                    <p>Niveaux enseignés : {{ cours.niveaux }}</p>
-                    <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
-                    <p>Mode d'enseignement : <br/>
-                        {% if cours.webcam %}
-                            <dd> - Téléprésentiel</dd>
-                        {% endif %}
-                        {% if cours.chezProf %}
-                            <dd> - Chez le professeur</dd>
-                        {% endif %}
-                        {% if cours.chezEleve %}
-                            <dd> - A domicile</dd>
-                        {% endif %}
-                    </p>
-                    <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Envoyer un message</button></a>
 
+                    <p>Niveaux enseignés : {{ cours.niveaux }}</p>
+                    {% if app.user %}
+                        <p>Prix : {{ cours.tarifHoraire }}€ /h</p>
+                        <p>Mode d'enseignement : <br/>
+                            {% if cours.webcam %}
+                                <dd> - Téléprésentiel</dd>
+                            {% endif %}
+                            {% if cours.chezProf %}
+                                <dd> - Chez le professeur</dd>
+                            {% endif %}
+                            {% if cours.chezEleve %}
+                                <dd> - A domicile</dd>
+                            {% endif %}
+                        </p>
+                        <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Envoyer un message</button></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -77,6 +83,7 @@
     </div>
 </section>
        
+
 <!-- LISTINGS DETAILS INFO SECTION -->
 <section class="clearfix paddingAdjustTop">
     <div class="container">
@@ -87,21 +94,23 @@
                         <h3>Description du cours</h3>
                         <p>{{ cours.description }}</p>
                     </div>
-                    <div class="detailsInfoBox">
-                        <h3>Avis sur {{ cours.prof }} ({{ cours.prof.avis|length }})</h3>
+                    {% if app.user %}
+                        <div class="detailsInfoBox">
+                            <h3>Avis sur {{ cours.prof }} ({{ cours.prof.avis|length }})</h3>
 
-                        {% for avis in cours.prof.avis %}
-                            <div class="media media-comment">
-                                <div class="media-left">
-                                    <h4 class="media-heading">{{ avis.eleve }}</h4>
-                                    <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                            {% for avis in cours.prof.avis %}
+                                <div class="media media-comment">
+                                    <div class="media-left">
+                                        <h4 class="media-heading">{{ avis.eleve }}</h4>
+                                        <img src="/assets/pictures/{{ avis.eleve.pictureFilename }}" alt="User Image">
+                                    </div>
+                                    <div class="media-body">
+                                        <p>{{ avis.commentaire }}</p>
+                                    </div>
                                 </div>
-                                <div class="media-body">
-                                    <p>{{ avis.commentaire }}</p>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

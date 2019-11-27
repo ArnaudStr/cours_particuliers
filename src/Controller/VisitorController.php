@@ -41,7 +41,6 @@ class VisitorController extends AbstractController
         $search = $request->query->get('s');
 
         $nbResultats = 0;
-        $titre = 'Recherhe';
 
         $categorie = $this->getDoctrine()
             ->getRepository(Categorie::class)
@@ -60,7 +59,7 @@ class VisitorController extends AbstractController
             $nbResultats = count($activite->getCoursS());
         }
             
-        return $this->render('search/search.html.twig', [
+        return $this->render('course/search.html.twig', [
             'categorie' => $categorie,
             'activite' => $activite,
             'nbResultats' => $nbResultats,
@@ -76,7 +75,7 @@ class VisitorController extends AbstractController
         $nbResultats = count($activite->getCoursS());
         // dd($activite);
                                
-        return $this->render('search/search.html.twig', [
+        return $this->render('course/search.html.twig', [
             'activite' => $activite,
             'nbResultats' => $nbResultats,
         ]);

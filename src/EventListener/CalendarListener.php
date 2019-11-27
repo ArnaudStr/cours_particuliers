@@ -60,8 +60,6 @@ class CalendarListener
             ->innerJoin('seance.eleve', 'e')
             ->where('seance.dateDebut BETWEEN :start and :end')
             ->andWhere('e.id = :id')
-            // ->orWhere('seance.dateFin BETWEEN :start and :end')
-            // ->orWhere(':end BETWEEN seance.dateDebut and seance.dateFin')
             ->setParameter('start', $start->format('Y-m-d H:i:s'))
             ->setParameter('end', $end->format('Y-m-d H:i:s'))
             ->setParameter('id', $filters['eleve'])
@@ -135,14 +133,13 @@ class CalendarListener
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$seance->getEleve()) {
 
                 $seanceEvent = new Event(
-                    "S'inscire",
+                    "S'inscrire",
                     $seance->getDateDebut(),
                     $dateFin 
                 );
 
                 $seanceEvent->setOptions([
                     'backgroundColor' => 'blue',
-                    'borderColor' => 'blue',
                     'textColor' => 'white',
                     'url'=> $this->router->generate('demande_inscription_seance', [
                                 'idSeance' => $seance->getId(),
@@ -156,17 +153,17 @@ class CalendarListener
             else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters)) {
 
                 $seanceEvent = new Event(
-                    $seance->getCours()->getActivite()->getNom().' avec '.$seance->getProf()->getNom(),
+                    $seance->getCours()->getActivite().' avec '.$seance->getProf(),
                     $seance->getDateDebut(),
                     $dateFin // If the end date is null or not defined, a all day event is created.
                 );
 
                 $seanceEvent->setOptions([
-                    'backgroundColor' => 'orange',
-                    'borderColor' => 'orange',
+                    'backgroundColor' => 'blue',
+                    // 'borderColor' => 'orange',
                     'textColor' => 'white',
                     'url' => $this->router->generate('emettre_avis', [
-                                'idProf' => $seance->getProf()->getId(),
+                                'id' => $seance->getProf()->getId(),
                     ])
                 ]);
 
@@ -177,18 +174,16 @@ class CalendarListener
                 // COURS VALIDé
                 if ( $seance->getEleve() ) {
                     $seanceEvent = new Event(
-                        $seance->getCours()->getActivite()->getNom().' avec '.$seance->getEleve()->getNom(),
+                        $seance->getCours()->getActivite().' avec '.$seance->getEleve(),
                         $seance->getDateDebut(),
                         $dateFin // If the end date is null or not defined, a all day event is created.
                     );
 
                     $seanceEvent->setOptions([
-                        'backgroundColor' => '#1A252F',
-                        'borderColor' => '#',
+                        'backgroundColor' => 'blue',
+                        
+                        // 'borderColor' => '#',
                         'textColor' => 'white',
-                        // 'url' => $this->router->generate('emettre_avis', [
-                        //     'idProf' => $seance->getProf()->getId(),
-                        // ])
                     ]);
                 }
 
@@ -207,8 +202,7 @@ class CalendarListener
                     );
 
                     $seanceEvent->setOptions([
-                        'backgroundColor' => 'blue',
-                        'borderColor' => 'blue',
+                        'backgroundColor' => '#2196f3',
                         'textColor' => 'white',
                         'url' => $this->router->generate('demandes_seance_prof', [
                             'id' => $seance->getId()
@@ -241,7 +235,7 @@ class CalendarListener
                 );
 
                 $seanceEvent->setOptions([
-                    'backgroundColor' => '#1A252F',
+                    'backgroundColor' => '##2196f3',
                     'borderColor' => '#',
                     'textColor' => 'white'
                 ]);
