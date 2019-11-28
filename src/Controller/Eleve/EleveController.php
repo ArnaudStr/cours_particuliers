@@ -6,12 +6,10 @@ use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Eleve;
 use App\Form\AvisType;
-use App\Entity\DemandeCours;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/eleve")
@@ -90,10 +88,6 @@ class EleveController extends AbstractController
     public function showDemandesEleve(Eleve $eleve) {
 
         $eleve = $this->getUser();
-
-        // $demandesCours = $this->getDoctrine()
-        //     ->getRepository(DemandeCours::class)
-        //     ->findByEleve($eleve);
 
         return $this->render('eleve/demandesEleve.html.twig', [
             'title' => 'Mes demandes d\'inscription',

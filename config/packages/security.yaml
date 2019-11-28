@@ -25,9 +25,9 @@ security:
                 class: App\Entity\Eleve
                 property: email
 
-        chain_provider:
-            chain:
-                providers: ['prof_provider', 'eleve_provider']
+        # chain_provider:
+        #     chain:
+        #         providers: ['prof_provider', 'eleve_provider']
 
     firewalls:
         dev:
@@ -74,4 +74,5 @@ security:
         ROLE_ADMIN:       ROLE_USER
         ROLE_ELEVE:       ROLE_USER
         ROLE_PROF:       ROLE_USER
+
 

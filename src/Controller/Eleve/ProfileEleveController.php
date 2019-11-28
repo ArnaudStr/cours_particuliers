@@ -37,12 +37,6 @@ class ProfileEleveController extends EleveController
                 ->getRepository(Seance::class)
                 ->findNextSeanceEleve($eleve, $cours); 
 
-            // if ($proSeance) {
-            //     $coursEtProchaineSeance['nextSeance'] = $proSeance;
-            // }
-            // else {
-            //     $coursEtProchaineSeance['nextSeance'] = null;
-            // }
             $coursEtProchaineSeance['nextSeance'] = $proSeance;
 
             $lastSeance = $this->getDoctrine()
@@ -87,9 +81,6 @@ class ProfileEleveController extends EleveController
                 $pictureFilename->move($this->getParameter('pictures_directory'), $filename);
                 $eleve->setPictureFilename($filename);
             }
-            // else {
-            //     $eleve->setPictureFilename($pictureBeforeForm);
-            // }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($eleve);

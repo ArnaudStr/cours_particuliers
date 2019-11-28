@@ -25,7 +25,7 @@ class VisitorController extends AbstractController
             ->getRepository(Categorie::class)
             ->findAll();  
 
-        return $this->render('course/searchCourse.html.twig', [
+        return $this->render('home.html.twig', [
             'title' => 'Cours à Strasbourg',
             'transparent' => true,
             'profs' => $profs,
@@ -73,7 +73,6 @@ class VisitorController extends AbstractController
     public function listeCoursVisitorActivite(Activite $activite)
     {
         $nbResultats = count($activite->getCoursS());
-        // dd($activite);
                                
         return $this->render('course/search.html.twig', [
             'activite' => $activite,

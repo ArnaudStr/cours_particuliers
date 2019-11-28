@@ -28,6 +28,8 @@ class CreationCoursType extends AbstractType
                 "label" => "Tarif horaire",
                 'attr' => [
                     "min" => 1,
+                    'minMessage' => 'Veuillez inscrire un prix supérieur à 0'
+
                 ],
             ])
 

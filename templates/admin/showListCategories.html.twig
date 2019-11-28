@@ -1,38 +1,52 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{title}}{% endblock %}
+
+
 {% block body %}
 
-    <table class="table table-striped table-warning">
-        <thead>
-            <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Modifier</th>
-                <th scope="col">Supprimer</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            {% for categorie in categories %}
-                
-                <tr>
-                    <td><strong>{{  categorie.nom  }}</strong></td>
-                    <td><strong><a href="{{ path('edit_categorie',{'id':categorie.id}) }}"><i class="fa fa-edit"></i></a></strong></td>
-                    <td><a href="{{ path('delete_categorie',{'id':categorie.id}) }}"><i class="fa fa-trash"></i></a></td>
-                    {#<td><a href="{{ path('show_info_categorie',{'id':categorie.id}) }}"><i class="fas fa-list-alt"></i></a></td> #}
-                </tr>
-                {% for activite in categorie.activites %}
-                    <tr>
-                        <td>{{  activite.nom  }}</td>
-                        <td><a href="{{ path('edit_activite',{'id':activite.id}) }}"><i class="fa fa-edit"></i></a></td>        
-                        <td><a href="{{ path('delete_activite',{'id':activite.id}) }}"><i class="fa fa-trash"></i></a></td>                    
-                    </tr>
-                {% endfor %}
-                
-            {% endfor %}
-        </tbody>
-    </table>
 
-    <p><a href="{{ path('add_categorie') }}"><button type="button" class="btn btn-primary">Ajouter une catégorie</button></a></p>
-    <p><a href="{{ path('add_activite') }}"><button type="button" class="btn btn-primary">Ajouter une activité</button></a></p>
+<!-- CATEGORY LIST SECTION -->
+<section class="clerfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="resultBar barSpaceAdjust">
+                    <h2>Liste des activités</h2>
+                </div>
+                 <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Modifier</th>
+                            <th scope="col">Supprimer</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for categorie in categories %}
+                            
+                            <tr>
+                                <td><strong>{{  categorie.nom  }}</strong></td>
+                                <td><strong><a href="{{ path('edit_categorie',{'id':categorie.id}) }}"><i class="fa fa-edit"></i></a></strong></td>
+                                <td><a href="{{ path('delete_categorie',{'id':categorie.id}) }}"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            {% for activite in categorie.activites %}
+                                <tr>
+                                    <td>{{  activite.nom  }}</td>
+                                    <td><a href="{{ path('edit_activite',{'id':activite.id}) }}"><i class="fa fa-edit"></i></a></td>        
+                                    <td><a href="{{ path('delete_activite',{'id':activite.id}) }}"><i class="fa fa-trash"></i></a></td>                    
+                                </tr>
+                            {% endfor %}
+                            
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p><a href="{{ path('add_categorie') }}"><button type="button" class="btn btn-primary">Ajouter une catégorie</button></a></p>
+                <p><a href="{{ path('add_activite') }}"><button type="button" class="btn btn-primary">Ajouter une activité</button></a></p>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

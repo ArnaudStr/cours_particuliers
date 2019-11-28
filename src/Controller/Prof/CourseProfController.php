@@ -2,7 +2,6 @@
 
 namespace App\Controller\Prof;
 
-use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Seance;
 use App\Entity\DemandeCours;

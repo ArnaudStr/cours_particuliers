@@ -77,10 +77,6 @@ class MessageProfController extends ProfController
         $msgNonLus = $this->getDoctrine()
             ->getRepository(Message::class)
             ->findConversationNonLusProf($eleve, $prof);
-        
-        // $msgRecus = $this->getDoctrine()
-        // ->getRepository(Message::class)
-        // ->findRecusProf($eleve, $prof);
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -129,7 +125,7 @@ class MessageProfController extends ProfController
             $nouveauMessage = true;
         }   
 
-        return $this->render('prof/test.html.twig', [
+        return $this->render('refresh.html.twig', [
             'nouveauMessage' => $nouveauMessage,
         ]);
     }

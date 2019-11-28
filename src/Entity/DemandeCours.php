@@ -34,11 +34,6 @@ class DemandeCours
      */
     private $eleve;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $modeCours;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -80,15 +75,4 @@ class DemandeCours
         return $this;
     }
 
-    public function getModeCours(): ?string
-    {
-        return $this->modeCours;
-    }
-
-    public function setModeCours(string $modeCours): self
-    {
-        $this->modeCours = $modeCours;
-
-        return $this;
-    }
 }

@@ -30,7 +30,7 @@ class CourseEleveController extends EleveController
         ->getRepository(Categorie::class)
         ->findAll();  
 
-        return $this->render('course/searchCourse.html.twig', [
+        return $this->render('home.html.twig', [
             'title' => 'Cours à Strasbourg',
             'transparent' => true,
             'categories' => $categories,

@@ -126,7 +126,7 @@ class MessageEleveController extends EleveController
             $nouveauMessage = true;
         }   
 
-        return $this->render('prof/test.html.twig', [
+        return $this->render('refresh.html.twig', [
             'nouveauMessage' => $nouveauMessage,
         ]);
     }

@@ -57,19 +57,6 @@ class SeanceRepository extends ServiceEntityRepository
     }
 
     public function findLastSeanceEleve(Eleve $eleve, Cours $cours) {
-        // $entityManager = $this->getEntityManager();
-
-        // $query = $entityManager->createQuery(
-        //     'SELECT s
-        //     FROM App\Entity\Seance s
-        //     WHERE s.eleve = :eleve
-        //     AND s.cours = :cours
-        //     AND s.dateDebut < CURRENT_TIMESTAMP()'
-        // )->setParameter('eleve', $eleve)
-        // ->setParameter('cours', $cours)
-        // ->setMaxResults(1);
-    
-        // return $query->getOneorNullresult();
 
         return $this->createQueryBuilder('s')
             ->select('s, MAX(s.dateDebut) AS HIDDEN max_date_debut')
@@ -122,16 +109,6 @@ class SeanceRepository extends ServiceEntityRepository
     
         return $query->execute();
     }
-    /*
-    public function findOneBySomeField($value): ?Seance
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+
 
 }

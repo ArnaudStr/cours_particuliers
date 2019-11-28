@@ -53,28 +53,15 @@ class MessageRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllToDelete(): array
-    {
-        $date = new DateTime('now -30 days');
-        // automatically knows to select Products
-        // the "p" is an alias you'll use in the rest of the query
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.dateEnvoi < :date')
-            ->setParameter('date', $date)
-            ->getQuery()
-            ->getResult();
+    // public function deleteMessagesNbJours($nbJours){
+    //     $date = new DateTime('now -'.$nbJours.' days');
 
-    }
-
-    public function deleteMessagesNbJours($nbJours){
-        $date = new DateTime('now -'.$nbJours.' days');
-
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.dateEnvoi < :date')
-            ->setParameter('date', $date)
-            ->getQuery()
-            ->getResult();
-    }
+    //     return $this->createQueryBuilder('m')
+    //         ->andWhere('m.dateEnvoi < :date')
+    //         ->setParameter('date', $date)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
 
     public function findNbNonLusEleve(Eleve $eleve) {
         $entityManager = $this->getEntityManager();
@@ -312,30 +299,6 @@ class MessageRepository extends ServiceEntityRepository
     
         return $query->execute();
     }
-
-    // // renvoie les messages envoyés de l'élève au prof
-    // public function findDernierMessageProf(Eleve $eleve, Prof $prof)
-    // {
-    //     $entityManager = $this->getEntityManager();
-
-    //     $query = $entityManager->createQuery(
-    //         'SELECT m
-    //         FROM App\Entity\Message m
-    //         WHERE m.prof = :prof
-    //         AND m.eleve = :eleve
-    //         AND m.auteur = :eleveUsername
-    //         AND m.date_envoi = (
-    //             SELECT MAX(date_envoi)
-    //             FROM App\Entity\Message m
-    //             WHERE m.prof = :prof
-    //             AND m.eleve = :eleve
-    //             AND m.auteur = :eleveUsername)'
-    //     )->setParameter('eleve', $eleve)
-    //     ->setParameter('prof', $prof)
-    //     ->setParameter('eleveUsername', $eleve->getUsername());
-    
-    //     return $query->execute();
-    // }
 
 
     public function findRecusProf(Eleve $eleve, Prof $prof)

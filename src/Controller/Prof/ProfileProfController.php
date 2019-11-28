@@ -2,18 +2,15 @@
 
 namespace App\Controller\Prof;
 
-use App\Entity\Prof;
 use App\Entity\Seance;
 use App\Form\EditProfType;
 use App\Form\ChangePasswordType;
 use Rogervila\ArrayDiffMultidimensional;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\Prof\ProfController;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @Route("/prof")
@@ -111,11 +108,6 @@ class ProfileProfController extends ProfController
                     $prof->setPictureFilename($filename);
             }
 
-            // else
-            // {
-            //     $prof->setPictureFilename($pictureBeforeForm);
-            // }
-
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($prof);
             $entityManager->flush();
@@ -148,6 +140,7 @@ class ProfileProfController extends ProfController
                 $newpwd = $form->get('newPassword')['first']->getData();
         
                 $newEncodedPassword = $passwordEncoder->encodePassword($prof, $newpwd);
+
                 $prof->setPassword($newEncodedPassword);
         
                 //$em->persist($user);
@@ -221,7 +214,7 @@ class ProfileProfController extends ProfController
     {       
         $prof = $this->getUser();
 
-        return $this->render('/reviews.html.twig', [
+        return $this->render('prof/reviews.html.twig', [
             'title' => 'Mes avis',
             'prof' => $prof
         ]);
