@@ -10,6 +10,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/eleve")
@@ -20,6 +21,7 @@ class EleveController extends AbstractController
     /**
      * Page d'acceuil, avec le planning de l'élève
      * @Route("/", name="home_eleve")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function indexEleve() {
 
