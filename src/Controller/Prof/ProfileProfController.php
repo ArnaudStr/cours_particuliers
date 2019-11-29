@@ -2,32 +2,39 @@
 
 namespace App\Controller\Prof;
 
+use App\Entity\Prof;
+use App\Entity\Avis;
 use App\Entity\Seance;
 use App\Form\EditProfType;
 use App\Form\ChangePasswordType;
+use App\Controller\Prof\ProfController;
 use Rogervila\ArrayDiffMultidimensional;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Controller\Prof\ProfController;
 
 /**
  * @Route("/prof")
+ * @IsGranted("ROLE_PROF")
  */
 class ProfileProfController extends ProfController
 {
      /**
-     * Profil du prof
-     * @Route("/showProfileProf/", name="show_profile_prof")
+     * Profil du prof (page d'accueil)
+     * @Route("/", name="home_prof")
      */
     public function showProfileProf()
     {
         $prof = $this->getUser();
-        $nbEtoiles = null;
-        if ($noteMoyenne = $prof->getNoteMoyenne()){
+     
+        $noteMoyenne = $prof->getNoteMoyenne();
+
+        if ($noteMoyenne){
             $nbEtoiles = round($noteMoyenne);
         }
+        else $nbEtoiles = null;
 
         // liste des cours avec la prochaine séance
         $allCoursEtProchaineSeance = [];
@@ -78,6 +85,7 @@ class ProfileProfController extends ProfController
 
         return $this->render('prof/showProfileProf.html.twig', [
             'allCoursEtProchaineSeance' => $allCoursEtProchaineSeance,
+            'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
             'creneauxSemaine' => $creneauxSemaine
         ]);
@@ -112,7 +120,7 @@ class ProfileProfController extends ProfController
             $entityManager->persist($prof);
             $entityManager->flush();
 
-            return $this->redirectToRoute('show_profile_prof', [
+            return $this->redirectToRoute('home_prof', [
                 'id' => $prof->getId()
             ]);
         }
@@ -149,13 +157,9 @@ class ProfileProfController extends ProfController
                 $this->addFlash('notice', 'Votre mot de passe à bien été changé !');
                 die('changé');
 
-                return $this->redirectToRoute('show_profile_prof', [
-                    'id' => $prof->getId()
-                ]);
-
             }
 
-            else return $this->redirectToRoute('show_profile_prof', [
+            return $this->redirectToRoute('home_prof', [
                 'id' => $prof->getId()
             ]);
         }
@@ -202,7 +206,7 @@ class ProfileProfController extends ProfController
 
         $manager->flush();
 
-        return $this->redirectToRoute('show_profile_prof', [
+        return $this->redirectToRoute('home_prof', [
             'id' => $prof->getId()
         ]);
     }

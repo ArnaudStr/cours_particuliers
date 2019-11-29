@@ -12,6 +12,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use App\Controller\Eleve\EleveController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/eleve")
@@ -33,6 +35,7 @@ class SecurityEleveController extends EleveController
 
     /**
      * @Route("/logoutEleve", name="logout_eleve")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function logoutEleve() {
         return $this->redirectToRoute("search_course");
@@ -40,6 +43,7 @@ class SecurityEleveController extends EleveController
 
      /**
      * @Route("/forgottenPasswordEleve", name="forgotten_password_eleve")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function forgottenPasswordEleve(
         Request $request,
@@ -98,6 +102,7 @@ class SecurityEleveController extends EleveController
 
     /**
      * @Route("/resetPasswordEleve/{token}", name="reset_password_eleve")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function resetPasswordEleve(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {

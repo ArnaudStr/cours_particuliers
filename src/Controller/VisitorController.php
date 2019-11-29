@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Activite;
@@ -17,10 +18,12 @@ class VisitorController extends AbstractController
      */
     public function searchCourse()
     {
+        // On récupère les 5 avis avec la meilleure note pour l'affichage du slider en bas de page
         $profs = $this->getDoctrine()
             ->getRepository(Prof::class)
             ->findBestFive();  
 
+        // On récupère toutes les catégories pour l'affichage des activités par catégorie
         $categories = $this->getDoctrine()
             ->getRepository(Categorie::class)
             ->findAll();  
@@ -87,16 +90,8 @@ class VisitorController extends AbstractController
      */
     public function displayCourseVisitor(Cours $cours)
     {
-        $nbEtoiles = null;
-        if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
-            $nbEtoiles = round($noteMoyenne);
-        }
-        else $noteMoyenne = 'Pas encore noté';
-
         return $this->render('course/displayCourse.html.twig', [
             'cours' => $cours,
-            'noteMoyenne' => $noteMoyenne,
-            'nbEtoiles' => $nbEtoiles,
         ]);
     }
 }

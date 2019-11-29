@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Votre profil !{% endblock %}
+{% block title %}Votre profil{% endblock %}
 
 {% block body %}
     {% block flash %}
@@ -97,20 +97,20 @@
                     <div class="profileIntro">
                         <h3>Mes avis</h3>
                         <div class="row">
-                            {% if app.user.noteMoyenne %}
-                            <h3>Note : {{ app.user.noteMoyenne }}</h3>
+                            {% if noteMoyenne %}
+                                <h3>Note : {{ noteMoyenne }}</h3>
                             {% endif %}
                             
                             {% if nbEtoiles %}
                                 {% if nbEtoiles >= 1 %}
                                     {% for i in 1..nbEtoiles %}
-                                        <i class="fas fa-star"></i>
+                                        <i class="fa fa-star"></i>
                                     {% endfor %}
                                 {% endif %}
                     
                                 {% if nbEtoiles != 5 %}         
                                     {% for i in nbEtoiles .. 4 %}
-                                        <i class="far fa-star"></i>
+                                        <i class="fa fa-star-o"></i>
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}

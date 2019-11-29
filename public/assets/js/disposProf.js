@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
         defaultView: 'timeGridWeek',
+
         editable: true,
         droppable: true, // this allows things to be dropped onto the calendar
         eventClick: function(info) {

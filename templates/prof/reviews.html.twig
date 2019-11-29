@@ -19,13 +19,13 @@
                                     <span>
                                     {% if avis.note >= 1 %}
                                         {% for i in 1..avis.note %}
-                                            <i class="fas fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                         {% endfor %}
                                     {% endif %}
                         
                                     {% if avis.note != 5 %}         
                                         {% for i in avis.note .. 4 %}
-                                            <i class="far fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
                                         {% endfor %}
                                     {% endif %}
                                     </span>

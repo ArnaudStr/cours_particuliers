@@ -19,11 +19,11 @@ class EleveController extends AbstractController
 {
    
     /**
-     * Page d'acceuil, avec le planning de l'élève
-     * @Route("/", name="home_eleve")
+     * Planning de l'élève
+     * @Route("/planningEleve", name="planning_eleve")
      * @IsGranted("ROLE_ELEVE")
      */
-    public function indexEleve() {
+    public function planningEleve() {
 
         return $this->render('eleve/calendrierEleve.html.twig', [
             'title' => 'Planning'
@@ -33,12 +33,13 @@ class EleveController extends AbstractController
     /**
      * Affichage du profil public d'un prof
      * @Route("/voirProfilProf/{id}", name="voir_profil_prof")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function voirProfilProf(Prof $prof) {
         $nbEtoiles = null;
-        if ($notes = $prof->getNotes()){
-            $noteMoyenne = round(array_sum($notes)/count($notes),1);
-            $nbEtoiles = round($noteMoyenne);
+    
+        if ($prof->getNoteMoyenne()){
+            $nbEtoiles = round($prof->getNoteMoyenne());
         }
  
         return $this->render('prof/pagePubliqueProf.html.twig', [
@@ -49,31 +50,52 @@ class EleveController extends AbstractController
 
     /**
      * @Route("/emettreAvis/{id}", name="emettre_avis")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function emettreAvis(Prof $prof, Request $request) {
         $eleve = $this->getUser();
 
-        $avis = new Avis();
+        $avis = $this->getDoctrine()
+            ->getRepository(Avis::class)
+            ->findAvis($prof, $eleve);
 
-        $form = $this->createForm(AvisType::class, $avis);
+        if($avis){
+            $this->addFlash('avis', 'Vous avez déjà envoyé un avis à '.$prof);
+            
+            return $this->redirectToRoute('planning_eleve');
+        }
 
-        $form->handleRequest($request);
-  
-        if ($form->isSubmitted() && $form->isValid()) {
+        else {
+            $avis = new Avis();
 
-            $avis->setProf($prof);
-            $avis->setEleve($eleve);
+            $form = $this->createForm(AvisType::class, $avis);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($avis);
-            $prof->addNote($form->get('note')->getData());
-            $noteMoyenne = round(array_sum($prof->getNotes())/count($prof->getNotes()),1);
-            $prof->setNoteMoyenne($noteMoyenne);
-            $entityManager->persist($prof);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager->flush();
+                $avis->setProf($prof);
+                $avis->setEleve($eleve);
 
-            return $this->redirectToRoute('home_eleve');
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($avis);
+
+                $entityManager->flush();
+
+                $noteMoyenne = round($this->getDoctrine()
+                    ->getRepository(Avis::class)
+                    ->findNoteMoyenne($prof),1);
+
+                    // dd($noteMoyenne);
+
+                $prof->setNoteMoyenne($noteMoyenne);
+
+                $entityManager->persist($prof);
+
+                $entityManager->flush();
+
+                return $this->redirectToRoute('planning_eleve');
+            }
         }
 
         return $this->render('eleve/emettreAvis.html.twig', [
@@ -86,6 +108,7 @@ class EleveController extends AbstractController
     /**
      * Affiche la liste des cours du prof (avec possibilité de les modifier)
      * @Route("/showDemandesEleve", name="show_demandes_eleve")
+     * @IsGranted("ROLE_ELEVE")
      */
     public function showDemandesEleve(Eleve $eleve) {
 

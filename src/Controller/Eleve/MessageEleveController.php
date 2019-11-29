@@ -8,9 +8,12 @@ use App\Entity\Message;
 use App\Controller\Eleve\EleveController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/eleve")
+ * @IsGranted("ROLE_ELEVE")
  */
 class MessageEleveController extends EleveController
 {

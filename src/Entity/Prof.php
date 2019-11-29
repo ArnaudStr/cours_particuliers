@@ -93,10 +93,6 @@ class Prof implements UserInterface
      */
     private $coursS;
 
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $notes = [];
 
     /**
      * @var string le token qui servira lors de l'oubli de mot de passe
@@ -115,11 +111,6 @@ class Prof implements UserInterface
     private $seances;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $noteMoyenne;
-
-    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenExpire;
@@ -133,6 +124,11 @@ class Prof implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $nbMsgNonLus;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $noteMoyenne;
 
     public function __construct()
     {
@@ -391,28 +387,6 @@ class Prof implements UserInterface
 
         return $this;
     }
-    
-    public function getNotes(): ?array
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(?array $notes): self
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    public function addNote(Float $note): self
-    {
-        if ($note<=5 && $note>=0) {
-            $this->notes[] = $note;
-        }
-
-        return $this;
-    }
-    
 
     /**
      * @return string
@@ -481,18 +455,6 @@ class Prof implements UserInterface
         return ucfirst($this->getPrenom()).' '.strtoupper($this->getNom());
     }
 
-    public function getNoteMoyenne(): ?float
-    {
-        return $this->noteMoyenne;
-    }
-
-    public function setNoteMoyenne(?float $noteMoyenne): self
-    {
-        $this->noteMoyenne = $noteMoyenne;
-
-        return $this;
-    }
-
     public function getTokenExpire(): ?\DateTimeInterface
     {
         return $this->tokenExpire;
@@ -525,6 +487,18 @@ class Prof implements UserInterface
     public function setNbMsgNonLus(int $nbMsgNonLus): self
     {
         $this->nbMsgNonLus = $nbMsgNonLus;
+
+        return $this;
+    }
+
+    public function getNoteMoyenne(): ?float
+    {
+        return $this->noteMoyenne;
+    }
+
+    public function setNoteMoyenne(?float $noteMoyenne): self
+    {
+        $this->noteMoyenne = $noteMoyenne;
 
         return $this;
     }

@@ -17,17 +17,17 @@
                         
                         <p>{{ cours.prof.adresse }}</p>
                         <div class="listingReview">
-                            {% if cours.prof.noteMoyenne %}
+                            {% if nbEtoiles %}
                                 <ul class="list-inline rating">
-                                    {% if cours.prof.noteMoyenne|round >= 1 %}
-                                        {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                    {% if nbEtoiles >= 1 %}
+                                        {% for i in 1 .. nbEtoiles  %}
                                             <!-- Etoiles pleines -->
                                             <li><i class="fa fa-star" aria-hidden="true"></i></li>
                                         {% endfor %}
                                     {% endif %}
 
-                                    {% if cours.prof.noteMoyenne|round != 5 %}         
-                                        {% for i in cours.prof.noteMoyenne|round .. 4 %}
+                                    {% if nbEtoiles != 5 %}         
+                                        {% for i in nbEtoiles .. 4 %}
                                             <!-- Etoiles vides -->
                                             <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
                                         {% endfor %}

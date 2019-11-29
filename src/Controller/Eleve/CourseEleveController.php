@@ -2,9 +2,9 @@
 
 namespace App\Controller\Eleve;
 
+use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Cours;
-use App\Entity\Eleve;
 use App\Entity\Seance;
 use App\Entity\Activite;
 use App\Entity\Categorie;
@@ -12,10 +12,13 @@ use App\Entity\DemandeCours;
 use App\Controller\Eleve\EleveController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 
 /**
  * @Route("/eleve")
+ * @IsGranted("ROLE_ELEVE")
  */
 class CourseEleveController extends EleveController
 {
@@ -62,6 +65,8 @@ class CourseEleveController extends EleveController
         else if ($activite){
             $nbResultats = count($activite->getCoursS());
         }
+
+        
             
         return $this->render('course/search.html.twig', [
             'categorie' => $categorie,
@@ -78,15 +83,16 @@ class CourseEleveController extends EleveController
      */
     public function displayCoursEleve(Cours $cours)
     {
-        $nbEtoiles = null;
-        if ($noteMoyenne = $cours->getProf()->getNoteMoyenne()){
+        $noteMoyenne = $cours->getProf()->getNoteMoyenne();
+        if ($noteMoyenne){
             $nbEtoiles = round($noteMoyenne);
         }
-        else $noteMoyenne = 'Pas encore noté';
-
+        else {
+            $nbEtoiles = null;
+        }
+        
         return $this->render('course/displayCourse.html.twig', [
             'cours' => $cours,
-            'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
         ]);
     }

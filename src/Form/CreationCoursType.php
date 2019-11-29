@@ -22,10 +22,11 @@ class CreationCoursType extends AbstractType
             ->add("activite", EntityType::class, [
                 "class"=>Activite::class, 
                 "choice_label" => 'nom',
+                'label' => 'Choisissez l\'activité *'
             ])
 
             ->add("tarifHoraire", IntegerType::class, [
-                "label" => "Tarif horaire",
+                "label" => "Tarif horaire *",
                 'attr' => [
                     "min" => 1,
                     'minMessage' => 'Veuillez inscrire un prix supérieur à 0'
@@ -51,10 +52,11 @@ class CreationCoursType extends AbstractType
             ])
 
             ->add('description', TextareaType::class, [
+                "label" => "Description du cours *",
             ])
 
             ->add('niveaux', TextType::class, [
-                'label' => 'Veuillez renseigner les niveaux pour lesquels vous voulez enseigner ce cours',
+                'label' => 'Niveaux pour lesquels vous voulez enseigner ce cours',
                 'required' => false,
                 ])
 

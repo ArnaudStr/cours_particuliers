@@ -80,10 +80,11 @@
                                                     <h2>{{ cours.prof }}</h2>
                                                     {% if app.user %}
                                                         <p>{{ cours.tarifHoraire }}€ /h</p>
+                                                        <h2>TAMER</h2>
                                                         {% if cours.prof.noteMoyenne %}
                                                             <ul class="list-inline rating">
                                                                 {% if cours.prof.noteMoyenne|round >= 1 %}
-                                                                    {% for i in 1 .. cours.prof.noteMoyenne|round  %}
+                                                                    {% for i in 1 .. cours.prof.noteMoyenne|round %}
                                                                         <!-- Etoiles pleines -->
                                                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
                                                                     {% endfor %}

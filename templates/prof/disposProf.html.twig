@@ -11,27 +11,26 @@
     <div data-entry-idprof={{app.user.id}}></div>
 
     <div class="row calendrier">
-        <div class="center-block col-md-6 col-sm-9 col-xs-12">
+        <div class="center-block col-md-7 col-sm-9 col-xs-12">
+            <p>
+                <strong>Déplacez le bouton 'Nouveau créneau' ci-dessous sur le calendrier afin de créer un nouveau créneau.</br>
+                        Vous pouvez également déplacer, modifier ou supprimer (en cliquant dessus) un créneau.</br>
+                        Une fois que vous aurez défini vos disponibilités dans la semaine, cliquez sur le bouton 'Valider mes disponibilités' ci-dessous (cela créera des séances pour les 30 prochains jours)
+                </strong>
+            </p>
             <div id='external-events'>
-                <p>
-                    <strong>Déplacez le bouton 'Nouveau créneau' ci-dessous sur le calendrier afin de créer un nouveau créneau.</br>
-                            Vous pouvez également déplacer, modifier ou supprimer (en cliquant dessus) un créneau sur le calendrirer.
-                    </strong>
-                </p>
+               <a href="{{ path('changements_dispos') }}">
+                    <button class="btn btn-primary" id="boutton" style="float: right">
+                        Valider mes disponibilités
+                    </button>
+                </a>
                 <div class='fc-event'>Nouveau créneau</div>
             </div>
         </div>
+
         <div class="center-block col-md-10 col-sm-10 col-xs-12">
             {% include '@Calendar/calendar.html' %} 
         </div>
-    </div>
-
-    <div class="center-block col-md-6 col-sm-9 col-xs-12">
-        <!-- <a href="{{ path('changements_dispos') }}"><button class="btn btn-primary"> -->
-        <button class="btn btn-primary">
-            Valider mes disponibilites
-        </button>
-        <!-- </button></a> -->
     </div>
 
 {% endblock %}
@@ -45,30 +44,32 @@
         var plageHoraire = [];
         var tabJourHoraire = {};
         var btn = document.getElementById("boutton");
-        btn.addEventListener('click', function(){
-            var tabA = Array.from(document.getElementsByClassName('fc-time-grid-event'));
-            var jour=null;
+       // if (btn) {
+            btn.addEventListener('click', function(){
+                var tabA = Array.from(document.getElementsByClassName('fc-time-grid-event'));
+                var jour=null;
 
-            tabA.forEach(function(e) {
-                var test = e.firstChild.childNodes[0].attributes[2].value.split(' - ');
+                tabA.forEach(function(e) {
+                    var test = e.firstChild.childNodes[0].attributes[2].value.split(' - ');
 
-                plageHoraire.push(test[0].replace(':00',''));
-                plageHoraire.push(test[1].replace(':00',''));
+                    plageHoraire.push(test[0].replace(':00',''));
+                    plageHoraire.push(test[1].replace(':00',''));
 
-                if (jour == e.fcSeg.start.toString().substr(0,3));
-                else {
-                    jour = e.fcSeg.start.toString().substr(0,3);
-                    tabJourHoraire[jour]= [];
-                }
+                    if (jour == e.fcSeg.start.toString().substr(0,3));
+                    else {
+                        jour = e.fcSeg.start.toString().substr(0,3);
+                        tabJourHoraire[jour]= [];
+                    }
 
-                tabJourHoraire[jour].push(plageHoraire);
+                    tabJourHoraire[jour].push(plageHoraire);
 
-                plageHoraire = [];
-                
-                })
+                    plageHoraire = [];
+                    
+                    })
 
-                document.cookie = 'dispos='+JSON.stringify(tabJourHoraire)+'; path=/';
-        })
+                    document.cookie = 'dispos='+JSON.stringify(tabJourHoraire)+'; path=/';
+            })
+      //  }
     </script>
 {% endblock %}
 

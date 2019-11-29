@@ -84,10 +84,10 @@
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
-                                <a class="nav-link" href="{{ path('home_eleve') }}">Planning</a>
+                                <a class="nav-link" href="{{ path('planning_eleve') }}">Planning</a>
                             </li>     
                             <li class="">
-                                <a class="nav-link" href="{{ path('show_profile_eleve') }}">Profil</a>
+                                <a class="nav-link" href="{{ path('home_eleve') }}">Profil</a>
                             </li>     
                             <li class="">
                                 <a class="nav-link" href="{{ path('show_messages_eleve') }}">Messagerie ({{ app.user.nbMsgNonLus }})</a>          
@@ -108,15 +108,19 @@
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
-                                <a class="nav-link" href="{{ path('home_prof') }}">Planning</a>
+                                <a class="nav-link" href="{{ path('planning_prof') }}">Planning</a>
                             </li>     
                             <li class="">
-                                <a class="nav-link" href="{{ path('show_profile_prof') }}">Profil</a>
+                                <a class="nav-link" href="{{ path('home_prof') }}">Profil</a>
                             </li>     
                             <li class="">
                                 <a class="nav-link" href="{{ path('show_messages_prof') }}">Messagerie ({{ app.user.nbMsgNonLus }})</a>          
                             </li>
 
+                            <li>
+                                <a class="nav-link" href="{{ path('edit_disponibilites_prof') }}">Modifier mes disponibilités</a>
+                            </li> 
+                            
                             <li>
                                 <a class="nav-link" href="{{ path('add_propose_cours') }}">Proposer un cours</a>
                             </li> 

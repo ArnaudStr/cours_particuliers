@@ -8,10 +8,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Controller\Prof\ProfController;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 
 /**
  * @Route("/prof")
+ * @IsGranted("ROLE_PROF")
  */
 class MessageProfController extends ProfController
 {

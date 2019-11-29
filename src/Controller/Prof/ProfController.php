@@ -10,6 +10,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/prof")
@@ -17,10 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProfController extends AbstractController
 {    
     /**
-     * Page d'acceuil (planning du prof)
-     * @Route("/", name="home_prof")
+     * Planning du prof
+     * @Route("/planningProf", name="planning_prof")
+     * @IsGranted("ROLE_PROF")
      */
-    public function indexProf()
+    public function planningProf()
     {
         return $this->render('prof/calendrierProf.html.twig', [
             'title' => 'Planning'

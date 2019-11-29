@@ -136,6 +136,13 @@ h1, h2, h3, h4, h5 {
   color: #222222;
 }
 
+@media (max-width: 600px) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
+
 h2 {
   font-size: 19px;
   margin-bottom: 25px;
@@ -4682,7 +4689,7 @@ i.fa.fa-heart-o.active:before {
 
 .rating li i {
   color: #ffb400;
-  font-size: 10px;
+  /* font-size: 10px; */
 }
 
 .btnAreaBorder {
@@ -10647,3 +10654,14 @@ body.pattern-04 {
 .btn-primary{
   padding: 15px 30px;
 }
+
+.fa-star, .fa-star-o {
+  color: #ffb400;
+  /* font-size: 10px; */
+}
+
+/* @media  (max-width: 400px) {
+  .comments-media .media-left {
+    display:none;
+  }
+} */

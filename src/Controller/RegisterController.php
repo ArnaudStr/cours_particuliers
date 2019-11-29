@@ -133,11 +133,11 @@ class RegisterController extends AbstractController
             );
 
             $user->setNom(
-                $form->get('nom')->getData()
+                mb_strtoupper($form->get('nom')->getData(), 'UTF-8')
             );
 
             $user->setPrenom(
-                $form->get('prenom')->getData()
+                ucfirst(mb_strtolower($form->get('prenom')->getData(), 'UTF-8'))
             );
             
             $entityManager = $this->getDoctrine()->getManager();

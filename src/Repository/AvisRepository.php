@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Avis;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Prof;
+use App\Entity\Eleve;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Avis|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +49,42 @@ class AvisRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+    * @return Avis[] Retourne les 5 meilleurs avis
+    */
+    public function findBestFive()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.note', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findNoteMoyenne(Prof $prof)
+    {
+        return $this->createQueryBuilder('a')
+            ->select("avg(a.note)")
+            ->where('a.prof = :prof')
+            ->setParameter('prof', $prof)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function findAvis(Prof $prof, Eleve $eleve)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.prof = :prof')
+            ->andWhere('a.eleve = :eleve')
+            ->setParameter('prof', $prof)
+            ->setParameter('eleve', $eleve)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult()
+        ;
+    }
+
 }

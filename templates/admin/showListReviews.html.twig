@@ -19,19 +19,19 @@
                                     <span>
                                     {% if avis.note >= 1 %}
                                         {% for i in 1..avis.note %}
-                                            <i class="fas fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                         {% endfor %}
                                     {% endif %}
                         
                                     {% if avis.note != 5 %}         
                                         {% for i in avis.note .. 4 %}
-                                            <i class="far fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
                                         {% endfor %}
                                     {% endif %}
                                     </span>
                                 <div class="date">{{ avis.dateAvis|date("d/m/Y")}}</div>
                                 <p>{{ avis.commentaire }}</p>
-                                <a href="{{ path('delete_review_admin',{'id':avis.id}) }}"><i class="fa fa-trash"></i></a></td>
+                                <a href="{{ path('delete_review_admin',{'id':avis.id}) }}"><i class="fa fa-trash"></i> Supprimier l'avis</a></td>
                                 </div>
                             </div>
                     </div>

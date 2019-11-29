@@ -92,10 +92,10 @@ class ProfRepository extends ServiceEntityRepository
     public function findOneByEmail($email): ?Prof
     {
         return $this->createQueryBuilder('p')
-        ->andWhere('p.email = :email')
-        ->setParameter('email', $email)
-        ->getQuery()
-        ->getOneOrNullResult()
-        ;
+            ->andWhere('p.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 }

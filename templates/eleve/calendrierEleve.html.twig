@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue {{ app.user ~ " !"}}{% endblock %}
+{% block title %}Votre planning{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
 
 {% block body %}
+    {% block flash %}
+        {% for flash_message in app.session.flashbag.get('avis') %}
+            <div class="container alert alert-info" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+    
     <div data-entry-ideleve={{app.user.id}}></div>
 
     <div class="row calendrier">

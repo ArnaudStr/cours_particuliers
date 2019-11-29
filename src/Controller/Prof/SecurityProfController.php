@@ -12,6 +12,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use App\Controller\Prof\ProfController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/prof")
@@ -33,6 +34,7 @@ class SecurityProfController extends ProfController
 
     /**
      * @Route("/logoutProf", name="logout_prof")
+     * @IsGranted("ROLE_PROF")
      */
     public function logoutProf() {
         
@@ -43,6 +45,7 @@ class SecurityProfController extends ProfController
 
     /**
      * @Route("/forgottenPasswordProf", name="forgotten_password_prof")
+     * @IsGranted("ROLE_PROF")
      */
     public function forgottenPasswordProf(
         Request $request,
@@ -56,13 +59,14 @@ class SecurityProfController extends ProfController
             $email = $request->request->get('email');
  
             $entityManager = $this->getDoctrine()->getManager();
+
             $user = $entityManager->getRepository(Prof::class)->findOneByEmail($email);
-            /* @var $user User */
  
             if ($user === null) {
                 $this->addFlash('forgotPwd', 'Email Inconnu');
                 return $this->redirectToRoute('home');
             }
+            
             $token = $tokenGenerator->generateToken();
  
             try{
@@ -103,6 +107,7 @@ class SecurityProfController extends ProfController
 
      /**
      * @Route("/resetPasswordProf/{token}", name="reset_password_prof")
+     * @IsGranted("ROLE_PROF")
      */
     public function resetPasswordProf(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {

@@ -6,9 +6,11 @@ use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Admin;
 use App\Entity\Eleve;
+use App\Entity\Seance;
+
+use App\Entity\Message;
 use App\Entity\Activite;
 use App\Entity\Categorie;
-
 use App\Form\ActiviteType;
 use App\Form\CategorieType;
 use App\Form\RegistrationAdminType;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -28,44 +31,44 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AdminController extends AbstractController
 {
 
-    // /**
-    //  * @Route("/register", name="register_admin")
-    //  */
-    // public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator): Response
-    // {
-    //     $user = new Admin();
-    //     $form = $this->createForm(RegistrationAdminType::class, $user);
-    //     $form->handleRequest($request);
+    /**
+     * @Route("/register", name="register_admin")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AdminAuthenticator $authenticator): Response
+    {
+        $user = new Admin();
+        $form = $this->createForm(RegistrationAdminType::class, $user);
+        $form->handleRequest($request);
 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         // encode the plain password
-    //         $user->setPassword(
-    //             $passwordEncoder->encodePassword(
-    //                 $user,
-    //                 $form->get('plainPassword')->getData()
-    //             )
-    //         );
+        if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
 
-    //         $user->setRoles(["ROLE_ADMIN"]);
+            $user->setRoles(["ROLE_ADMIN"]);
 
-    //         $entityManager = $this->getDoctrine()->getManager();
-    //         $entityManager->persist($user);
-    //         $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-    //         // do anything else you need here, like send an email
+            // do anything else you need here, like send an email
 
-    //         return $guardHandler->authenticateUserAndHandleSuccess(
-    //             $user,
-    //             $request,
-    //             $authenticator,
-    //             'admin_security' // firewall name in security.yaml
-    //         );
-    //     }
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                'admin_security' // firewall name in security.yaml
+            );
+        }
 
-    //     return $this->render('registration/registerAdmin.html.twig', [
-    //         'registrationForm' => $form->createView(),
-    //     ]);
-    // }
+        return $this->render('registration/registerAdmin.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
 
     /**
      * @Route("/login", name="login_admin")
@@ -82,6 +85,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/logout", name="logout_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function logout()
     {
@@ -91,6 +95,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/addCategorie", name="add_categorie")
      * @Route("/editCategorie/{id}", name="edit_categorie")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function addEditCategorie(Categorie $categorie = null, ObjectManager $manager, Request $request) {
         if(!$categorie) {
@@ -120,6 +125,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/deleteCategorie/{id}", name="delete_categorie")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteCategorie(Categorie $categorie, ObjectManager $manager) {
         $manager->remove($categorie);
@@ -131,6 +137,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/showListActivitesCategories", name="show_list_activites_categories")
      * @Route("/", name="home_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function showListActivitesCategories() {
         // On enregistre les formations
@@ -145,6 +152,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/addActivite", name="add_activite")
      * @Route("/editActivite/{id}", name="edit_activite")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function addEditActivity(Activite $activite = null, ObjectManager $manager, Request $request) {
         if(!$activite) {
@@ -174,6 +182,7 @@ class AdminController extends AbstractController
     
     /**
      * @Route("/deleteActivite/{id}", name="delete_activite")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteActivite(Activite $activite, ObjectManager $manager) {
         $manager->remove($activite);
@@ -184,6 +193,7 @@ class AdminController extends AbstractController
     
     /**
      * @Route("/showListMembers", name="show_list_members")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function showListMembers() {
         // On enregistre les formations
@@ -199,6 +209,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/deleteProf/{id}", name="delete_prof_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteProf(Prof $prof, ObjectManager $manager) {
         $manager->remove($prof);
@@ -209,6 +220,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/deleteEleve/{id}", name="delete_eleve_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteEleve(Eleve $eleve, ObjectManager $manager) {
         foreach($eleve->getSeances() as $seance){
@@ -225,6 +237,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/showReviewsProfAdmin/{id}", name="show_reviews_prof_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function showReviewsProfAdmin(Prof $prof) {
 
@@ -236,6 +249,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/editProfAdmin/{id}", name="edit_prof_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function editProfAdmin(Prof $prof) {
 
@@ -247,6 +261,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/editEleveAdmin/{id}", name="edit_eleve_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function editEleveAdmin(Eleve $eleve) {
 
@@ -258,10 +273,22 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/deleteReviewProfAdmin/{id}", name="delete_review_admin")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deleteReviewProfAdmin(Avis $avis, ObjectManager $manager) {
 
         $manager->remove($avis);
+
+        $manager->flush();
+
+        $noteMoyenne = round($this->getDoctrine()
+            ->getRepository(Avis::class)
+            ->findNoteMoyenne($avis->getProf()),1);
+
+        $avis->getProf()->setNoteMoyenne($noteMoyenne);
+
+        $manager->persist($avis->getProf());
+
         $manager->flush();
   
         return $this->redirectToRoute('show_list_members', [

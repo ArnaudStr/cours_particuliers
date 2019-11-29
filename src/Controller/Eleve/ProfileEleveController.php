@@ -2,7 +2,7 @@
 
 namespace App\Controller\Eleve;
 
-use App\Entity\Eleve;
+
 use App\Entity\Seance;
 use App\Form\EditEleveType;
 use App\Form\ChangePasswordType;
@@ -11,15 +11,18 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Controller\Eleve\EleveController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/eleve")
+ * @IsGranted("ROLE_ELEVE")
  */
 class ProfileEleveController extends EleveController
 {
     /**
-     * Profil de l'élève
-     * @Route("/showProfileEleve/", name="show_profile_eleve")
+     * Profil de l'élève (page d'accueil)
+     * @Route("/", name="home_eleve")
      */
     public function showProfileEleve() {
 
