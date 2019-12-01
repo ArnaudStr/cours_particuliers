@@ -8,11 +8,10 @@
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="resultBar barSpaceAdjust">
-                    <h2>Vous avez {{ app.user.demandesCours }} demandes en attente :</h2>
+                    <h2>Vous avez <strong>{{ app.user.demandesCours|length }}</strong> demandes en attente :</h2>
                 </div>
                 {% for demandeCours in app.user.demandesCours %}
                     <p>Demande pour un cours de {{ demandeCours.cours }} avec {{ demandeCours.prof }}
-                    
                 {% endfor %}
             </div>
         </div>
