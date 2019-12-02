@@ -30,8 +30,8 @@ class CourseEleveController extends EleveController
     public function searchCourseEleve()
     {
         $categories = $this->getDoctrine()
-        ->getRepository(Categorie::class)
-        ->findAll();  
+            ->getRepository(Categorie::class)
+            ->findAll();  
 
         return $this->render('home.html.twig', [
             'title' => 'Cours à Strasbourg',

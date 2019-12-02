@@ -80,7 +80,6 @@
                                                     <h2>{{ cours.prof }}</h2>
                                                     {% if app.user %}
                                                         <p>{{ cours.tarifHoraire }}€ /h</p>
-                                                        <h2>TAMER</h2>
                                                         {% if cours.prof.noteMoyenne %}
                                                             <ul class="list-inline rating">
                                                                 {% if cours.prof.noteMoyenne|round >= 1 %}

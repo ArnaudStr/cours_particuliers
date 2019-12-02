@@ -43,7 +43,7 @@ class EditProfType extends AbstractType
                 ],
                 'constraints' => [
                     new File([
-                        'maxSize' => '4096k',
+                        'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpg',
                             'image/jpeg',
