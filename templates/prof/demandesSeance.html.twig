@@ -8,15 +8,26 @@
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="resultBar barSpaceAdjust">
-                    <h2>Demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h2>
+                    <h2>Vous avez <strong>{{ demandesCours|length }}</strong> demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h2>
                 </div>
-                {% for demandeCours in demandesCours %}
-                    <p>Demande de {{ demandeCours.eleve }} pour un cours de {{ demandeCours.cours }}
-                    
-                    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn-primary">Valider la seance</button></a></p>
-                
-                    <p><a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn-primary">Refuser la seance</button></a></p>
-                {% endfor %}
+                <div class="demandesCours">
+                    {% if is_granted('ROLE_PROF') %}
+                        {% for demandeCours in demandesCours %}
+                            <p>Demande de <strong>{{ demandeCours.eleve }}</strong> pour un cours de <strong>{{ demandeCours.cours }}</strong>
+                            <p>
+                                <a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':1}) }}"><button type="button" class="btn btn-primary">Valider la seance</button></a>
+                        
+                                <a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn btn-primary">Refuser la seance</button></a>
+
+                                <a href="{{ path('conversation_prof', {'id':demandeCours.eleve.id}) }}"><button class="btn btn-lg btn-primary">Contacter {{ demandeCours.eleve }}</button></a>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        {% for demandeCours in demandesCours %}
+                            <p>Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong></p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

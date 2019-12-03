@@ -7,12 +7,21 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-xs-12">
-                <div class="resultBar barSpaceAdjust">
-                    <h2>Vous avez <strong>{{ app.user.demandesCours|length }}</strong> demandes en attente :</h2>
-                </div>
-                {% for demandeCours in app.user.demandesCours %}
-                    <p>Demande pour un cours de {{ demandeCours.cours }} avec {{ demandeCours.prof }}
-                {% endfor %}
+                {% if is_granted('ROLE_PROF') %}
+                    <div class="resultBar barSpaceAdjust">
+                        <h2>Vous avez <strong>{{ app.user.demandesCours|length }}</strong> demandes en attente :</h2>
+                    </div>
+                    {% for demandeCours in app.user.demandesCours %}
+                        <p style="font-size: 20px">Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong> pour la séance du <strong>{{ demandeCours.seance.dateDebut|date("d/m/Y") }}</strong> à <strong>{{ demandeCours.seance.dateDebut|date("H:i") }}</strong>
+                    {% endfor %}
+                {% else %}
+                    <div class="resultBar barSpaceAdjust">
+                        <h2><strong>{{ app.user.demandesCours|length }}</strong> demandes d'inscription pour la seance du {{ seance.dateDebut|date("d/m/Y") }} à {{ seance.dateDebut|date("H:i") }}</h2>
+                    </div>
+                    {% for demandeCours in demandesCours %}
+                        <p style="font-size: 20px">Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong></p>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

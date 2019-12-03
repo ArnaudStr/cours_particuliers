@@ -56,15 +56,31 @@ class CalendarListener
 
             // SEANCES D'UN ELEVE
             $seances = $this->seanceRepository
-            ->createQueryBuilder('seance')
-            ->innerJoin('seance.eleve', 'e')
-            ->where('seance.dateDebut BETWEEN :start and :end')
-            ->andWhere('e.id = :id')
-            ->setParameter('start', $start->format('Y-m-d H:i:s'))
-            ->setParameter('end', $end->format('Y-m-d H:i:s'))
-            ->setParameter('id', $filters['eleve'])
-            ->getQuery()
-            ->getResult();
+                ->createQueryBuilder('seance')
+                ->innerJoin('seance.eleve', 'e')
+                ->where('seance.dateDebut BETWEEN :start and :end')
+                ->andWhere('e.id = :id')
+                ->setParameter('start', $start->format('Y-m-d H:i:s'))
+                ->setParameter('end', $end->format('Y-m-d H:i:s'))
+                ->setParameter('id', $filters['eleve'])
+                ->getQuery()
+                ->getResult();
+
+            $demandes = $this->demandeCoursRepository
+                ->createQueryBuilder('demandeSeance')
+                ->innerJoin('demandeSeance.eleve', 'e')
+                ->innerJoin('demandeSeance.seance', 's')
+                ->where('s.dateDebut BETWEEN :start and :end')
+                ->andWhere('e.id = :id')
+                ->setParameter('start', $start->format('Y-m-d H:i:s'))
+                ->setParameter('end', $end->format('Y-m-d H:i:s'))
+                ->setParameter('id', $filters['eleve'])
+                ->getQuery()
+                ->getResult();
+            
+            foreach($demandes as $demande){
+                array_push($seances, $demande->getSeance());
+            }
 
         }
 
@@ -72,17 +88,17 @@ class CalendarListener
 
             // SEANCES D'UN PROF
             $seances = $this->seanceRepository
-            ->createQueryBuilder('seance')
-            ->innerJoin('seance.prof', 'p')
-            ->where('seance.dateDebut BETWEEN :start and :end')
-            ->andWhere('p.id = :id')
-            // ->and('formation.dateDebut BETWEEN :start and :end')
-            ->setParameter('start', $start->format('Y-m-d H:i:s'))
-            ->setParameter('end', $end->format('Y-m-d H:i:s'))
-            ->setParameter('id', $filters['prof'])
-            ->getQuery()
-            ->getResult()
-            ;
+                ->createQueryBuilder('seance')
+                ->innerJoin('seance.prof', 'p')
+                ->where('seance.dateDebut BETWEEN :start and :end')
+                ->andWhere('p.id = :id')
+                // ->and('formation.dateDebut BETWEEN :start and :end')
+                ->setParameter('start', $start->format('Y-m-d H:i:s'))
+                ->setParameter('end', $end->format('Y-m-d H:i:s'))
+                ->setParameter('id', $filters['prof'])
+                ->getQuery()
+                ->getResult()
+                ;
 
         }
 
@@ -152,21 +168,47 @@ class CalendarListener
             // Seances d'un eleve
             else if (array_key_exists('eleve', $filters) && !array_key_exists('cours', $filters)) {
 
-                $seanceEvent = new Event(
-                    $seance->getCours()->getActivite().' avec '.$seance->getProf(),
-                    $seance->getDateDebut(),
-                    $dateFin // If the end date is null or not defined, a all day event is created.
-                );
+                if ( $seance->getEleve() ) {
+                    $seanceEvent = new Event(
+                        $seance->getCours()->getActivite().' avec '.$seance->getProf(),
+                        $seance->getDateDebut(),
+                        $dateFin // If the end date is null or not defined, a all day event is created.
+                    );
 
-                $seanceEvent->setOptions([
-                    'backgroundColor' => 'blue',
-                    // 'borderColor' => 'orange',
-                    'textColor' => 'white',
-                    'url' => $this->router->generate('emettre_avis', [
-                                'id' => $seance->getProf()->getId(),
-                    ])
-                ]);
+                    $seanceEvent->setOptions([
+                        'backgroundColor' => 'blue',
+                        'textColor' => 'white',
+                        'url' => $this->router->generate('emettre_avis', [
+                                    'id' => $seance->getProf()->getId(),
+                        ])
+                    ]);
+                }
 
+
+                else {
+                
+                    $demandesCours = $this->demandeCoursRepository
+                        ->createQueryBuilder('d')
+                        ->andWhere('d.seance = :seance')
+                        ->setParameter('seance', $seance)
+                        ->getQuery()
+                        ->getResult()
+                    ;
+                    $seanceEvent = new Event(
+                        count($demandesCours).' demandes de cours',
+                        $seance->getDateDebut(),
+                        $dateFin // If the end date is null or not defined, a all day event is created.
+                    );
+
+                    $seanceEvent->setOptions([
+                        'backgroundColor' => '#2196f3',
+                        'textColor' => 'white',
+                        'url' => $this->router->generate('demandes_seance_eleve', [
+                            'id' => $seance->getId()
+                        ])
+                    ]);
+                }
+                
             }
 
             // Seances d'un prof

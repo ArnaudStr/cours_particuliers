@@ -30,7 +30,7 @@ class SecurityEleveController extends EleveController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexio élève']);
     }
 
     /**
@@ -97,7 +97,9 @@ class SecurityEleveController extends EleveController
             return $this->redirectToRoute('login_eleve');
         }
  
-        return $this->render('security/forgotten_password.html.twig');
+        return $this->render('security/forgotten_password.html.twig', [
+            'title' => 'Mot de passe oublié'
+        ]);
     }
 
     /**
@@ -131,7 +133,7 @@ class SecurityEleveController extends EleveController
             return $this->redirectToRoute('login_eleve');
         }else {
  
-            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+            return $this->render('security/reset_password.html.twig', ['token' => $token, 'title' => 'Changement mot de passe']);
         }
     }
 }

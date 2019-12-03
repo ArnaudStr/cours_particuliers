@@ -29,7 +29,7 @@ class SecurityProfController extends ProfController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/loginProf.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/loginProf.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexion professeur']);
     }
 
     /**
@@ -102,7 +102,7 @@ class SecurityProfController extends ProfController
             return $this->redirectToRoute('login_prof');
         }
  
-        return $this->render('security/forgotten_password.html.twig');
+        return $this->render('security/forgotten_password.html.twig', ['title' => 'Mot de passe oublié']);
     }
 
      /**

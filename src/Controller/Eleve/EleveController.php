@@ -45,6 +45,7 @@ class EleveController extends AbstractController
         return $this->render('prof/pagePubliqueProf.html.twig', [
             'prof' => $prof,
             'nbEtoiles' => $nbEtoiles,
+            'title' => ''.$prof
         ]);
     }
 
@@ -99,14 +100,14 @@ class EleveController extends AbstractController
         }
 
         return $this->render('eleve/emettreAvis.html.twig', [
-            'title' => 'Avis',
+            'title' => 'Avis sur '.$prof,
             'prof' => $prof,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * Affiche la liste des cours du prof (avec possibilité de les modifier)
+     * Affiche la liste des demandes en attente
      * @Route("/showDemandesEleve", name="show_demandes_eleve")
      * @IsGranted("ROLE_ELEVE")
      */
@@ -119,6 +120,8 @@ class EleveController extends AbstractController
             'eleve' => $eleve
         ]);
     }
+
+    
 
     public function delFile($dir, $del_file){
         $fsObject = new Filesystem();

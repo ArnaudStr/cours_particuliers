@@ -58,7 +58,8 @@ class MessageEleveController extends EleveController
         }
 
         return $this->render('eleve/showMessageEleve.html.twig', [
-            'allConversations' => $allConversationsNbMsgNonLus
+            'allConversations' => $allConversationsNbMsgNonLus,
+            'title' => 'Messagerie'
         ]);
     }
 
@@ -107,6 +108,7 @@ class MessageEleveController extends EleveController
             'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
+            'title' => ''.$prof
         ]);
     }
 

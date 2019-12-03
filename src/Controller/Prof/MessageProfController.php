@@ -57,7 +57,8 @@ class MessageProfController extends ProfController
         }
 
         return $this->render('prof/showMessageProf.html.twig', [
-            'allConversations' => $allConversationsNbMsgNonLus
+            'allConversations' => $allConversationsNbMsgNonLus,
+            'title' => 'Messagerie'
         ]);
     }
     
@@ -106,6 +107,7 @@ class MessageProfController extends ProfController
             'allMsg' => $allMsg,
             'msgLus' => $msgLus,
             'msgNonLus' => $msgNonLus,
+            'title ' => ''.$eleve
         ]);
     }
 

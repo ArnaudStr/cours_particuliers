@@ -87,7 +87,8 @@ class ProfileProfController extends ProfController
             'allCoursEtProchaineSeance' => $allCoursEtProchaineSeance,
             'noteMoyenne' => $noteMoyenne,
             'nbEtoiles' => $nbEtoiles,
-            'creneauxSemaine' => $creneauxSemaine
+            'creneauxSemaine' => $creneauxSemaine,
+            'title' => 'Votre profil'
         ]);
     }
    
@@ -127,6 +128,7 @@ class ProfileProfController extends ProfController
 
         return $this->render('prof/editProfileProf.html.twig', [
             'editForm' => $form->createView(),
+            'title' => 'Modifiez votre profil'
         ]);
     }
 
@@ -165,7 +167,8 @@ class ProfileProfController extends ProfController
         }
 
         return $this->render('security/changePassword.html.twig', array(
-                    'form' => $form->createView(),
+            'form' => $form->createView(),
+            'title' => 'Changement mot de passe'
         ));
     }
 
@@ -176,7 +179,7 @@ class ProfileProfController extends ProfController
     public function editDisponibilitesProf()
     {       
         return $this->render('prof/disposProf.html.twig', [
-            'title' => 'Disponibilites prof'
+            'title' => 'Modifiez vos disponibilités'
         ]);
     }
 
@@ -220,7 +223,8 @@ class ProfileProfController extends ProfController
 
         return $this->render('prof/reviews.html.twig', [
             'title' => 'Mes avis',
-            'prof' => $prof
+            'prof' => $prof,
+            'title' => 'Mes avis'
         ]);
     }
 }

@@ -89,13 +89,12 @@ class CourseProfController extends ProfController
                 ->getRepository(DemandeCours::class)
                 ->findBySeance($seance);  
 
-                return $this->render('prof/demandesSeance.html.twig', [
-                    'title' => 'Demande d\'inscription à une séance',
-                    'seance' => $seance,
-                    'demandesCours' => $demandesCours,
-                ]);
+            return $this->render('prof/demandesSeance.html.twig', [
+                'title' => 'Demande d\'inscription à une séance',
+                'seance' => $seance,
+                'demandesCours' => $demandesCours,
+            ]);
         }
-
     }
 
     /**

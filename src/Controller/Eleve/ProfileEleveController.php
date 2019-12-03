@@ -57,6 +57,7 @@ class ProfileEleveController extends EleveController
 
         return $this->render('eleve/showProfileEleve.html.twig', [
             'allCoursEtProchaineSeance' => $allCoursEtProchaineSeance,
+            'title' => 'Votre profil'
         ]);
     }   
 
@@ -94,6 +95,7 @@ class ProfileEleveController extends EleveController
 
         return $this->render('eleve/editProfileEleve.html.twig', [
             'editForm' => $form->createView(),
+            'title' => 'Modifez votre profil'
         ]);
     }
 
@@ -141,6 +143,7 @@ class ProfileEleveController extends EleveController
 
         return $this->render('security/changePassword.html.twig', array(
                     'form' => $form->createView(),
+                    'title' => 'Changement mot de passe'
         ));
     }
 }

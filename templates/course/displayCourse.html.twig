@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}S'inscrire au cours {{ cours }} !{% endblock %}
-
 {% block body %}
 <!-- LISTINGS DETAILS TITLE SECTION -->
 <section class="clearfix paddingAdjustBottom" id="listing-details">
@@ -54,7 +52,7 @@
                                 <dd> - A domicile</dd>
                             {% endif %}
                         </p>
-                        <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Envoyer un message</button></a>
+                        <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Contacter {{ cours.prof }}</button></a>
                     {% endif %}
                 </div>
             </div>

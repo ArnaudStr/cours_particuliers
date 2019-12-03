@@ -45,16 +45,6 @@
                         <li class="">
                             <a class="nav-link" href="{{ path('show_list_activites_categories') }}">Liste des activites</a>
                         </li>
-                        {#<li class="">
-                            <a class="nav-link" href="{{ path('delete_messages') }}">Supprimer messages</a>
-                        </li>
-
-                        <li class="">
-                            <a class="nav-link" href="{{ path('delete_seances_passees') }}">Supprimer séances libres passées</a>
-                        </li>
-                        <li class="">
-                            <a class="nav-link" href="{{ path('delete_messages_passes') }}">Supprimer messages passés</a>
-                        </li> #}
                         <li class="">
                             <a class="nav-link" href="{{ path('logout_admin') }}">Déconnexion</a>
                         </li>
@@ -91,10 +81,7 @@
                             </li>     
                             <li class="">
                                 <a class="nav-link" href="{{ path('show_messages_eleve') }}">Messagerie ({{ app.user.nbMsgNonLus }})</a>          
-                            </li>
-                            <li class="">
-                                <a class="nav-link" href="{{ path('show_demandes_eleve') }}">Mes demandes de cours</a>          
-                            </li>          
+                            </li> 
                             <li class="">
                                 <a href="{{ path('search_course_eleve') }}">Rechercher un cours </a>
                             </li>     
@@ -116,23 +103,18 @@
                             <li class="">
                                 <a class="nav-link" href="{{ path('show_messages_prof') }}">Messagerie ({{ app.user.nbMsgNonLus }})</a>          
                             </li>
-
                             <li>
                                 <a class="nav-link" href="{{ path('edit_disponibilites_prof') }}">Modifier mes disponibilités</a>
                             </li> 
-                            
                             <li>
                                 <a class="nav-link" href="{{ path('add_propose_cours') }}">Proposer un cours</a>
                             </li> 
-
                             <li class="">
                                 <a class="nav-link" href="{{ path('logout_prof') }}">Déconnexion</a>
                             </li>     
                         </ul>
                     </div>
                 {% endif %}
-
-                    {# <a class="btn btn-default navbar-btn" href="add-listings.html"> + <span>Add Listing</span></a> #}
                 </div>
             </nav>
         </div>

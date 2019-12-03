@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Votre profil{% endblock %}
-
 {% block body %}
     {% block flash %}
         {% for flash_message in app.session.flashbag.get('changePasswordOk') %}
