@@ -110,7 +110,7 @@ class EleveController extends AbstractController
      * @Route("/showDemandesEleve", name="show_demandes_eleve")
      * @IsGranted("ROLE_ELEVE")
      */
-    public function showDemandesEleve(Eleve $eleve) {
+    public function showDemandesEleve() {
 
         $eleve = $this->getUser();
 

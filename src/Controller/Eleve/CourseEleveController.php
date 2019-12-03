@@ -148,7 +148,7 @@ class CourseEleveController extends EleveController
         return $this->render('course/search.html.twig', [
             'activite' => $activite,
             'nbResultats' => $nbResultats,
-            'title' => $activite->getNom()
+            'title' => $activite
         ]);
     }
 }

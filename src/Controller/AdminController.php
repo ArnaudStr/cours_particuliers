@@ -104,7 +104,7 @@ class AdminController extends AbstractController
         }
  
         else {
-            $title = 'Modification de la categorie '.$categorie->getNom();
+            $title = 'Modification de la categorie '.$categorie;
         }
  
         $form = $this->createForm(CategorieType::class, $categorie);
@@ -161,7 +161,7 @@ class AdminController extends AbstractController
         }
  
         else {
-            $title = 'Modification de la activite '.$activite->getNom();
+            $title = 'Modification de l\'activite '.$activite;
         }
  
         $form = $this->createForm(ActiviteType::class, $activite);

@@ -10588,10 +10588,6 @@ body.pattern-04 {
   overflow-y: auto;
 }
 
-/* .panel-list a {
-  border-bottom: black;
-} */
-
 .panel-list a :hover{
   background-color: #4c4c4c;
 }
@@ -10614,20 +10610,6 @@ body.pattern-04 {
   height: 30px !important;
 }
 
-/* .calendrier .fc-event{
-  height: 28px;
-} */
-
-/* #external-events {
-  position: fixed;
-  z-index: 2;
-  top: 20px;
-  left: 20px;
-  width: 150px;
-  padding: 0 10px;
-  border: 1px solid #ccc;
-  background: #eee;
-}*/
 
 #external-events .fc-event {
   margin: 1em 0;
@@ -10657,11 +10639,8 @@ body.pattern-04 {
 
 .fa-star, .fa-star-o {
   color: #ffb400;
-  /* font-size: 10px; */
 }
 
-/* @media  (max-width: 400px) {
-  .comments-media .media-left {
-    display:none;
-  }
-} */
+.banerInfo h1{
+  color: #77B0E6;
+}
