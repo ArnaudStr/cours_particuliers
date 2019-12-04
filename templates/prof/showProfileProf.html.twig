@@ -80,7 +80,8 @@
                                     <div class="panelCustom">
                                         {% for prochaineSeance in coursEleves.seances %}
                                             <p>Prochaine séance avec {{ prochaineSeance.eleve }} le {{ prochaineSeance.dateDebut|date('d/m/Y') }}
-                                                à {{ prochaineSeance.dateDebut|date('H:i') }}
+                                                à {{ prochaineSeance.dateDebut|date('H:i') }} 
+                                                <a href="{{ path('conversation_prof', {'id':prochaineSeance.eleve.id}) }}" target="_blank" style="float:right">Contacter {{ prochaineSeance.eleve.prenom }}</a>
                                             </p>
                                         {% endfor %}
                                     </div>

@@ -2,13 +2,17 @@
 
 namespace App\EventListener;
 
-use App\Repository\DemandeCoursRepository;
+use DateTime;
+use App\Entity\Eleve;
+use App\Entity\DemandeCours;
+use CalendarBundle\Entity\Event;
 use App\Repository\ProfRepository;
 use App\Repository\SeanceRepository;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use CalendarBundle\Entity\Event;
 use CalendarBundle\Event\CalendarEvent;
-use DateTime;
+use App\Repository\DemandeCoursRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
+
 
 class CalendarListener
 {
@@ -16,17 +20,23 @@ class CalendarListener
     private $seanceRepository;
     private $profRepository;
     private $router;
+    private $user;
 
     public function __construct(
         SeanceRepository $seanceRepository,
         DemandeCoursRepository $demandeCoursRepository,
         ProfRepository $profRepository,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        Security $security
+        // EntityManager $em
     ) {
         $this->seanceRepository = $seanceRepository;
         $this->demandeCoursRepository = $demandeCoursRepository;
         $this->profRepository = $profRepository;
         $this->router = $router;
+        $this->user = $security->getUser();
+        // $this->em = $em;
+        
     }
 
     public function load(CalendarEvent $calendar): void
@@ -35,21 +45,40 @@ class CalendarListener
         $end = $calendar->getEnd();
         $filters = $calendar->getFilters();
 
-        if (array_key_exists('cours', $filters)) {
+        if (array_key_exists('cours', $filters) && array_key_exists('eleve', $filters)) {
 
             // SEANCES DISPONIBLES POUR UN COURS
             $seances = $this->seanceRepository
                 ->createQueryBuilder('seance')
                 ->innerJoin('seance.prof', 'p')
+                // ->innerJoin('seance.id', 's')
                 ->where('seance.dateDebut BETWEEN :start and :end')
-                ->andWhere('p.id = :id')
+                ->andWhere('p.id = :idProf')
+                // ->andWhere('s.id = :idSeance')
                 // ->and('formation.dateDebut BETWEEN :start and :end')
                 ->setParameter('start', $start->format('Y-m-d H:i:s'))
                 ->setParameter('end', $end->format('Y-m-d H:i:s'))
-                ->setParameter('id', $filters['prof'])
+                ->setParameter('idProf', $filters['prof'])
                 ->getQuery()
                 ->getResult()
             ;
+
+            $demandes = $this->demandeCoursRepository
+                ->createQueryBuilder('demandeSeance')
+                ->innerJoin('demandeSeance.eleve', 'e')
+                ->innerJoin('demandeSeance.seance', 's')
+                ->select('demandeSeance.seance')
+                ->where('s.dateDebut BETWEEN :start and :end')
+                ->andWhere('e.id = :id')
+                ->setParameter('start', $start->format('Y-m-d H:i:s'))
+                ->setParameter('end', $end->format('Y-m-d H:i:s'))
+                ->setParameter('id', $filters['eleve'])
+                ->getQuery()
+                ->getResult();
+
+            foreach($demandes as $demande){
+                if (in_array)
+            }
 
         }
         else if (array_key_exists('eleve', $filters)) {
@@ -148,20 +177,23 @@ class CalendarListener
             // Seances disponibles à l'inscription (par encore réservées)
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$seance->getEleve()) {
 
-                $seanceEvent = new Event(
-                    "S'inscrire",
-                    $seance->getDateDebut(),
-                    $dateFin 
-                );
+                if (!in_array($seance, $filters['eleve']->getSeances())) {
 
-                $seanceEvent->setOptions([
-                    'backgroundColor' => 'blue',
-                    'textColor' => 'white',
-                    'url'=> $this->router->generate('demande_inscription_seance', [
-                                'idSeance' => $seance->getId(),
-                                'idCours' => $filters['cours'],
-                    ])
-                ]); 
+                    $seanceEvent = new Event(
+                        "S'inscrire",
+                        $seance->getDateDebut(),
+                        $dateFin 
+                    );
+
+                    $seanceEvent->setOptions([
+                        'backgroundColor' => 'blue',
+                        'textColor' => 'white',
+                        'url'=> $this->router->generate('demande_inscription_seance', [
+                                    'idSeance' => $seance->getId(),
+                                    'idCours' => $filters['cours'],
+                        ])
+                    ]); 
+                }
 
             }
 

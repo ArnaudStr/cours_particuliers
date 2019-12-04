@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Eleve;
 use App\Entity\Seance;
 use App\Entity\DemandeCours;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -41,6 +42,22 @@ class DemandeCoursRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('d')
             ->andWhere('d.eleve = :eleve')
             ->setParameter('eleve', $eleve)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return DemandeCours[] Returns an array of DemandeCours objects
+     */
+    public function findByEleveSeance(Eleve $eleve, Seance $seance)
+    {
+        return $this->createQueryBuilder('d')
+            ->select('d.seance')
+            ->andWhere('d.eleve = :eleve')
+            ->andWhere('d.seance = :seance')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('seance', $seance)
             ->getQuery()
             ->getResult()
         ;

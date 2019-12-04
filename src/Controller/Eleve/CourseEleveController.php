@@ -2,6 +2,7 @@
 
 namespace App\Controller\Eleve;
 
+use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Seance;
 use App\Entity\Activite;
@@ -9,7 +10,9 @@ use App\Entity\Categorie;
 use App\Entity\DemandeCours;
 use App\Controller\Eleve\EleveController;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -38,6 +41,18 @@ class CourseEleveController extends EleveController
     
 
     /**
+     * @Route("/cancelDemandeEleve/{id}", name="cancel_demande_eleve")
+     */
+    public function cancelDemandeEleve(DemandeCours $demande, ObjectManager $manager) {
+      
+        $manager->remove($demande);
+        $manager->flush();
+
+        return $this->redirectToRoute('home_eleve', [
+        ]);
+    }
+
+    /**
      * Recherche de cours (avec searchbar)
      * @Route("/searchCourseEleve", name="search_course_eleve")
      */
@@ -48,7 +63,7 @@ class CourseEleveController extends EleveController
             ->findAll();  
 
         return $this->render('home.html.twig', [
-            'title' => 'Cours à Strasbourg',
+            'title' => 'StrasCours',
             'transparent' => true,
             'categories' => $categories,
         ]);
@@ -129,7 +144,7 @@ class CourseEleveController extends EleveController
      * @ParamConverter("seance", options={"id" = "idSeance"})
      * @ParamConverter("cours", options={"id" = "idCours"})
      */
-    public function demandeInscriptionSeance(Seance $seance, Cours $cours) {
+    public function demandeInscriptionSeance(Seance $seance, Cours $cours, \Swift_Mailer $mailer) {
 
         $eleve = $this->getUser();
         // Inscription élève au cours
@@ -142,6 +157,20 @@ class CourseEleveController extends EleveController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($demandeCours);
         $entityManager->flush();
+
+        $this->addFlash('demande', 'Votre demande d\'inscription à la séance a été enregistré et est en attente de réponse. Vous pouvez la retrouver dans votre planning.');
+
+        $url = $this->generateUrl('demandes_seance_prof', array('id' => $seance->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $message = (new \Swift_Message('Nouvelle demande d\'inscription'))
+            ->setFrom('arnaud6757@gmail.com')
+            ->setTo($seance->getProf()->getEmail())
+            ->setBody(
+                "Bonjour ".$eleve.".<br/>Vous avez reçu une demande d'inscription à un cours de ".$cours." pour le ".$seance->getDateDebut()->format('d-m-Y H:i')." : <a href='". $url ."'>Cliquez ici</a>",
+                'text/html'
+            );
+
+        $mailer->send($message);
 
         return $this->redirectToRoute('display_course_eleve', [
             'id' => $cours->getId()

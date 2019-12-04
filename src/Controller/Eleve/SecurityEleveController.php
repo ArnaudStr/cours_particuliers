@@ -30,7 +30,7 @@ class SecurityEleveController extends EleveController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexio élève']);
+        return $this->render('security/loginEleve.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexion élève']);
     }
 
     /**

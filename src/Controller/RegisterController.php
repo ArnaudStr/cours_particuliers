@@ -47,11 +47,11 @@ class RegisterController extends AbstractController
 
                         $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-                        $message = (new \Swift_Message('Forgot Password'))
+                        $message = (new \Swift_Message('Validez votre inscription à Strascours'))
                         ->setFrom('arnaud6757@gmail.com')
                         ->setTo($eleve->getEmail())
                         ->setBody(
-                            "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            "Bonjour ".$eleve.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
                             'text/html'
                         );
             
@@ -91,11 +91,11 @@ class RegisterController extends AbstractController
 
                         $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-                        $message = (new \Swift_Message('Lien pour valider votre inscription'))
+                        $message = (new \Swift_Message('Validez votre inscription à Strascours'))
                         ->setFrom('arnaud6757@gmail.com')
                         ->setTo($prof->getEmail())
                         ->setBody(
-                            "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            "Bonjour ".$prof.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
                             'text/html'
                         );
             
@@ -146,13 +146,13 @@ class RegisterController extends AbstractController
 
             $url = $this->generateUrl('app_confirm_account', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $message = (new \Swift_Message('Lien pour valider votre inscription'))
-            ->setFrom('arnaud6757@gmail.com')
-            ->setTo($user->getEmail())
-            ->setBody(
-                "Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
-                'text/html'
-            );
+            $message = (new \Swift_Message('Validez votre inscription à Strascours'))
+                ->setFrom('arnaud6757@gmail.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    "Bonjour ".$user.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                    'text/html'
+                );
 
             $mailer->send($message);
 

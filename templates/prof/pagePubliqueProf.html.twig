@@ -31,7 +31,7 @@
               <ul class="user-contact-details">
                 <li><i class="fa fa-envelope" aria-hidden="true"></i><a href="#">{{ prof.email }}</a></li>
               </ul>
-              <a href="#"><div class="verified-user">Contacter</div></a>
+              <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}" target="_blank"><div class="verified-user">Contacter</div></a>
             </div>
           </div>
           <div class="col-xs-12 col-sm-4">

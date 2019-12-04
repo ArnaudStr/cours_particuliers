@@ -113,12 +113,17 @@ class CourseProfController extends ProfController
                 if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
                     $seance->getCours()->addEleve($demandeCours->getEleve());
                 };
+
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($demandeCours);
             $entityManager->persist($seance);
             $entityManager->flush();
+
+            if ($valider == 1) {
+                return $this->redirectToRoute('planning_prof');
+            }
 
             return $this->redirectToRoute('demandes_seance_prof', ['id' => $seance->getId()]);
         }

@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+{% block flash %}
+    {% for flash_message in app.session.flashbag.get('demande') %}
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+{% endblock %}
 <!-- LISTINGS DETAILS TITLE SECTION -->
 <section class="clearfix paddingAdjustBottom" id="listing-details">
     <div class="container">
@@ -52,13 +60,14 @@
                                 <dd> - A domicile</dd>
                             {% endif %}
                         </p>
-                        <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}"><button class="btn btn-lg btn-primary">Contacter {{ cours.prof }}</button></a>
+                        <a href="{{ path('conversation_eleve', {'id':cours.prof.id}) }}" target="_blank"><button class="btn btn-lg btn-primary">Contacter {{ cours.prof }}</button></a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 
 <section class="clearfix paddingAdjustTop">
     <div class="container">
@@ -74,7 +83,7 @@
                     <!-- The Modal -->
 
                 {% else %}
-                    <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a> si vous possedez déjà un compte, ou <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> sinon</h2>
+                    <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a>. Si vous n'avez pas encors de compte, vous pouvez <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> dès maintenant!</h2>
                 {% endif %}
             </div>
         </div>

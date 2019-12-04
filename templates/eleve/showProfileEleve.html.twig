@@ -35,6 +35,9 @@
                         {% if allCoursEtProchaineSeance %}
                             {% for coursSeance in allCoursEtProchaineSeance %}
                                <h4>Cours de {{ coursSeance.cours }} avec {{ coursSeance.cours.prof }}</h4>
+                               <p><a href="{{ path('conversation_eleve', {'id':coursSeance.cours.prof.id}) }}" target="_blank">Contacter {{ coursSeance.cours.prof.prenom }}</a> ou 
+                                <a href="{{ path('emettre_avis', {'id':coursSeance.cours.prof.id}) }}" target="_blank">Mettre un avis sur {{ coursSeance.cours.prof.prenom }}</a>
+                                </p>
                                 {% if coursSeance.lastSeance %}
                                     <p>Dernière séance le {{ coursSeance.lastSeance.dateDebut|date('d/m/Y') }}
                                         à {{ coursSeance.lastSeance.dateDebut|date('H:i') }}
@@ -43,8 +46,7 @@
 
                                 {% if coursSeance.nextSeance %}
                                     <p>Prochaine séance le {{ coursSeance.nextSeance.dateDebut|date('d/m/Y') }}
-                                        à {{ coursSeance.nextSeance.dateDebut|date('H:i') }}
-                                    </p>
+                                        à {{ coursSeance.nextSeance.dateDebut|date('H:i') }}</p>
                                 {% endif %}
                                 </br>
                             {% endfor %}

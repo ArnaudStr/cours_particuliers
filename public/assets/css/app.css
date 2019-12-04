@@ -4213,6 +4213,7 @@ footer {
   margin: 0 0 24px 0;
   font-weight: 500;
   font-size: 45px;
+  text-shadow: black 0.1em 0.1em 0.2em;
 }
 
 .banerInfo p {
@@ -10407,7 +10408,7 @@ body.pattern-04 {
 }
 
 .miniSearchBar .btn-primary {
-  width :17%;
+  /* width :17%; */
 }
 
 /* Pour l'affichage des cours d'un cours prof */
@@ -10639,10 +10640,6 @@ body.pattern-04 {
 
 .fa-star, .fa-star-o {
   color: #ffb400;
-}
-
-.banerInfo h1{
-  color: #77B0E6;
 }
 
 .demandesCours p{

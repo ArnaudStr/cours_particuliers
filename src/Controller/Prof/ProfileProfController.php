@@ -109,7 +109,8 @@ class ProfileProfController extends ProfController
             
             // Upload de la photo et inscription en BDD du nom de l'image
             if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
-                if ($pictureFilename!='default_avatar.png'){
+
+                if ($pictureBeforeForm!='default_avatar.png'){
                     $this->delFile('pictures',$pictureBeforeForm);
                 }
                     $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
@@ -122,7 +123,7 @@ class ProfileProfController extends ProfController
             $entityManager->flush();
 
             return $this->redirectToRoute('home_prof', [
-                'id' => $prof->getId()
+                // 'id' => $prof->getId()
             ]);
         }
 

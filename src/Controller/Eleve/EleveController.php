@@ -4,7 +4,6 @@ namespace App\Controller\Eleve;
 
 use App\Entity\Avis;
 use App\Entity\Prof;
-use App\Entity\Eleve;
 use App\Form\AvisType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;

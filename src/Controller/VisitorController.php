@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Avis;
 use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Activite;
@@ -29,7 +28,7 @@ class VisitorController extends AbstractController
             ->findAll();  
 
         return $this->render('home.html.twig', [
-            'title' => 'Cours à Strasbourg',
+            'title' => 'StrasCours',
             'transparent' => true,
             'profs' => $profs,
             'categories' => $categories,
@@ -80,6 +79,7 @@ class VisitorController extends AbstractController
         return $this->render('course/search.html.twig', [
             'activite' => $activite,
             'nbResultats' => $nbResultats,
+            'title' => $activite
         ]);
     }
 
@@ -92,6 +92,7 @@ class VisitorController extends AbstractController
     {
         return $this->render('course/displayCourse.html.twig', [
             'cours' => $cours,
+            'title' => 'Cours de '.$cours,
         ]);
     }
 }

@@ -12,7 +12,7 @@
                         <h2>Vous avez <strong>{{ app.user.demandesCours|length }}</strong> demandes en attente :</h2>
                     </div>
                     {% for demandeCours in app.user.demandesCours %}
-                        <p style="font-size: 20px">Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong> pour la séance du <strong>{{ demandeCours.seance.dateDebut|date("d/m/Y") }}</strong> à <strong>{{ demandeCours.seance.dateDebut|date("H:i") }}</strong>
+                        <p style="font-size: 20px">Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong> pour le <strong>{{ demandeCours.seance.dateDebut|date("d/m/Y") }}</strong> à <strong>{{ demandeCours.seance.dateDebut|date("H:i") }}</strong>
                     {% endfor %}
                 {% else %}
                     <div class="resultBar barSpaceAdjust">

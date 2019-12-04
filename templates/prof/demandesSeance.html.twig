@@ -19,13 +19,18 @@
                         
                                 <a href="{{ path('validation_seances_prof', {'id':demandeCours.id, 'valider':0}) }}"><button type="button" class="btn btn-primary">Refuser la seance</button></a>
 
-                                <a href="{{ path('conversation_prof', {'id':demandeCours.eleve.id}) }}"><button class="btn btn-lg btn-primary">Contacter {{ demandeCours.eleve }}</button></a>
+                                <a href="{{ path('conversation_prof', {'id':demandeCours.eleve.id}) }}" target="_blank"><button class="btn btn-lg btn-primary">Contacter {{ demandeCours.eleve }}</button></a>
                             </p>
                         {% endfor %}
                     {% else %}
                         {% for demandeCours in demandesCours %}
                             <p>Demande pour un cours de <strong>{{ demandeCours.cours }}</strong> avec <strong>{{ demandeCours.cours.prof }}</strong></p>
-                        {% endfor %}
+                            <p>
+                                <a href="{{ path('cancel_demande_eleve', {'id':demandeCours.id}) }}"><button type="button" class="btn btn-primary">Annuler la demande</button></a>
+    
+                                <a href="{{ path('conversation_eleve', {'id':demandeCours.seance.prof.id}) }}" target="_blank"><button class="btn btn-lg btn-primary">Contacter {{ demandeCours.seance.prof }}</button></a>
+                            </p>
+                            {% endfor %}
                     {% endif %}
                 </div>
             </div>

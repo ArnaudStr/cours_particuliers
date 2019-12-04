@@ -70,6 +70,7 @@ class ProfileEleveController extends EleveController
         $eleve = $this->getUser();
         // On récupere l'image avant le passage par le formulaire
         $pictureBeforeForm = $eleve->getPictureFilename();
+        dd($pictureBeforeForm);
 
         $form = $this->createForm(EditEleveType::class, $eleve);
         $form->handleRequest($request);
@@ -78,7 +79,7 @@ class ProfileEleveController extends EleveController
 
             // Upload de la photo et inscription en BDD du nom de l'image, (si il y a eu une image dans le formulaire)
             if ( $pictureFilename = $form->get("pictureFilename")->getData() ) {
-                if ($pictureFilename!='default_avatar.png'){
+                if ($pictureBeforeForm!='default_avatar.png'){
                     $this->delFile('pictures',$pictureBeforeForm);
                 }
                 $filename = md5(uniqid()).'.'.$pictureFilename->guessExtension();
@@ -90,7 +91,7 @@ class ProfileEleveController extends EleveController
             $entityManager->persist($eleve);
             $entityManager->flush();
 
-            return $this->redirectToRoute('show_profile_eleve', ['id'=>$eleve->getID()]);
+            return $this->redirectToRoute('home_eleve', ['id'=>$eleve->getID()]);
         }
 
         return $this->render('eleve/editProfileEleve.html.twig', [
@@ -125,7 +126,7 @@ class ProfileEleveController extends EleveController
 
                 $this->addFlash('changePasswordOk', 'Votre mot de passe à bien été changé !');
 
-                return $this->redirectToRoute('show_profile_eleve', [
+                return $this->redirectToRoute('home_eleve', [
                     'id' => $eleve->getId()
                 ]);
 
