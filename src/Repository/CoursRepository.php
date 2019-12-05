@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Activite;
 use App\Entity\Cours;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -18,6 +19,21 @@ class CoursRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Cours::class);
     }
+
+    /**
+     * @return Cours[] Returns an array of Cours objects
+     */
+    public function findByExampleField(Activite $activite)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.activite = :activite')
+            ->setParameter('activite', $activite)
+            ->orderBy('c.tarifHoraire', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     // /**
     //  * @return Cours[] Returns an array of Cours objects
