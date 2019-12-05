@@ -8,6 +8,7 @@ use App\Form\RegistrationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -29,7 +30,7 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Si la personne s'enregistre en tant qu'élève
-            if ( $isEleve == 1 ) {
+            if ( $isEleve != 0 ) {
 
                 $email = $form->get('email')->getData();
 
@@ -158,6 +159,9 @@ class RegisterController extends AbstractController
 
             $this->addFlash('confirm', 'Vous avez reçu un email de validation, veuillez confirmer votre compte');
 
+            if ($isEleve != 0 && $isEleve != 1){
+                $this->get('session')->set('cours', $isEleve);
+            }
             return $route;
         }
 

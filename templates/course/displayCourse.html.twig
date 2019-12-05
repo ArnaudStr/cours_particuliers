@@ -83,7 +83,7 @@
                     <!-- The Modal -->
 
                 {% else %}
-                    <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a>. Si vous n'avez pas encors de compte, vous pouvez <a href="{{ path('register', {isEleve : 1}) }}">vous enregistrer</a> dès maintenant!</h2>
+                    <h2>Pour vous inscrire à ce cours, veuilllez <a href="{{ path('login_eleve') }}">vous connecter</a>. Si vous n'avez pas encors de compte, vous pouvez <a href="{{ path('register', {isEleve : cours.id}) }}">vous enregistrer</a> dès maintenant!</h2>
                 {% endif %}
             </div>
         </div>

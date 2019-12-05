@@ -2,7 +2,6 @@
 
 namespace App\Controller\Eleve;
 
-use App\Entity\Prof;
 use App\Entity\Cours;
 use App\Entity\Seance;
 use App\Entity\Activite;
@@ -166,7 +165,7 @@ class CourseEleveController extends EleveController
             ->setFrom('arnaud6757@gmail.com')
             ->setTo($seance->getProf()->getEmail())
             ->setBody(
-                "Bonjour ".$eleve.".<br/>Vous avez reçu une demande d'inscription à un cours de ".$cours." pour le ".$seance->getDateDebut()->format('d-m-Y H:i')." : <a href='". $url ."'>Cliquez ici</a>",
+                "Bonjour ".$cours->getProf().".<br/>Vous avez reçu une demande d'inscription à un cours de ".$cours." pour le ".$seance->getDateDebut()->format('d-m-Y H:i')." : <a href='". $url ."'>Cliquez ici</a>",
                 'text/html'
             );
 

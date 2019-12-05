@@ -17,9 +17,9 @@
     {% endfor %}
 
     {% for flash_message in app.session.flashbag.get('forgotPwd') %}
-    <div class="container alert alert-info" role="alert">
-        {{ flash_message }}
-    </div>
+        <div class="container alert alert-info" role="alert">
+            {{ flash_message }}
+        </div>
     {% endfor %}
 {% endblock %}
 

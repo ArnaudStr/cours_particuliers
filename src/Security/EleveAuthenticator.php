@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -91,6 +92,10 @@ class EleveAuthenticator extends AbstractFormLoginAuthenticator
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
+        }
+
+        if($request->getSession()->get('cours')){
+            return new RedirectResponse($this->urlGenerator->generate('display_course_eleve', array('id' => $request->getSession()->get('cours'))));
         }
 
         return new RedirectResponse($this->urlGenerator->generate('home_eleve'));

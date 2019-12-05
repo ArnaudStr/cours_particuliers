@@ -3,8 +3,6 @@
 namespace App\EventListener;
 
 use DateTime;
-use App\Entity\Eleve;
-use App\Entity\DemandeCours;
 use CalendarBundle\Entity\Event;
 use App\Repository\ProfRepository;
 use App\Repository\SeanceRepository;
@@ -48,7 +46,7 @@ class CalendarListener
         if (array_key_exists('cours', $filters) && array_key_exists('eleve', $filters)) {
 
             // SEANCES DISPONIBLES POUR UN COURS
-            $seances = $this->seanceRepository
+            $seancesS = $this->seanceRepository
                 ->createQueryBuilder('seance')
                 ->innerJoin('seance.prof', 'p')
                 // ->innerJoin('seance.id', 's')
@@ -65,20 +63,34 @@ class CalendarListener
 
             $demandes = $this->demandeCoursRepository
                 ->createQueryBuilder('demandeSeance')
+                // ->select('demandeSeance.seance')
                 ->innerJoin('demandeSeance.eleve', 'e')
                 ->innerJoin('demandeSeance.seance', 's')
-                ->select('demandeSeance.seance')
+                // ->innerJoin('s', 'demandeSeance.seance')
+                // ->innerJoin('demandeSeance.seance', 's')
                 ->where('s.dateDebut BETWEEN :start and :end')
                 ->andWhere('e.id = :id')
+                // ->andWhere(' = :id')
                 ->setParameter('start', $start->format('Y-m-d H:i:s'))
                 ->setParameter('end', $end->format('Y-m-d H:i:s'))
                 ->setParameter('id', $filters['eleve'])
                 ->getQuery()
                 ->getResult();
 
-            foreach($demandes as $demande){
-                if (in_array)
+            $seancesDemandes = [];
+            $seances = [];
+            
+            foreach ($demandes as $demande) {
+                array_push($seancesDemandes, $demande->getSeance());
             }
+
+            foreach ($seancesS as $seance) {
+                if (!in_array($seance, $seancesDemandes)) {
+                    array_push($seances, $seance);
+                }
+            }
+
+            // $seances = array_diff($seances, $seancesDemandes);
 
         }
         else if (array_key_exists('eleve', $filters)) {
@@ -177,7 +189,7 @@ class CalendarListener
             // Seances disponibles à l'inscription (par encore réservées)
             if (array_key_exists('eleve', $filters) && array_key_exists('cours', $filters) && !$seance->getEleve()) {
 
-                if (!in_array($seance, $filters['eleve']->getSeances())) {
+                // if (!in_array($seance, $filters['eleve']->getSeances())) {
 
                     $seanceEvent = new Event(
                         "S'inscrire",
@@ -193,7 +205,7 @@ class CalendarListener
                                     'idCours' => $filters['cours'],
                         ])
                     ]); 
-                }
+                // }
 
             }
 

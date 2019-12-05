@@ -10590,7 +10590,7 @@ body.pattern-04 {
 }
 
 .panel-list a :hover{
-  background-color: #4c4c4c;
+  background-color: #CBCBCB;
 }
 
 @media  (max-width: 400px) {
@@ -10605,6 +10605,7 @@ body.pattern-04 {
 
 .calendrier{
   padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .calendrier .fc-widget-content{

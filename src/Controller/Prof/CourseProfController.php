@@ -6,12 +6,13 @@ use App\Entity\Cours;
 use App\Entity\Seance;
 use App\Entity\DemandeCours;
 use App\Form\CreationCoursType;
+use App\Controller\Prof\ProfController;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use App\Controller\Prof\ProfController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 
 /**
@@ -100,7 +101,7 @@ class CourseProfController extends ProfController
     /**
      * @Route("/validationSeanceProf/{id}/{valider}", name="validation_seances_prof")
      */
-    public function validationSeanceProf(DemandeCours $demandeCours, int $valider) {
+    public function validationSeanceProf(DemandeCours $demandeCours, int $valider, \Swift_Mailer $mailer) {
 
         $seance = $demandeCours->getSeance();
         if ($seance->getProf() == $this->getUser()) {
@@ -113,6 +114,18 @@ class CourseProfController extends ProfController
                 if (!$seance->getCours()->getEleves()->contains($demandeCours->getEleve())){
                     $seance->getCours()->addEleve($demandeCours->getEleve());
                 };
+
+                $url = $this->generateUrl('home_eleve', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+
+                $message = (new \Swift_Message('Validation demande d\'inscription'))
+                    ->setFrom('arnaud6757@gmail.com')
+                    ->setTo($demandeCours->getEleve()->getEmail())
+                    ->setBody(
+                        "Bonjour ".$demandeCours->getEleve().".<br/>Votre demande d'inscription à un cours de ".$demandeCours->getCours()." pour le ".$seance->getDateDebut()->format('d-m-Y H:i')." a été acceptée : <a href='". $url ."'>Cliquez ici</a>",
+                        'text/html'
+                    );
+        
+                $mailer->send($message);
 
             }
 
