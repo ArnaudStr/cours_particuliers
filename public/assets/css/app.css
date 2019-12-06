@@ -10647,7 +10647,6 @@ body.pattern-04 {
   font-size: 20px;
 }
 
-/* .listeCours{
-  width: 350px;
-  height: 350px;
-} */
+.profileName h3{
+  font-size: 15px;
+}

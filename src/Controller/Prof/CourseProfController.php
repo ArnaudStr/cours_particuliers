@@ -45,6 +45,12 @@ class CourseProfController extends ProfController
             $title = 'Modification de cours '.$cours;
         }
 
+        $activites = [];
+
+        foreach($prof->getCoursS() as $cours){
+            array_push($activites, $cours->getActivite());
+        }
+
         // on prépare le formulaire
         $form = $this->createForm(CreationCoursType::class, $cours);
 
@@ -54,11 +60,20 @@ class CourseProfController extends ProfController
         // Vérifie si le formulaire a été remplis et validé
         if($form->isSubmitted() && $form->isValid()) {
 
-            // Sauvegarde l'objet avant de l'envoyer en base de données 
-            $manager->persist($cours);
+            if(in_array($form->get('activite')->getData(), $activites) && !$modif){
 
-            // Execute la requête d'ajout/modif en base de données
-            $manager->flush();
+                $this->addFlash('coursExistant', 'Vous enseignez déjà ce cours!');
+
+                return $this->redirectToRoute('add_propose_cours');
+            }
+
+            else {
+                // Sauvegarde l'objet avant de l'envoyer en base de données 
+                $manager->persist($cours);
+
+                // Execute la requête d'ajout/modif en base de données
+                $manager->flush();
+            }
  
             // Une fois le cours ajouté en base de données, on redigire le prof vers la liste de ses cours
             return $this->redirectToRoute('show_liste_cours');

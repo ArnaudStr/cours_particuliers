@@ -93,7 +93,6 @@ class Prof implements UserInterface
      */
     private $coursS;
 
-
     /**
      * @var string le token qui servira lors de l'oubli de mot de passe
      * @ORM\Column(type="string", length=255, nullable=true)

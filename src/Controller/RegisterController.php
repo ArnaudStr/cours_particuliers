@@ -52,7 +52,7 @@ class RegisterController extends AbstractController
                         ->setFrom('arnaud6757@gmail.com')
                         ->setTo($eleve->getEmail())
                         ->setBody(
-                            "Bonjour ".$eleve.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            "Bonjour ".$eleve.".<br/>Voici le lien pour confirmer votre inscription sur StrasCours : <a href='". $url ."'>Confirmer mon compte</a>",
                             'text/html'
                         );
             
@@ -96,7 +96,7 @@ class RegisterController extends AbstractController
                         ->setFrom('arnaud6757@gmail.com')
                         ->setTo($prof->getEmail())
                         ->setBody(
-                            "Bonjour ".$prof.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                            "Bonjour ".$prof.".<br/>Voici le lien pour confirmer votre inscription sur StrasCours : <a href='". $url ."'>Confirmer mon compte</a>",
                             'text/html'
                         );
             
@@ -151,7 +151,7 @@ class RegisterController extends AbstractController
                 ->setFrom('arnaud6757@gmail.com')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "Bonjour ".$user.".<br/>Voici le lien pour confirmer votre inscription : <a href='". $url ."'>Confirmer mon compte</a>",
+                    "Bonjour ".$user.".<br/>Voici le lien pour confirmer votre inscription sur StrasCours : <a href='". $url ."'>Confirmer mon compte</a>",
                     'text/html'
                 );
 

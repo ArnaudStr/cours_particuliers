@@ -25,8 +25,8 @@
                     <div class="profileIntro">
                         <h3>Avis</h3>
                         <div class="row">
-                            {% if noteMoyenne %}
-                                <h3>Note : {{ noteMoyenne }}</h3>
+                            {% if prof.noteMoyenne %}
+                                <h3>Note : {{ prof.noteMoyenne }}</h3>
                             {% endif %}
                             <p><a href="{{ path('show_reviews_prof_admin', {'id':prof.id}) }}">Voir / Supprimer avis</a></p>
                         </div>
