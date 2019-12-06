@@ -17,6 +17,23 @@ class VisitorController extends AbstractController
      */
     public function searchCourse()
     {
+
+        // $activites = $this->getDoctrine()->getRepository(Activite::class)->findAll();
+        $activites = $this->getDoctrine()->getRepository(Activite::class)->findNames();
+
+        $activitesJson = [];
+
+        foreach($activites as $key=>$activite){
+            foreach($activite as $key2=>$nom){
+                array_push($activitesJson, $nom);
+            }
+        }
+        dump($activitesJson);
+
+        $json = json_encode($activitesJson);
+
+        dd($json);
+
         // On récupère les 5 avis avec la meilleure note pour l'affichage du slider en bas de page
         $profs = $this->getDoctrine()
             ->getRepository(Prof::class)
@@ -83,7 +100,6 @@ class VisitorController extends AbstractController
         ]);
     }
 
-
     /**
      * Affichage des informations d'un cours
      * @Route("/displayCourseVisitor/{id}", name="display_course_visitor")
@@ -95,4 +111,21 @@ class VisitorController extends AbstractController
             'title' => 'Cours de '.$cours,
         ]);
     }
+
+    /**
+     * @Route("/allActivitesCategories", name="all_activites_categories")
+     */
+    public function allActivitesCategories()
+    {
+        $categories = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
+        $activites = $this->getDoctrine()->getRepository(Activite::class)->findAll();
+
+        $json = json_encode($activites);
+
+            dd($json);
+            
+        return $json;
+
+    }
+
 }

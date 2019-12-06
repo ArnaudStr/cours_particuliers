@@ -50,6 +50,20 @@ class ActiviteRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @param string $term
+     * @return activite[]
+     */
+    public function findNames()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a.nom')
+            ->getQuery()
+            // ->getSingleScalarResult()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Activite[] Returns an array of Activite objects
     //  */
